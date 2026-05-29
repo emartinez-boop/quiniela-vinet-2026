@@ -599,7 +599,8 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
         🔒 Acceso restringido a colaboradores de Vinet<br>
         <strong>¿Olvidaste la contraseña? Contacta a RRHH</strong>
       </div>
-      <button onclick="clearTestData()" style="
+      <button id="gate-clear-btn" onclick="clearTestData()" style="
+        display:none;
         margin-top:12px;background:none;border:1px solid rgba(239,68,68,.25);
         border-radius:var(--r);padding:7px 14px;color:rgba(239,68,68,.5);
         font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;
@@ -812,7 +813,7 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
 <div id="panel-grupos" class="panel">
   <div class="sec-ttl">Grupos Oficiales FIFA 2026</div>
   <!-- BOTÓN DE PRUEBAS — visible para limpiar datos de prueba -->
-  <div id="clear-data-bar" style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:var(--r);padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+  <div id="clear-data-bar" style="display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:var(--r);padding:12px 16px;margin-bottom:18px;align-items:center;gap:12px;flex-wrap:wrap;">
     <div style="flex:1;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(239,68,68,.8);letter-spacing:.5px;">
       🧪 <strong>Modo prueba</strong> — Borra todos los datos guardados para empezar desde cero
     </div>
@@ -870,6 +871,19 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
           <div class="frow">
             <div class="fg"><label class="fl">Tu Nombre (Colaborador Vinet)</label><input class="fi" type="text" id="r-name" placeholder="Nombre completo"/></div>
             <div class="fg"><label class="fl">🏆 Campeón del Mundial</label><select class="fs" id="r-champ"></select></div>
+          </div>
+          <div class="frow">
+            <div class="fg">
+              <label class="fl">🔑 Contraseña Personal</label>
+              <div style="position:relative;display:flex;align-items:center;">
+                <input class="fi" type="password" id="r-pwd" placeholder="Mín. 4 caracteres" style="flex:1;padding-right:36px;" autocomplete="new-password"/>
+                <button type="button" onclick="toggleRegPwd()" style="position:absolute;right:8px;background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted);" id="r-pwd-eye">👁</button>
+              </div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--dim);letter-spacing:.5px;margin-top:3px;">Usarás esta contraseña para acceder a tu quiniela</div>
+            </div>
+            <div class="fg"><label class="fl">🔑 Confirmar Contraseña</label>
+              <input class="fi" type="password" id="r-pwd2" placeholder="Repite tu contraseña" autocomplete="new-password"/>
+            </div>
           </div>
           <div class="frow">
             <div class="fg"><label class="fl">🥈 Subcampeón</label><select class="fs" id="r-runner"></select></div>
@@ -1558,6 +1572,7 @@ async function loadParts(){
           pts:         row.pts||0,
           exact:       row.exact||0,
           correct:     row.correct||0,
+          pwd_hash:    row.pwd_hash||null,
         }));
       }
     }
@@ -1622,6 +1637,7 @@ async function saveOnePart(p){
         pts:          p.pts||0,
         exact:        p.exact||0,
         correct:      p.correct||0,
+        pwd_hash:     p.pwd_hash||null,
       }])
     });
   }catch(e){}
@@ -1898,8 +1914,45 @@ function findMatchByTeams(home,away){
   );
 }
 
+// ─────────────────────────────────────────────
+// API-FOOTBALL — throttle inteligente
+// Solo 1 cliente llama a la API cada 15 min.
+// El resto usa los datos que ya están en Supabase.
+// ─────────────────────────────────────────────
+const AF_SYNC_TABLE = 'scores'; // usamos updated_at de la tabla scores
+const AF_THROTTLE_MS = 15 * 60 * 1000; // 15 minutos
+
+async function getLastScoreUpdate(){
+  // Busca el updated_at más reciente en la tabla scores
+  try{
+    const r = await fetch(
+      `${SB_URL}/rest/v1/scores?select=updated_at&order=updated_at.desc&limit=1`,
+      {headers: SB_HDRS}
+    );
+    if(!r.ok) return null;
+    const rows = await r.json();
+    if(!rows.length || !rows[0].updated_at) return null;
+    return new Date(rows[0].updated_at).getTime();
+  }catch(e){ return null; }
+}
+
+async function shouldCallApi(){
+  // Devuelve true solo si el último update en Supabase tiene más de 15 min
+  const lastUpdate = await getLastScoreUpdate();
+  if(!lastUpdate) return true; // sin datos → llamar
+  return (Date.now() - lastUpdate) > AF_THROTTLE_MS;
+}
+
 async function fetchOfficialScores(){
   try{
+    const call = await shouldCallApi();
+    if(!call){
+      // Datos frescos en Supabase — solo refrescar desde ahí
+      await loadScores();
+      refreshPts();renderMatches();renderRanking();
+      renderPodium();renderGroups();renderBracket();updateStats();
+      return;
+    }
     const today=new Date().toISOString().split('T')[0];
     const r=await fetch(`${AF_BASE}/fixtures?league=${WC_LEAGUE}&season=${WC_SEASON}&date=${today}`,
       {headers:AF_HEADERS});
@@ -1928,6 +1981,11 @@ async function fetchOfficialScores(){
 
 async function fetchRecentScores(){
   try{
+    const call = await shouldCallApi();
+    if(!call){
+      // Supabase tiene datos frescos — no llamar a la API
+      return;
+    }
     const r=await fetch(
       `${AF_BASE}/fixtures?league=${WC_LEAGUE}&season=${WC_SEASON}&status=FT-AET-PEN&last=20`,
       {headers:AF_HEADERS});
@@ -2726,6 +2784,19 @@ function renderBracket(){
 const VINET_DOMAIN = 'vinet.co.cr';
 let currentEmail = null; // verified email for this session
 
+// ─────────────────────────────────────────────
+// ADMIN — solo emartinez@vinet.co.cr ve los botones de prueba
+// ─────────────────────────────────────────────
+const ADMIN_EMAIL = 'emartinez@vinet.co.cr';
+
+function checkAdminUI(){
+  const isAdmin = currentEmail === ADMIN_EMAIL;
+  const gateClearBtn  = document.getElementById('gate-clear-btn');
+  const clearDataBar  = document.getElementById('clear-data-bar');
+  if(gateClearBtn)  gateClearBtn.style.display  = isAdmin ? 'block' : 'none';
+  if(clearDataBar)  clearDataBar.style.display   = isAdmin ? 'flex'  : 'none';
+}
+
 function isVinetEmail(email){
   return /^[^\s@]+@vinet\.co\.cr$/i.test(email.trim());
 }
@@ -2762,9 +2833,22 @@ function validateWmEmail(){
   }
 }
 
-function submitWmEmail(){
+async function submitWmEmail(){
   const email=document.getElementById('wm-email').value.trim().toLowerCase();
   if(!isVinetEmail(email)){ toast('⚠️ Solo correos @vinet.co.cr'); return; }
+
+  // Verificar contraseña si el usuario ya está registrado
+  const existing = participants.find(x=>x.email===email);
+  if(existing && existing.pwd_hash){
+    const pwd = prompt('🔑 Ingresa tu contraseña personal para acceder:');
+    if(!pwd){ toast('⚠️ Contraseña requerida'); return; }
+    const hashed = await hashPwd(pwd);
+    if(hashed !== existing.pwd_hash){
+      toast('❌ Contraseña incorrecta');
+      return;
+    }
+  }
+
   setVerifiedEmail(email);
   hideWelcome();
   // Auto-navigate to quiniela tab
@@ -2795,9 +2879,22 @@ function validateGateEmail(){
   }
 }
 
-function verifyEmail(){
+async function verifyEmail(){
   const email=document.getElementById('gate-email').value.trim().toLowerCase();
   if(!isVinetEmail(email)){toast('⚠️ Solo correos @vinet.co.cr');return;}
+
+  // Si el usuario ya tiene contraseña registrada, pedirla
+  const existing = participants.find(x=>x.email===email);
+  if(existing && existing.pwd_hash){
+    const pwd = prompt('🔑 Ingresa tu contraseña personal para acceder:');
+    if(!pwd){ toast('⚠️ Contraseña requerida'); return; }
+    const hashed = await hashPwd(pwd);
+    if(hashed !== existing.pwd_hash){
+      toast('❌ Contraseña incorrecta');
+      return;
+    }
+  }
+
   setVerifiedEmail(email);
 }
 
@@ -2805,6 +2902,8 @@ function setVerifiedEmail(email){
   currentEmail=email;
   // Persist email so predictions show after reload
   localStorage.setItem('wc26-current-email', email);
+  // Mostrar/ocultar botones de admin
+  checkAdminUI();
   // Show verified state
   document.getElementById('email-verified-bar').style.display='flex';
   document.getElementById('verified-email-display').textContent=email;
@@ -2874,6 +2973,20 @@ function updateRegUI(){
   }
 }
 
+function toggleRegPwd(){
+  const inp = document.getElementById('r-pwd');
+  const eye = document.getElementById('r-pwd-eye');
+  if(!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  eye.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+// Hash simple (SHA-256) para no guardar contraseña en plano
+async function hashPwd(pwd){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pwd));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
 async function saveQuiniela(){
   if(isDeadlinePassed()){toast('🔒 El registro cerró el 10 de junio a medianoche');return;}
   if(!currentEmail){toast('⚠️ Verifica tu correo @vinet.co.cr primero');return;}
@@ -2882,10 +2995,16 @@ async function saveQuiniela(){
   const name=document.getElementById('r-name').value.trim();
   if(!name){toast('⚠️ Ingresa tu nombre completo');return;}
 
-  // Find existing participant by email, or create new
+  // ── Validar contraseña solo en primer registro ──
   let p = participants.find(x=>x.email===currentEmail);
   if(!p){
-    p = {id:`u${Date.now()}`,name,pts:0,exact:0,correct:0};
+    // Primer registro — contraseña obligatoria
+    const pwd  = document.getElementById('r-pwd')?.value||'';
+    const pwd2 = document.getElementById('r-pwd2')?.value||'';
+    if(pwd.length < 4){ toast('⚠️ La contraseña debe tener al menos 4 caracteres'); return; }
+    if(pwd !== pwd2)  { toast('⚠️ Las contraseñas no coinciden'); return; }
+    const hashed = await hashPwd(pwd);
+    p = {id:`u${Date.now()}`,name,pts:0,exact:0,correct:0,pwd_hash:hashed};
     participants.push(p);
   }
 
@@ -3239,6 +3358,7 @@ async function init(){
   const savedEmail = localStorage.getItem('wc26-current-email');
   if(savedEmail && isVinetEmail(savedEmail)){
     currentEmail = savedEmail;
+    checkAdminUI();
   }
 
   // Check if already authenticated
