@@ -142,7 +142,8 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
 /* ══════════════════════ RANKING TABLE ══════════════════════ */
 .rank-wrap{overflow-x:auto;}
 .rank-tbl{width:100%;border-collapse:collapse;}
-.rank-tbl th{font-family:'Barlow Condensed',sans-serif;font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--dim);padding:9px 10px;text-align:left;border-bottom:1px solid var(--brd);background:var(--s2);position:sticky;top:47px;}
+.rank-tbl th{font-family:'Barlow Condensed',sans-serif;font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--dim);padding:9px 10px;text-align:left;border-bottom:1px solid var(--brd);background:var(--s2);position:sticky;top:47px;z-index:10;}
+.panel{padding-top:16px;}
 .rank-tbl th.c{text-align:center;}
 .rank-tbl td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px;transition:background .12s;}
 .rank-tbl td.c{text-align:center;}
@@ -756,16 +757,16 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
 <!-- ═══════════════ PANEL: LISTA ═══════════════ -->
 <div id="panel-lista" class="panel">
   <div class="sec-ttl" id="lista-title">👥 Colaboradores Registrados</div>
-  <div style="overflow-x:auto">
-    <table class="rank-tbl">
+  <div style="overflow-x:auto;overflow-y:visible;">
+    <table class="rank-tbl" style="border-collapse:separate;border-spacing:0;">
       <thead><tr>
-        <th class="c" style="width:36px">#</th>
-        <th>Nombre</th>
-        <th>Campeón 🏆</th>
-        <th>Subcampeón 🥈</th>
-        <th class="hide-sm">3er Lugar 🥉</th>
-        <th class="hide-sm">Goleador ⚽</th>
-        <th class="c">Estado</th>
+        <th class="c" style="width:36px;top:47px;z-index:10;">#</th>
+        <th style="top:47px;z-index:10;">Nombre</th>
+        <th style="top:47px;z-index:10;">Campeón 🏆</th>
+        <th style="top:47px;z-index:10;">Subcampeón 🥈</th>
+        <th class="hide-sm" style="top:47px;z-index:10;">3er Lugar 🥉</th>
+        <th class="hide-sm" style="top:47px;z-index:10;">Goleador ⚽</th>
+        <th class="c" style="top:47px;z-index:10;">Estado</th>
       </tr></thead>
       <tbody id="lista-body">
         <tr><td colspan="7"><div class="loader"><div class="spin"></div>Cargando…</div></td></tr>
@@ -923,9 +924,9 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
       <div class="wm-title">QUINIELA<br><em>MUNDIAL</em> 2026</div>
       <div class="wm-sub">México · Canadá · Estados Unidos</div>
       <div class="wm-prizes">
-        <div class="wm-prize-tag">🍽️ 1° Cena para dos</div>
-        <div class="wm-prize-tag">🎁 2° Tarjeta $100</div>
-        <div class="wm-prize-tag">🎬 3° Cine x4</div>
+        <div class="wm-prize-tag">💻 1° MacBook Neo de 13 pulgadas</div>
+        <div class="wm-prize-tag">🎀 2° Premio sorpresa</div>
+        <div class="wm-prize-tag">🎀 3° Premio sorpresa</div>
       </div>
     </div>
     <div class="wm-body">
@@ -1466,9 +1467,9 @@ let searchMQ='';
 let searchRQ='';
 
 const PRIZES = [
-  {pos:1,icon:'🍽️',title:'Primer Lugar',color:'gold',  desc:'Cena para dos personas'},
-  {pos:2,icon:'🎁',title:'Segundo Lugar',color:'silver',desc:'Tarjeta de regalo $100'},
-  {pos:3,icon:'🎬',title:'Tercer Lugar', color:'bronze',desc:'Entradas al cine para 3 acompañantes'},
+  {pos:1,icon:'💻',title:'Primer Lugar',color:'gold',  desc:'MacBook Neo de 13 pulgadas'},
+  {pos:2,icon:'🎀',title:'Segundo Lugar',color:'silver',desc:'Premio sorpresa'},
+  {pos:3,icon:'🎀',title:'Tercer Lugar', color:'bronze',desc:'Premio sorpresa'},
 ];
 
 // DEADLINE: 10 Jun 2026 23:59:59 CDMX (UTC-6)
@@ -2142,7 +2143,7 @@ function renderPodium(){
         <div class="podium-pts">${top3[1].pts}</div>
         <div class="podium-pts-label">puntos</div>
         <div class="podium-champ">${F[top3[1].champion]||'🏆'} ${top3[1].champion}</div>
-        <div style="margin-top:8px;font-size:11px;color:var(--silver);font-family:'Barlow Condensed',sans-serif;">🎁 Tarjeta regalo $100</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--silver);font-family:'Barlow Condensed',sans-serif;">🎀 Premio sorpresa</div>
       </div></div>`:'<div></div>'}
       ${top3[0]?`<div class="podium-card pc-gold"><div class="podium-card-inner">
         <span class="podium-medal">🥇</span>
@@ -2151,7 +2152,7 @@ function renderPodium(){
         <div class="podium-pts">${top3[0].pts}</div>
         <div class="podium-pts-label">puntos</div>
         <div class="podium-champ">${F[top3[0].champion]||'🏆'} ${top3[0].champion}</div>
-        <div style="margin-top:8px;font-size:11px;color:var(--gold);font-family:'Barlow Condensed',sans-serif;">🍽️ Cena para dos personas</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--gold);font-family:'Barlow Condensed',sans-serif;">💻 MacBook Neo de 13 pulgadas</div>
       </div></div>`:'<div></div>'}
       ${top3[2]?`<div class="podium-card pc-bronze"><div class="podium-card-inner">
         <span class="podium-medal">🥉</span>
@@ -2160,7 +2161,7 @@ function renderPodium(){
         <div class="podium-pts">${top3[2].pts}</div>
         <div class="podium-pts-label">puntos</div>
         <div class="podium-champ">${F[top3[2].champion]||'🏆'} ${top3[2].champion}</div>
-        <div style="margin-top:8px;font-size:11px;color:var(--bronze2);font-family:'Barlow Condensed',sans-serif;">🎬 Cine 3 acompañantes</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--bronze2);font-family:'Barlow Condensed',sans-serif;">🎀 Premio sorpresa</div>
       </div></div>`:'<div></div>'}`;
   }
 
@@ -3075,9 +3076,9 @@ function buildShareMessage(){
   }
 
   body += `🏆 *PREMIOS VINET*\n`;
-  body += `🍽️ 1° Cena para dos personas\n`;
-  body += `🎁 2° Tarjeta de regalo $100\n`;
-  body += `🎬 3° Entradas al cine (3 acompañantes)\n\n`;
+  body += `💻 1° MacBook Neo de 13 pulgadas\n`;
+  body += `🎀 2° Premio sorpresa\n`;
+  body += `🎀 3° Premio sorpresa\n\n`;
   body += `━━━━━━━━━━━━━━━━━━\n`;
   body += `👇 *Registra tu quiniela aquí:*\n`;
   body += `${getShareUrl()}`;
