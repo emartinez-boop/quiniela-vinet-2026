@@ -2837,16 +2837,10 @@ async function submitWmEmail(){
   const email=document.getElementById('wm-email').value.trim().toLowerCase();
   if(!isVinetEmail(email)){ toast('⚠️ Solo correos @vinet.co.cr'); return; }
 
-  // Verificar contraseña si el usuario ya está registrado
   const existing = participants.find(x=>x.email===email);
   if(existing && existing.pwd_hash){
-    const pwd = prompt('🔑 Ingresa tu contraseña personal para acceder:');
-    if(!pwd){ toast('⚠️ Contraseña requerida'); return; }
-    const hashed = await hashPwd(pwd);
-    if(hashed !== existing.pwd_hash){
-      toast('❌ Contraseña incorrecta');
-      return;
-    }
+    const ok = await verifyPwdModal(email, existing);
+    if(!ok) return;
   }
 
   setVerifiedEmail(email);
@@ -2883,16 +2877,10 @@ async function verifyEmail(){
   const email=document.getElementById('gate-email').value.trim().toLowerCase();
   if(!isVinetEmail(email)){toast('⚠️ Solo correos @vinet.co.cr');return;}
 
-  // Si el usuario ya tiene contraseña registrada, pedirla
   const existing = participants.find(x=>x.email===email);
   if(existing && existing.pwd_hash){
-    const pwd = prompt('🔑 Ingresa tu contraseña personal para acceder:');
-    if(!pwd){ toast('⚠️ Contraseña requerida'); return; }
-    const hashed = await hashPwd(pwd);
-    if(hashed !== existing.pwd_hash){
-      toast('❌ Contraseña incorrecta');
-      return;
-    }
+    const ok = await verifyPwdModal(email, existing);
+    if(!ok) return;
   }
 
   setVerifiedEmail(email);
@@ -2981,10 +2969,73 @@ function toggleRegPwd(){
   eye.textContent = inp.type === 'password' ? '👁' : '🙈';
 }
 
-// Hash simple (SHA-256) para no guardar contraseña en plano
+// Hash SHA-256 via Web Crypto API (mismo algoritmo siempre en el browser)
 async function hashPwd(pwd){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pwd));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// ─────────────────────────────────────────────
+// MODAL DE CONTRASEÑA — reemplaza window.prompt
+// ─────────────────────────────────────────────
+let _pwdModalResolve = null;
+
+function showPwdModal(email){
+  return new Promise(resolve => {
+    _pwdModalResolve = resolve;
+    const overlay = document.getElementById('pwd-modal-overlay');
+    const input   = document.getElementById('pwd-modal-input');
+    const display = document.getElementById('pwd-modal-email-display');
+    const err     = document.getElementById('pwd-modal-err');
+    if(display) display.textContent = '✉️ ' + email;
+    if(input)  { input.value = ''; input.type = 'password'; }
+    if(err)    err.textContent = '';
+    overlay.style.display = 'flex';
+    setTimeout(() => input?.focus(), 100);
+  });
+}
+
+function pwdModalToggle(){
+  const inp = document.getElementById('pwd-modal-input');
+  const eye = document.getElementById('pwd-modal-eye');
+  if(!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  eye.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+function pwdModalCancel(){
+  document.getElementById('pwd-modal-overlay').style.display = 'none';
+  if(_pwdModalResolve) { _pwdModalResolve(null); _pwdModalResolve = null; }
+}
+
+function pwdModalConfirm(){
+  const val = document.getElementById('pwd-modal-input')?.value || '';
+  if(!val){ document.getElementById('pwd-modal-err').textContent = '⚠️ Ingresa tu contraseña'; return; }
+  document.getElementById('pwd-modal-overlay').style.display = 'none';
+  if(_pwdModalResolve) { _pwdModalResolve(val); _pwdModalResolve = null; }
+}
+
+// Función central para verificar contraseña con modal bonito
+async function verifyPwdModal(email, existing){
+  const pwd = await showPwdModal(email);
+  if(!pwd){ toast('⚠️ Acceso cancelado'); return false; }
+  const hashed = await hashPwd(pwd);
+  if(hashed !== existing.pwd_hash){
+    document.getElementById('pwd-modal-overlay').style.display = 'flex';
+    document.getElementById('pwd-modal-err').textContent = '❌ Contraseña incorrecta, intenta de nuevo';
+    document.getElementById('pwd-modal-input').value = '';
+    document.getElementById('pwd-modal-input').focus();
+    // Esperar segundo intento
+    const pwd2 = await new Promise(res => { _pwdModalResolve = res; });
+    if(!pwd2){ toast('⚠️ Acceso cancelado'); return false; }
+    const hashed2 = await hashPwd(pwd2);
+    if(hashed2 !== existing.pwd_hash){
+      document.getElementById('pwd-modal-overlay').style.display = 'none';
+      toast('❌ Contraseña incorrecta');
+      return false;
+    }
+  }
+  return true;
 }
 
 async function saveQuiniela(){
@@ -3427,5 +3478,26 @@ async function init(){
 }
 init();
 </script>
+
+<!-- ═══════════════ MODAL CONTRASEÑA ═══════════════ -->
+<div id="pwd-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:3000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);">
+  <div style="background:var(--s2);border:1px solid var(--brd2);border-radius:4px;padding:28px 24px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.6);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:#fff;margin-bottom:4px;">🔑 Acceso Personal</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--muted);letter-spacing:.5px;margin-bottom:18px;">Ingresa tu contraseña para acceder a tu quiniela</div>
+    <div id="pwd-modal-email-display" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--green);letter-spacing:1px;margin-bottom:12px;"></div>
+    <div style="position:relative;margin-bottom:6px;">
+      <input id="pwd-modal-input" type="password" placeholder="Tu contraseña"
+        style="width:100%;background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:10px 40px 10px 12px;color:var(--txt);font-family:'Barlow Condensed',sans-serif;font-size:15px;outline:none;"
+        onkeydown="if(event.key==='Enter')pwdModalConfirm()"
+        oninput="document.getElementById('pwd-modal-err').textContent=''"/>
+      <button onclick="pwdModalToggle()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;" id="pwd-modal-eye">👁</button>
+    </div>
+    <div id="pwd-modal-err" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--red);letter-spacing:.5px;min-height:16px;margin-bottom:12px;"></div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="pwdModalCancel()" style="flex:1;background:var(--s4);border:1px solid var(--brd);border-radius:var(--r);padding:10px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;">Cancelar</button>
+      <button onclick="pwdModalConfirm()" style="flex:2;background:linear-gradient(135deg,var(--gold),var(--gold3));border:none;border-radius:var(--r);padding:10px;color:#000;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;cursor:pointer;">Entrar →</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
