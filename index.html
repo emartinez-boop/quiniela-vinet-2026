@@ -143,7 +143,6 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
 .rank-wrap{overflow-x:auto;}
 .rank-tbl{width:100%;border-collapse:collapse;}
 .rank-tbl th{font-family:'Barlow Condensed',sans-serif;font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--dim);padding:9px 10px;text-align:left;border-bottom:1px solid var(--brd);background:var(--s2);position:sticky;top:47px;z-index:10;}
-.panel{padding-top:16px;}
 .rank-tbl th.c{text-align:center;}
 .rank-tbl td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.03);font-size:12px;transition:background .12s;}
 .rank-tbl td.c{text-align:center;}
@@ -568,6 +567,16 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
   .fab-wa{bottom:72px;right:14px;padding:11px 16px 11px 13px;font-size:11px;gap:7px;}
   .fab-wa svg{width:16px;height:16px;}
 }
+/* ── ONBOARDING BUBBLE ── */
+#onb-bubble{position:fixed;z-index:500;pointer-events:none;transition:opacity .4s ease;}
+#onb-bubble.hidden{opacity:0;pointer-events:none!important;}
+.onb-arrow{width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:10px solid #4ade80;margin:0 18px;}
+.onb-card{background:linear-gradient(135deg,#0d2d0d,#1a3a1a);border:1.5px solid #4ade80;border-radius:8px;padding:12px 16px 10px;box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 0 1px rgba(74,222,128,.12);max-width:220px;pointer-events:all;cursor:pointer;animation:onbFloat 2.5s ease-in-out infinite;}
+.onb-card:hover{border-color:#6ee7b7;}
+.onb-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:#4ade80;margin-bottom:4px;}
+.onb-msg{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:rgba(255,255,255,.82);letter-spacing:.3px;line-height:1.45;}
+.onb-cta{display:block;margin-top:8px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:2px;color:#4ade80;text-transform:uppercase;border-top:1px solid rgba(74,222,128,.2);padding-top:6px;text-align:center;}
+@keyframes onbFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
 </style>
 </head>
 <body>
@@ -758,16 +767,16 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
 <!-- ═══════════════ PANEL: LISTA ═══════════════ -->
 <div id="panel-lista" class="panel">
   <div class="sec-ttl" id="lista-title">👥 Colaboradores Registrados</div>
-  <div style="overflow-x:auto;overflow-y:visible;">
-    <table class="rank-tbl" style="border-collapse:separate;border-spacing:0;">
+  <div style="overflow-x:auto;overflow-y:auto;max-height:calc(100vh - 160px);">
+    <table class="rank-tbl" style="border-collapse:collapse;">
       <thead><tr>
-        <th class="c" style="width:36px;top:47px;z-index:10;">#</th>
-        <th style="top:47px;z-index:10;">Nombre</th>
-        <th style="top:47px;z-index:10;">Campeón 🏆</th>
-        <th style="top:47px;z-index:10;">Subcampeón 🥈</th>
-        <th class="hide-sm" style="top:47px;z-index:10;">3er Lugar 🥉</th>
-        <th class="hide-sm" style="top:47px;z-index:10;">Goleador ⚽</th>
-        <th class="c" style="top:47px;z-index:10;">Estado</th>
+        <th class="c" style="width:36px;position:sticky;top:0;z-index:10;background:var(--s2);">#</th>
+        <th style="position:sticky;top:0;z-index:10;background:var(--s2);">Nombre</th>
+        <th style="position:sticky;top:0;z-index:10;background:var(--s2);">Campeón 🏆</th>
+        <th style="position:sticky;top:0;z-index:10;background:var(--s2);">Subcampeón 🥈</th>
+        <th class="hide-sm" style="position:sticky;top:0;z-index:10;background:var(--s2);">3er Lugar 🥉</th>
+        <th class="hide-sm" style="position:sticky;top:0;z-index:10;background:var(--s2);">Goleador ⚽</th>
+        <th class="c" style="position:sticky;top:0;z-index:10;background:var(--s2);">Estado</th>
       </tr></thead>
       <tbody id="lista-body">
         <tr><td colspan="7"><div class="loader"><div class="spin"></div>Cargando…</div></td></tr>
@@ -2909,6 +2918,8 @@ function setVerifiedEmail(email){
   localStorage.setItem('wc26-current-email', email);
   // Mostrar/ocultar botones de admin
   checkAdminUI();
+  // Mostrar burbuja de onboarding si es primera vez
+  showOnbBubble();
   // Show verified state
   document.getElementById('email-verified-bar').style.display='flex';
   document.getElementById('verified-email-display').textContent=email;
@@ -3337,11 +3348,46 @@ function showTab(id,btn){
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   document.getElementById(`panel-${id}`).classList.add('on');
   btn.classList.add('on');
+  // Si el usuario hace click en Mi Quiniela, descartar la burbuja
+  if(id==='quiniela') dismissOnbBubble(false);
 }
 
 // ─────────────────────────────────────────────
-// TOAST
+// ONBOARDING BUBBLE — aparece primera vez
 // ─────────────────────────────────────────────
+const ONB_KEY = 'vq26-onb-seen';
+
+function positionOnbBubble(){
+  const tab = document.querySelector('.tab[onclick*="quiniela"]');
+  const bubble = document.getElementById('onb-bubble');
+  if(!tab || !bubble) return;
+  const rect = tab.getBoundingClientRect();
+  bubble.style.left = (rect.left + rect.width/2 - 28) + 'px';
+  bubble.style.top  = (rect.bottom + 6) + 'px';
+}
+
+function showOnbBubble(){
+  if(localStorage.getItem(ONB_KEY)) return; // ya lo vio
+  const bubble = document.getElementById('onb-bubble');
+  if(!bubble) return;
+  positionOnbBubble();
+  // Pequeño delay para que el layout termine de cargar
+  setTimeout(()=>{ bubble.classList.remove('hidden'); }, 800);
+}
+
+function dismissOnbBubble(goToTab){
+  localStorage.setItem(ONB_KEY, '1');
+  const bubble = document.getElementById('onb-bubble');
+  if(bubble){ bubble.classList.add('hidden'); }
+  // Si hizo click en la burbuja, ir directo al tab Mi Quiniela
+  if(goToTab){
+    const tabBtn = document.querySelector('.tab[onclick*="quiniela"]');
+    if(tabBtn) tabBtn.click();
+  }
+}
+
+// Reposicionar en resize
+window.addEventListener('resize', positionOnbBubble);
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
@@ -3427,6 +3473,7 @@ async function init(){
   if(savedEmail && isVinetEmail(savedEmail)){
     currentEmail = savedEmail;
     checkAdminUI();
+    showOnbBubble();
   }
 
   // Check if already authenticated
@@ -3604,6 +3651,15 @@ init();
       <button onclick="pwdModalCancel()" style="flex:1;background:var(--s4);border:1px solid var(--brd);border-radius:var(--r);padding:10px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;">Cancelar</button>
       <button onclick="pwdModalConfirm()" style="flex:2;background:linear-gradient(135deg,var(--gold),var(--gold3));border:none;border-radius:var(--r);padding:10px;color:#000;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;cursor:pointer;">Entrar →</button>
     </div>
+  </div>
+</div>
+<!-- ── ONBOARDING BUBBLE ── -->
+<div id="onb-bubble" class="hidden">
+  <div class="onb-arrow"></div>
+  <div class="onb-card" onclick="dismissOnbBubble(true)">
+    <div class="onb-title">👋 ¡Comenzá aquí!</div>
+    <div class="onb-msg">Ingresá a <strong style="color:#fff">✏️ Mi Quiniela</strong> para registrar tu campeón, goleador y predicciones.</div>
+    <span class="onb-cta">Ir a Mi Quiniela →</span>
   </div>
 </div>
 </body>
