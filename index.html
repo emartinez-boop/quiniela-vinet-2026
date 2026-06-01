@@ -3570,9 +3570,6 @@ function clearTestData(){
 // INIT
 // ─────────────────────────────────────────────
 async function init(){
-  // Reset onboarding banner para todos (versión nueva)
-  localStorage.removeItem('vq26-onb-seen');
-  localStorage.removeItem(ONB_KEY);
   // Sync bin IDs from URL hash (shared link)
   syncBinIdsFromUrl();
 
