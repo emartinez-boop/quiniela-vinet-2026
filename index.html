@@ -568,10 +568,10 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
   .fab-wa svg{width:16px;height:16px;}
 }
 /* ── ONBOARDING BUBBLE ── */
-#onb-bubble{position:fixed;z-index:500;pointer-events:none;transition:opacity .4s ease;}
-#onb-bubble.hidden{opacity:0;pointer-events:none!important;}
+#onb-bubble{position:fixed;z-index:9999;pointer-events:none;transition:opacity .4s ease;opacity:1;}
+#onb-bubble.hidden{opacity:0;pointer-events:none!important;visibility:hidden;}
 .onb-arrow{width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:10px solid #4ade80;margin:0 18px;}
-.onb-card{background:linear-gradient(135deg,#0d2d0d,#1a3a1a);border:1.5px solid #4ade80;border-radius:8px;padding:12px 16px 10px;box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 0 1px rgba(74,222,128,.12);max-width:220px;pointer-events:all;cursor:pointer;animation:onbFloat 2.5s ease-in-out infinite;}
+.onb-card{background:linear-gradient(135deg,#0d2d0d,#1a3a1a);border:1.5px solid #4ade80;border-radius:8px;padding:12px 16px 10px;box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 0 1px rgba(74,222,128,.12);max-width:220px;pointer-events:all !important;cursor:pointer;animation:onbFloat 2.5s ease-in-out infinite;}
 .onb-card:hover{border-color:#6ee7b7;}
 .onb-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:#4ade80;margin-bottom:4px;}
 .onb-msg{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:rgba(255,255,255,.82);letter-spacing:.3px;line-height:1.45;}
@@ -723,9 +723,9 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
   <button class="tab"     onclick="showTab('partidos',this)">⚽ Partidos</button>
   <button class="tab"     onclick="showTab('grupos',this)">📊 Grupos</button>
   <button class="tab"     onclick="showTab('quiniela',this)">✏️ Mi Quiniela</button>
+  <button class="tab" id="tab-admin" style="display:none;color:#EF4444;" onclick="showTab('admin',this)">🔐 Admin</button>
 </nav>
 
-<!-- ═══════════════ PANEL: RANKING ═══════════════ -->
 <div id="panel-ranking" class="panel on">
 
   <!-- PODIUM -->
@@ -747,17 +747,17 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
   <div class="fbar">
     <input class="search-inp" type="text" placeholder="Buscar colaborador…" oninput="searchR(this.value)" style="margin-left:0;width:100%;max-width:260px;"/>
   </div>
-  <div class="rank-wrap">
+  <div style="overflow-x:auto;overflow-y:auto;max-height:calc(100vh - 160px);">
     <table class="rank-tbl">
       <thead><tr>
-        <th class="c" style="width:36px">#</th>
-        <th>Colaborador</th>
-        <th class="c">Pts</th>
-        <th class="c hide-sm">Exact.</th>
-        <th class="c hide-sm">Result.</th>
-        <th class="hide-sm">Campeón</th>
-        <th class="hide-sm">Sub</th>
-        <th class="c">Estado</th>
+        <th class="c" style="width:36px;position:sticky;top:0;z-index:10;background:var(--s2);">#</th>
+        <th style="position:sticky;top:0;z-index:10;background:var(--s2);">Colaborador</th>
+        <th class="c" style="position:sticky;top:0;z-index:10;background:var(--s2);">Pts</th>
+        <th class="c hide-sm" style="position:sticky;top:0;z-index:10;background:var(--s2);">Exact.</th>
+        <th class="c hide-sm" style="position:sticky;top:0;z-index:10;background:var(--s2);">Result.</th>
+        <th class="hide-sm" style="position:sticky;top:0;z-index:10;background:var(--s2);">Campeón</th>
+        <th class="hide-sm" style="position:sticky;top:0;z-index:10;background:var(--s2);">Sub</th>
+        <th class="c" style="position:sticky;top:0;z-index:10;background:var(--s2);">Estado</th>
       </tr></thead>
       <tbody id="rank-body"><tr><td colspan="8"><div class="loader"><div class="spin"></div>Cargando…</div></td></tr></tbody>
     </table>
@@ -935,6 +935,22 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
         <div class="pk-item">Tercer lugar <span class="pk-val">+3</span></div>
         <div class="pk-item">Goleador correcto <span class="pk-val">+4</span></div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PANEL: ADMIN ═══════════════ -->
+<div id="panel-admin" class="panel">
+  <div class="sec-ttl">🔐 Panel de Administración</div>
+  <div style="background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:24px;max-width:480px;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);margin-bottom:16px;letter-spacing:.5px;">
+      Descargá un respaldo completo de todos los registros con picks, emails y puntos.
+    </div>
+    <button onclick="exportAdminCSV()" style="background:linear-gradient(135deg,#166534,#15803d);border:none;border-radius:var(--r);padding:12px 28px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;width:100%;">
+      📥 Exportar CSV de Participantes
+    </button>
+    <div style="margin-top:12px;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--dim);letter-spacing:.5px;">
+      El archivo incluye: nombre, email, campeón, subcampeón, 3er lugar, goleador, goles, estado y puntos.
     </div>
   </div>
 </div>
@@ -2815,12 +2831,39 @@ let currentEmail = null; // verified email for this session
 // ─────────────────────────────────────────────
 const ADMIN_EMAIL = 'emartinez@vinet.co.cr';
 
+// ─────────────────────────────────────────────
+// ADMIN — solo emartinez@vinet.co.cr
+// ─────────────────────────────────────────────
 function checkAdminUI(){
   const isAdmin = currentEmail === ADMIN_EMAIL;
-  const gateClearBtn  = document.getElementById('gate-clear-btn');
-  const clearDataBar  = document.getElementById('clear-data-bar');
-  if(gateClearBtn)  gateClearBtn.style.display  = isAdmin ? 'block' : 'none';
-  if(clearDataBar)  clearDataBar.style.display   = isAdmin ? 'flex'  : 'none';
+  const gateClearBtn = document.getElementById('gate-clear-btn');
+  const clearDataBar = document.getElementById('clear-data-bar');
+  const tabAdmin     = document.getElementById('tab-admin');
+  if(gateClearBtn) gateClearBtn.style.display = isAdmin ? 'block' : 'none';
+  if(clearDataBar) clearDataBar.style.display  = isAdmin ? 'flex'  : 'none';
+  if(tabAdmin)     tabAdmin.style.display      = isAdmin ? 'flex'  : 'none';
+}
+
+function exportAdminCSV(){
+  const reg = participants.filter(p=>p.registered);
+  if(!reg.length){ toast('⚠️ Sin participantes para exportar'); return; }
+  const headers = ['#','Nombre','Email','Campeón','Subcampeón','3er Lugar','Goleador','Goles Totales','Estado','Puntos','Exactos','Correctos'];
+  const rows = reg.map((p,i)=>[
+    i+1, p.name, p.email||'',
+    p.champion||'', p.runner||'', p.third||'',
+    p.scorer||'', p.goals||0,
+    p.picksLocked?'Bloqueado':'Pendiente',
+    p.pts||0, p.exact||0, p.correct||0
+  ]);
+  const csv = [headers,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `quiniela-vinet-2026-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('📥 CSV exportado correctamente');
 }
 
 function isVinetEmail(email){
@@ -2863,7 +2906,23 @@ async function submitWmEmail(){
   const email=document.getElementById('wm-email').value.trim().toLowerCase();
   if(!isVinetEmail(email)){ toast('⚠️ Solo correos @vinet.co.cr'); return; }
 
-  const existing = participants.find(x=>x.email===email);
+  // Buscar solo este usuario en Supabase
+  let existing = null;
+  try{
+    const r = await fetch(
+      `${SB_URL}/rest/v1/participants?email=eq.${encodeURIComponent(email)}&select=id,email,pwd_hash,picks_locked`,
+      {headers: SB_HDRS}
+    );
+    if(r.ok){
+      const rows = await r.json();
+      if(rows.length){
+        existing = rows[0];
+        const local = participants.find(x=>x.email===email);
+        if(local) local.pwd_hash = existing.pwd_hash||null;
+      }
+    }
+  }catch(e){ existing = participants.find(x=>x.email===email)||null; }
+
   if(existing && existing.pwd_hash){
     const ok = await verifyPwdModal(email, existing);
     if(!ok) return;
@@ -2903,7 +2962,35 @@ async function verifyEmail(){
   const email=document.getElementById('gate-email').value.trim().toLowerCase();
   if(!isVinetEmail(email)){toast('⚠️ Solo correos @vinet.co.cr');return;}
 
-  const existing = participants.find(x=>x.email===email);
+  // Mostrar loading en el botón
+  const btn = document.getElementById('email-verify-btn');
+  const originalText = btn.textContent;
+  btn.textContent = '⏳ Verificando...';
+  btn.disabled = true;
+
+  // Buscar solo este usuario en Supabase (sin recargar todo el array)
+  let existing = null;
+  try{
+    const r = await fetch(
+      `${SB_URL}/rest/v1/participants?email=eq.${encodeURIComponent(email)}&select=id,email,pwd_hash,picks_locked`,
+      {headers: SB_HDRS}
+    );
+    if(r.ok){
+      const rows = await r.json();
+      if(rows.length){
+        // Actualizar pwd_hash en el array local si ya existe
+        existing = rows[0];
+        const local = participants.find(x=>x.email===email);
+        if(local) local.pwd_hash = existing.pwd_hash||null;
+        else participants.push({...existing, picksLocked: existing.picks_locked});
+      }
+    }
+  }catch(e){ existing = participants.find(x=>x.email===email)||null; }
+
+  // Restaurar botón
+  btn.textContent = originalText;
+  btn.disabled = false;
+
   if(existing && existing.pwd_hash){
     const ok = await verifyPwdModal(email, existing);
     if(!ok) return;
@@ -2914,12 +3001,12 @@ async function verifyEmail(){
 
 function setVerifiedEmail(email){
   currentEmail=email;
-  // Persist email so predictions show after reload
   localStorage.setItem('wc26-current-email', email);
-  // Mostrar/ocultar botones de admin
   checkAdminUI();
-  // Mostrar burbuja de onboarding si es primera vez
-  showOnbBubble();
+  // Mostrar burbuja solo si no tiene picks bloqueados (aún no registrado)
+  const p = participants.find(x=>x.email===email);
+  if(!p || !p.picksLocked) showOnbBubble();
+  else dismissOnbBubble(false); // ya registrado — no mostrar
   // Show verified state
   document.getElementById('email-verified-bar').style.display='flex';
   document.getElementById('verified-email-display').textContent=email;
@@ -3143,8 +3230,13 @@ function showLockedPicks(p){
 }
 
 // Called from setVerifiedEmail — check if this user already has locked picks
-function checkAndShowLockedPicks(email){
-  const p = participants.find(x=>x.email===email);
+async function checkAndShowLockedPicks(email){
+  let p = participants.find(x=>x.email===email);
+  // Si no lo encuentra localmente, recargar desde Supabase
+  if(!p){
+    await loadParts();
+    p = participants.find(x=>x.email===email);
+  }
   if(p?.picksLocked) showLockedPicks(p);
 }
 
@@ -3357,29 +3449,39 @@ function showTab(id,btn){
 // ─────────────────────────────────────────────
 const ONB_KEY = 'vq26-onb-seen';
 
-function positionOnbBubble(){
-  const tab = document.querySelector('.tab[onclick*="quiniela"]');
-  const bubble = document.getElementById('onb-bubble');
-  if(!tab || !bubble) return;
-  const rect = tab.getBoundingClientRect();
-  bubble.style.left = (rect.left + rect.width/2 - 28) + 'px';
-  bubble.style.top  = (rect.bottom + 6) + 'px';
-}
+function positionOnbBubble(){ /* banner fijo — no necesita posicionamiento */ }
 
 function showOnbBubble(){
-  if(localStorage.getItem(ONB_KEY)) return; // ya lo vio
-  const bubble = document.getElementById('onb-bubble');
-  if(!bubble) return;
-  positionOnbBubble();
-  // Pequeño delay para que el layout termine de cargar
-  setTimeout(()=>{ bubble.classList.remove('hidden'); }, 800);
+  // Limpiar keys viejos por si quedaron de versiones anteriores
+  ['vq26-onb-seen','wc26-onb-seen'].forEach(k=>{
+    // Solo borrar si el participante AÚN no tiene picks guardados
+    const p = currentEmail ? participants.find(x=>x.email===currentEmail) : null;
+    if(p && p.picksLocked) return; // ya registrado — no mostrar
+  });
+
+  const p = currentEmail ? participants.find(x=>x.email===currentEmail) : null;
+  // No mostrar si ya tiene picks bloqueados
+  if(p && p.picksLocked) return;
+  // No mostrar si ya la vio
+  if(localStorage.getItem(ONB_KEY)) return;
+
+  setTimeout(()=>{
+    const bubble = document.getElementById('onb-bubble');
+    if(!bubble) return;
+    bubble.style.display = 'block';
+    bubble.classList.remove('hidden');
+    bubble.style.opacity = '1';
+    bubble.style.visibility = 'visible';
+  }, 1200);
 }
 
 function dismissOnbBubble(goToTab){
   localStorage.setItem(ONB_KEY, '1');
   const bubble = document.getElementById('onb-bubble');
-  if(bubble){ bubble.classList.add('hidden'); }
-  // Si hizo click en la burbuja, ir directo al tab Mi Quiniela
+  if(bubble){
+    bubble.classList.add('hidden');
+    bubble.style.display = 'none';
+  }
   if(goToTab){
     const tabBtn = document.querySelector('.tab[onclick*="quiniela"]');
     if(tabBtn) tabBtn.click();
@@ -3388,6 +3490,9 @@ function dismissOnbBubble(goToTab){
 
 // Reposicionar en resize
 window.addEventListener('resize', positionOnbBubble);
+// Reposicionar en resize
+window.addEventListener('resize', positionOnbBubble);
+
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
@@ -3465,6 +3570,9 @@ function clearTestData(){
 // INIT
 // ─────────────────────────────────────────────
 async function init(){
+  // Reset onboarding banner para todos (versión nueva)
+  localStorage.removeItem('vq26-onb-seen');
+  localStorage.removeItem(ONB_KEY);
   // Sync bin IDs from URL hash (shared link)
   syncBinIdsFromUrl();
 
@@ -3473,23 +3581,20 @@ async function init(){
   if(savedEmail && isVinetEmail(savedEmail)){
     currentEmail = savedEmail;
     checkAdminUI();
-    showOnbBubble();
   }
 
   // Check if already authenticated
   const authed = await checkStoredAuth();
   if(authed){
     unlockApp();
-    // Load user predictions after auth
     setTimeout(async()=>{
       if(currentEmail){
         await loadMyPreds();
         renderMatchPreds();
-        renderMatches(); // re-render with predictions visible
+        renderMatches();
       }
     }, 600);
   } else {
-    // Show gate, focus password field
     setTimeout(()=>document.getElementById('gate-pwd')?.focus(), 200);
   }
 
@@ -3653,13 +3758,20 @@ init();
     </div>
   </div>
 </div>
-<!-- ── ONBOARDING BUBBLE ── -->
-<div id="onb-bubble" class="hidden">
-  <div class="onb-arrow"></div>
-  <div class="onb-card" onclick="dismissOnbBubble(true)">
-    <div class="onb-title">👋 ¡Comenzá aquí!</div>
-    <div class="onb-msg">Ingresá a <strong style="color:#fff">✏️ Mi Quiniela</strong> para registrar tu campeón, goleador y predicciones.</div>
-    <span class="onb-cta">Ir a Mi Quiniela →</span>
+<!-- ── ONBOARDING BANNER ── -->
+<div id="onb-bubble" class="hidden" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9999;pointer-events:all;max-width:320px;width:calc(100% - 32px);">
+  <div style="background:linear-gradient(135deg,#0d2d0d,#1a3a1a);border:2px solid #4ade80;border-radius:10px;padding:14px 18px 12px;box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 0 1px rgba(74,222,128,.15);cursor:pointer;animation:onbFloat 2.5s ease-in-out infinite;" onclick="dismissOnbBubble(true)">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <span style="font-size:22px;">👋</span>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#4ade80;">¡Comenzá aquí!</div>
+      <button onclick="event.stopPropagation();dismissOnbBubble(false)" style="margin-left:auto;background:none;border:none;color:rgba(255,255,255,.4);font-size:18px;cursor:pointer;line-height:1;">×</button>
+    </div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:rgba(255,255,255,.82);letter-spacing:.3px;line-height:1.45;">
+      Andá a la pestaña <strong style="color:#fff;">✏️ Mi Quiniela</strong> para registrar tu campeón, goleador y predicciones.
+    </div>
+    <div style="margin-top:10px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;color:#4ade80;text-transform:uppercase;border-top:1px solid rgba(74,222,128,.2);padding-top:8px;text-align:center;">
+      Ir a Mi Quiniela →
+    </div>
   </div>
 </div>
 </body>
