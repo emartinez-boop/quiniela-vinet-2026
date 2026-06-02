@@ -695,7 +695,7 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
       <div class="cd-sep">:</div>
       <div class="cd-unit"><span class="cd-num" id="cd-s">--</span><span class="cd-unit-label">Segundos</span></div>
     </div>
-    <div class="cd-msg" id="cd-msg">Registra antes del<br><strong>Miér 10 Jun · Medianoche</strong></div>
+    <div class="cd-msg" id="cd-msg">Registra antes del<br><strong>Miér 10 Jun · 11:59 PM (CR)</strong></div>
   </div>
 
   <div class="stats-bar">
@@ -841,7 +841,7 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
       <div class="dn-icon">⏰</div>
       <div class="dn-text">
         <div class="dn-title">Fecha límite de registro</div>
-        <div class="dn-sub">Miércoles 10 de junio · Medianoche (CDMX)</div>
+        <div class="dn-sub">Miércoles 10 de junio · 11:59 PM (Hora Costa Rica)</div>
       </div>
       <div class="dn-timer" id="reg-timer">--:--:--</div>
     </div>
@@ -1004,7 +1004,7 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
         <div class="wm-email-hint" id="wm-hint">Solo correos @vinet.co.cr</div>
       </div>
 
-      <div class="wm-deadline">⏰ Cierre de registro: <strong>Miér 10 Jun · Medianoche</strong></div>
+      <div class="wm-deadline">⏰ Cierre de registro: <strong>Miér 10 Jun · 11:59 PM (CR)</strong></div>
       <div class="wm-already"><button onclick="skipWelcome()">Ya registré mi quiniela, solo quiero ver el ranking</button></div>
     </div>
   </div>
@@ -1511,7 +1511,7 @@ const PRIZES = [
   {pos:3,icon:'🎀',title:'Tercer Lugar', color:'bronze',desc:'Premio sorpresa'},
 ];
 
-// DEADLINE: 10 Jun 2026 23:59:59 CDMX (UTC-6)
+// DEADLINE: 10 Jun 2026 23:59:59 hora Costa Rica (UTC-6)
 const DEADLINE = new Date('2026-06-10T23:59:59-06:00');
 
 // ─────────────────────────────────────────────
@@ -3361,7 +3361,7 @@ function buildShareMessage(){
   } else if(started && reg.length > 0){
     body += `📝 ${reg.length} colaborador${reg.length>1?'es registrados':' registrado'}\n\n`;
   } else {
-    body += `📝 *Registro abierto hasta el 10 Jun · Medianoche*\n`;
+    body += `📝 *Registro abierto hasta el 10 Jun · 11:59 PM (CR)*\n`;
     body += `✅ ${reg.length} colaboradores registrados\n\n`;
   }
 
@@ -3651,7 +3651,7 @@ const PHASE_LOCKS = {
   r16:    { label:'Octavos de Final',            lockUTC: new Date(Date.UTC(2026,6,4,22,0)),   icon:'⚡', color:'#3B82F6' },
   qf:     { label:'Cuartos de Final',            lockUTC: new Date(Date.UTC(2026,6,9,21,0)),   icon:'🏅', color:'#8B5CF6' },
   sf:     { label:'Semifinales',                 lockUTC: new Date(Date.UTC(2026,6,14,20,0)),  icon:'🌟', color:'#F59E0B' },
-  final:  { label:'Tercer Puesto y Gran Final',  lockUTC: new Date(Date.UTC(2026,6,18,21,0)),  icon:'🏆', color:'#EF4444' },
+  final:  { label:'Final y 3er Puesto (Dom 19 Jul)',  lockUTC: new Date(Date.UTC(2026,6,18,21,0)),  icon:'🏆', color:'#EF4444' },
 };
 
 function isPhraseLocked(fase){
