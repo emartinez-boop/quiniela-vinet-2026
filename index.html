@@ -964,8 +964,8 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
       <div class="wm-sub">México · Canadá · Estados Unidos</div>
       <div class="wm-prizes">
         <div class="wm-prize-tag">💻 1° MacBook Neo de 13 pulgadas</div>
-        <div class="wm-prize-tag">🎀 2° Premio sorpresa</div>
-        <div class="wm-prize-tag">🎀 3° Premio sorpresa</div>
+        <div class="wm-prize-tag">🔊 2° Altavoz JBL Authentics 300</div>
+        <div class="wm-prize-tag">🎧 3° Audífonos Apple Beats Studio Pro</div>
       </div>
     </div>
     <div class="wm-body">
@@ -1507,8 +1507,8 @@ let searchRQ='';
 
 const PRIZES = [
   {pos:1,icon:'💻',title:'Primer Lugar',color:'gold',  desc:'MacBook Neo de 13 pulgadas'},
-  {pos:2,icon:'🎀',title:'Segundo Lugar',color:'silver',desc:'Premio sorpresa'},
-  {pos:3,icon:'🎀',title:'Tercer Lugar', color:'bronze',desc:'Premio sorpresa'},
+  {pos:2,icon:'🔊',title:'Segundo Lugar',color:'silver',desc:'Altavoz JBL Authentics 300'},
+  {pos:3,icon:'🎧',title:'Tercer Lugar',color:'bronze',desc:'Audífonos Apple Beats Studio Pro'},
 ];
 
 // DEADLINE: 10 Jun 2026 23:59:59 hora Costa Rica (UTC-6)
@@ -2226,7 +2226,7 @@ function renderPodium(){
         <div class="podium-pts">${top3[1].pts}</div>
         <div class="podium-pts-label">puntos</div>
         <div class="podium-champ">${F[top3[1].champion]||'🏆'} ${top3[1].champion}</div>
-        <div style="margin-top:8px;font-size:11px;color:var(--silver);font-family:'Barlow Condensed',sans-serif;">🎀 Premio sorpresa</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--silver);font-family:'Barlow Condensed',sans-serif;">🔊 Altavoz JBL Authentics 300</div>
       </div></div>`:'<div></div>'}
       ${top3[0]?`<div class="podium-card pc-gold"><div class="podium-card-inner">
         <span class="podium-medal">🥇</span>
@@ -2244,7 +2244,7 @@ function renderPodium(){
         <div class="podium-pts">${top3[2].pts}</div>
         <div class="podium-pts-label">puntos</div>
         <div class="podium-champ">${F[top3[2].champion]||'🏆'} ${top3[2].champion}</div>
-        <div style="margin-top:8px;font-size:11px;color:var(--bronze2);font-family:'Barlow Condensed',sans-serif;">🎀 Premio sorpresa</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--bronze2);font-family:'Barlow Condensed',sans-serif;">🎧 Audífonos Apple Beats Studio Pro</div>
       </div></div>`:'<div></div>'}`;
   }
 
@@ -3367,8 +3367,8 @@ function buildShareMessage(){
 
   body += `🏆 *PREMIOS VINET*\n`;
   body += `💻 1° MacBook Neo de 13 pulgadas\n`;
-  body += `🎀 2° Premio sorpresa\n`;
-  body += `🎀 3° Premio sorpresa\n\n`;
+  body += `🔊 2° Altavoz JBL Authentics 300\n`;
+  body += `🎧 3° Audífonos Apple Beats Studio Pro\n\n`;
   body += `━━━━━━━━━━━━━━━━━━\n`;
   body += `👇 *Registra tu quiniela aquí:*\n`;
   body += `${getShareUrl()}`;
