@@ -723,6 +723,7 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
   <button class="tab"     onclick="showTab('partidos',this)">⚽ Partidos</button>
   <button class="tab"     onclick="showTab('grupos',this)">📊 Grupos</button>
   <button class="tab"     onclick="showTab('quiniela',this)">✏️ Mi Quiniela</button>
+  <button class="tab"     onclick="showTab('ayuda',this)">❓ Ayuda</button>
   <button class="tab" id="tab-admin" style="display:none;color:#EF4444;" onclick="showTab('admin',this)">🔐 Admin</button>
 </nav>
 
@@ -888,7 +889,7 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
                 <input class="fi" type="password" id="r-pwd" placeholder="Mín. 4 caracteres" style="flex:1;padding-right:36px;" autocomplete="new-password"/>
                 <button type="button" onclick="toggleRegPwd()" style="position:absolute;right:8px;background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted);" id="r-pwd-eye">👁</button>
               </div>
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--dim);letter-spacing:.5px;margin-top:3px;">Usarás esta contraseña para acceder a tu quiniela</div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--dim);letter-spacing:.5px;margin-top:3px;">⚠️ Guardá bien tu contraseña — por seguridad no se puede recuperar</div>
             </div>
             <div class="fg"><label class="fl">🔑 Confirmar Contraseña</label>
               <input class="fi" type="password" id="r-pwd2" placeholder="Repite tu contraseña" autocomplete="new-password"/>
@@ -955,7 +956,165 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
   </div>
 </div>
 
-<!-- ═══════════════ WELCOME MODAL ═══════════════ -->
+<!-- ═══════════════ PANEL: AYUDA ═══════════════ -->
+<div id="panel-ayuda" class="panel">
+  <div class="sec-ttl">❓ Preguntas Frecuentes</div>
+  <style>
+    .faq-section{margin-bottom:24px;}
+    .faq-section-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--brd);}
+    .faq-item{border:1px solid var(--brd);border-radius:var(--r);margin-bottom:6px;overflow:hidden;}
+    .faq-q{width:100%;text-align:left;background:var(--s4);border:none;padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+    .faq-q-text{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--txt);letter-spacing:.3px;line-height:1.3;}
+    .faq-icon{font-size:14px;color:var(--dim);transition:transform .25s;flex-shrink:0;}
+    .faq-item.open .faq-icon{transform:rotate(45deg);}
+    .faq-a{display:none;padding:10px 16px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;color:rgba(255,255,255,.75);line-height:1.55;letter-spacing:.2px;background:var(--s2);border-top:1px solid var(--brd);}
+    .faq-item.open .faq-a{display:block;}
+    .faq-a strong{color:#fff;}
+    .faq-a ul{margin:6px 0 0 16px;padding:0;}
+    .faq-a ul li{margin-bottom:3px;}
+  </style>
+
+  <!-- ACCESO Y REGISTRO -->
+  <div class="faq-section">
+    <div class="faq-section-title">🔐 Acceso y Registro</div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Cómo entro a la quiniela?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Entrá a la app, ingresá la contraseña general <strong>Vinet2026</strong> y andá a la pestaña <strong>✏️ Mi Quiniela</strong>. Un banner verde te guiará al siguiente paso.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Qué correo debo usar?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Únicamente tu correo corporativo <strong>@vinet.co.cr</strong>. No se aceptan correos personales ni de otros dominios. El sistema los bloquea automáticamente.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Puedo registrarme desde el celular?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Sí, la app está optimizada para mobile y desktop. Podés usarla desde cualquier dispositivo.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Puedo registrarme más de una vez?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">No. Solo se acepta <strong>un registro por correo electrónico</strong>.</div></div>
+  </div>
+
+  <!-- CONTRASEÑA PERSONAL -->
+  <div class="faq-section">
+    <div class="faq-section-title">🔑 Contraseña Personal</div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Para qué sirve la contraseña personal?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Protege tu quiniela. Solo vos podés ver tus picks. La vas a necesitar cada vez que entrés a la plataforma.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Es la misma contraseña que Vinet2026?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a"><strong>No.</strong> <strong>Vinet2026</strong> es la contraseña general para entrar a la app — igual para todos. La contraseña personal la creás vos al registrarte y es única tuya.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Qué hago si olvidé mi contraseña personal?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">⚠️ <strong>Tip importante:</strong> Guardá bien tu contraseña. Por seguridad, no se puede recuperar. Si la perdés, también perdés el acceso a tu cuenta.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Cuántos caracteres mínimo debe tener?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Mínimo <strong>4 caracteres</strong>.</div></div>
+  </div>
+
+  <!-- PICKS Y PREDICCIONES -->
+  <div class="faq-section">
+    <div class="faq-section-title">⚽ Picks y Predicciones</div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Cuál es la diferencia entre picks y predicciones?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Los <strong>picks</strong> son tus pronósticos generales del torneo (campeón, subcampeón, 3er lugar, goleador) — se registran en Mi Quiniela. Las <strong>predicciones por partido</strong> son los marcadores de cada partido individual — se ingresan en la pestaña ⚽ Partidos.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Puedo cambiar mis picks después de guardarlos?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a"><strong>No.</strong> Una vez que guardás tus picks quedan <strong>bloqueados permanentemente</strong>. Elegí con cuidado antes de guardar.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Puedo cambiar mis predicciones de partidos?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Sí, mientras el partido no haya iniciado y la fase esté abierta. Una vez que arranca la fase, los inputs se bloquean automáticamente.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Qué pasa si no ingreso predicciones de partidos?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">No sumás los puntos de esa ronda. Las predicciones por partido son la principal fuente de puntos durante el torneo. <strong>¡No las dejés en blanco!</strong></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Un empate también da puntos?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Sí. Si predijiste empate y el partido terminó empate (aunque el marcador sea diferente) sumás <strong>+1</strong>. Si acertás el marcador exacto del empate sumás <strong>+3</strong>.</div></div>
+  </div>
+
+  <!-- PUNTOS Y RANKING -->
+  <div class="faq-section">
+    <div class="faq-section-title">📊 Puntos y Ranking</div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Cómo se calculan los puntos?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a"><ul>
+      <li>Resultado exacto del partido → <strong>+3</strong></li>
+      <li>Ganador o empate correcto → <strong>+1</strong></li>
+      <li>Campeón correcto → <strong>+10</strong></li>
+      <li>Subcampeón correcto → <strong>+5</strong></li>
+      <li>3er lugar correcto → <strong>+3</strong></li>
+      <li>Goleador correcto → <strong>+4</strong></li>
+    </ul></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Cuándo se actualizan los puntos?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Automáticamente después de cada partido vía API oficial. El ranking se refresca en tiempo real.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Qué pasa si dos personas tienen el mismo puntaje?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">El desempate se aplica en este orden:<ul>
+      <li>1° Mayor cantidad de resultados exactos</li>
+      <li>2° Mayor cantidad de resultados correctos</li>
+      <li>3° Si persiste el empate → se rifa el premio entre los empatados</li>
+    </ul></div></div>
+  </div>
+
+  <!-- FECHAS Y BLOQUEOS -->
+  <div class="faq-section">
+    <div class="faq-section-title">⏰ Fechas y Bloqueos</div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Hasta cuándo puedo registrarme?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a"><strong>Miércoles 10 de junio · 11:59 PM (hora Costa Rica).</strong> Después de esa fecha no se aceptan nuevos registros ni modificaciones de picks.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Hasta cuándo puedo ingresar predicciones por partido?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a"><ul>
+      <li>Grupos → 10 Jun · 11:59 PM</li>
+      <li>Ronda de 32 → 28 Jun · antes del primer partido</li>
+      <li>Octavos → 4 Jul · antes del primer partido</li>
+      <li>Cuartos → 9 Jul · antes del primer partido</li>
+      <li>Semis → 14 Jul · antes del primer partido</li>
+      <li>Final y 3er puesto → 18 Jul · antes del primer partido</li>
+    </ul></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Qué pasa si se me pasó la fecha límite de una fase?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">El sistema bloquea automáticamente los inputs de esa fase. <strong>No hay excepciones ni extensiones.</strong></div></div>
+  </div>
+
+  <!-- PREMIOS Y ELEGIBILIDAD -->
+  <div class="faq-section">
+    <div class="faq-section-title">🏆 Premios y Elegibilidad</div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Cuáles son los premios?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a"><ul>
+      <li>🥇 1er lugar → MacBook Neo de 13 pulgadas</li>
+      <li>🥈 2do lugar → Altavoz JBL Authentics 300</li>
+      <li>🥉 3er lugar → Audífonos Apple Beats Studio Pro</li>
+    </ul></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Los gerentes de área pueden ganar premio?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Pueden participar y aparecer en el ranking, pero <strong>no son sujetos de ganar premio</strong>.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Qué requisito debo cumplir para ganar?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Estar <strong>activo en planillas de Vinet</strong> al cierre del Mundial (19 de julio de 2026).</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Qué pasa si hay una falla técnica grave?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Si ocurre una falla insubsanable por fuerza mayor que comprometa la integridad de los datos, la competencia se resolverá mediante una <strong>rifa equitativa de todos los premios</strong> entre los participantes inscritos.</div></div>
+  </div>
+
+  <!-- PROBLEMAS TÉCNICOS -->
+  <div class="faq-section">
+    <div class="faq-section-title">📱 Problemas Técnicos</div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">La app se queda cargando, ¿qué hago?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Recargá la página con <strong>Ctrl+Shift+R</strong> (Windows) o <strong>Cmd+Shift+R</strong> (Mac) para limpiar el caché.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">No me aparece el formulario de registro en Mi Quiniela.</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Asegurate de haber ingresado tu correo @vinet.co.cr y hacer click en "Entrar". Si ya te registraste antes, el sistema te pedirá tu contraseña personal.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Puedo usar la quiniela desde varios dispositivos?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Sí. Tus datos están guardados en la nube, así que podés entrar desde cualquier dispositivo con tu correo y contraseña personal.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">El ranking no muestra mis puntos.</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Los puntos se calculan automáticamente con los resultados oficiales. Antes de que inicien los partidos todos aparecen en 0 — es normal.</div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Tengo otro problema no listado aquí.</span><span class="faq-icon">+</span></button>
+    <div class="faq-a">Escribile directamente a <strong>emartinez@vinet.co.cr</strong> y te ayudamos a la brevedad.</div></div>
+  </div>
+</div>
 <div class="wm-overlay" id="wm-overlay" style="display:none">
   <div class="wm-box">
     <div class="wm-header">
@@ -3435,6 +3594,14 @@ function shareWA(ctx){ openShareModal(); }
 // ─────────────────────────────────────────────
 // TABS
 // ─────────────────────────────────────────────
+function toggleFaq(btn){
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  // Cerrar todos los abiertos en la misma sección
+  item.closest('.faq-section').querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
 function showTab(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
