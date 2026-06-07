@@ -2539,6 +2539,67 @@ function getFaseFromMatch(m){
   return 'grupos';
 }
 
+// ─────────────────────────────────────────────
+// TABLA DE PREDICCIONES — visible cuando partido terminó
+// Solo se muestra después del resultado oficial
+// ─────────────────────────────────────────────
+function renderAllPreds(matchId, sc){
+  const reg = participants.filter(p=>p.registered && p.preds);
+  const withPred = reg.filter(p=>p.preds[matchId]!=null && p.preds[matchId].h!=null);
+  if(!withPred.length) return '';
+
+  const rows = withPred.map(p=>{
+    const pred = p.preds[matchId];
+    const exact = pred.h===sc.h && pred.a===sc.a;
+    const correct = !exact && getRes(pred.h,pred.a)===getRes(sc.h,sc.a);
+    const pts = exact ? 3 : correct ? 1 : 0;
+    const ptsColor = exact ? '#22C55E' : correct ? 'var(--gold)' : '#EF4444';
+    const ptsLabel = exact ? '+3 ✓✓' : correct ? '+1 ✓' : '+0';
+    const isMe = p.email === currentEmail;
+    return `<tr style="background:${isMe?'rgba(212,160,23,.06)':'transparent'}">
+      <td style="padding:5px 10px;font-family:'Barlow Condensed',sans-serif;font-size:12px;color:${isMe?'var(--gold)':'var(--txt)'};font-weight:${isMe?'700':'400'};">
+        ${isMe?'👤 ':''} ${p.name}
+      </td>
+      <td style="padding:5px 10px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--muted);">${pred.h} – ${pred.a}</td>
+      <td style="padding:5px 10px;text-align:center;">
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:${ptsColor};background:${ptsColor}18;border:1px solid ${ptsColor}44;border-radius:2px;padding:1px 6px;letter-spacing:1px;">${ptsLabel}</span>
+      </td>
+    </tr>`;
+  }).join('');
+
+  const uid = `preds-${matchId}`;
+  return `<div style="grid-column:1/-1;border-top:1px solid rgba(255,255,255,.06);margin-top:2px;">
+    <button onclick="togglePredTable('${uid}')"
+      style="width:100%;background:none;border:none;cursor:pointer;padding:7px 12px;display:flex;align-items:center;justify-content:center;gap:6px;">
+      <span id="${uid}-icon" style="font-size:9px;color:var(--dim);">▼</span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;">
+        Ver predicciones · ${withPred.length} participante${withPred.length!==1?'s':''}
+      </span>
+    </button>
+    <div id="${uid}" style="display:none;overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.08);">
+            <th style="padding:5px 10px;text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;font-weight:800;">Participante</th>
+            <th style="padding:5px 10px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;font-weight:800;">Predicción</th>
+            <th style="padding:5px 10px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;font-weight:800;">Puntos</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function togglePredTable(uid){
+  const el = document.getElementById(uid);
+  const icon = document.getElementById(uid+'-icon');
+  if(!el) return;
+  const open = el.style.display === 'none';
+  el.style.display = open ? 'block' : 'none';
+  if(icon) icon.textContent = open ? '▲' : '▼';
+}
+
 function renderMatches(){
   resolveKnockout(); // ensure all slots resolved before rendering
 
@@ -2674,6 +2735,7 @@ function renderMatches(){
         <div class="mteam"><span class="mflag">${homeKnown?hf:'🏳'}</span><span class="mname-txt" style="${hStyle}">${dispHome}</span></div>
         ${center}
         <div class="mteam right"><span class="mflag">${awayKnown?af:'🏳'}</span><span class="mname-txt" style="${aStyle}">${dispAway}</span></div>
+        ${locked ? renderAllPreds(m.id, sc) : ''}
       </div>`;
     });
     html+='</div>';
