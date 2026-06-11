@@ -950,6 +950,9 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
     <button onclick="exportAdminCSV()" style="background:linear-gradient(135deg,#166534,#15803d);border:none;border-radius:var(--r);padding:12px 28px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;width:100%;">
       📥 Exportar CSV de Participantes
     </button>
+    <button onclick="recalcAllPts()" style="margin-top:10px;background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border:none;border-radius:var(--r);padding:12px 28px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;width:100%;">
+      🔄 Recalcular Puntos de Todos
+    </button>
     <div style="margin-top:12px;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--dim);letter-spacing:.5px;">
       El archivo incluye: nombre, email, campeón, subcampeón, 3er lugar, goleador, goles, estado y puntos.
     </div>
@@ -2342,6 +2345,41 @@ function refreshPts(){
   resolveKnockout();
   participants.forEach(p=>{const r=calcPts(p);p.pts=r.pts;p.exact=r.exact;p.correct=r.correct;});
   participants.sort((a,b)=>b.pts-a.pts||b.exact-a.exact||b.correct-a.correct);
+}
+
+// Recalcula y guarda puntos de TODOS en Supabase (solo admin)
+async function recalcAllPts(){
+  toast('⏳ Recalculando puntos de todos...');
+  // Cargar predicciones de todos si no están en memoria
+  await loadAllPredsForScoring();
+  refreshPts();
+  // Guardar cada participante en Supabase
+  let saved=0;
+  for(const p of participants){
+    await saveOnePart(p);
+    saved++;
+  }
+  renderRanking();renderPodium();updateStats();
+  toast(`✅ Puntos actualizados para ${saved} participantes`);
+}
+
+// Carga predicciones de todos los participantes para el cálculo de puntos
+async function loadAllPredsForScoring(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/predictions?select=participant_id,match_id,home_score,away_score&limit=5000`,{headers:SB_HDRS});
+    if(!r.ok) return;
+    const rows=await r.json();
+    // Agrupar por participant_id
+    const byPart={};
+    for(const row of rows){
+      if(!byPart[row.participant_id]) byPart[row.participant_id]={};
+      byPart[row.participant_id][row.match_id]={h:row.home_score,a:row.away_score};
+    }
+    // Asignar a cada participante
+    for(const p of participants){
+      if(byPart[p.id]) p.preds=byPart[p.id];
+    }
+  }catch(e){ console.warn('loadAllPredsForScoring:',e); }
 }
 
 // ─────────────────────────────────────────────
