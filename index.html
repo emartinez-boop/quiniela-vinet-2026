@@ -2350,10 +2350,13 @@ function refreshPts(){
 // Recalcula y guarda puntos de TODOS en Supabase (solo admin)
 async function recalcAllPts(){
   toast('⏳ Recalculando puntos de todos...');
-  // Cargar predicciones de todos si no están en memoria
+  // 1. Asegurar que todos los participantes estén en memoria
+  await loadParts();
+  // 2. Cargar TODAS las predicciones con paginación
   await loadAllPredsForScoring();
+  // 3. Recalcular puntos en memoria
   refreshPts();
-  // Guardar cada participante en Supabase
+  // 4. Guardar cada participante en Supabase
   let saved=0;
   for(const p of participants){
     await saveOnePart(p);
@@ -2363,22 +2366,31 @@ async function recalcAllPts(){
   toast(`✅ Puntos actualizados para ${saved} participantes`);
 }
 
-// Carga predicciones de todos los participantes para el cálculo de puntos
+// Carga predicciones de TODOS con paginación (evita límite de 1000 filas)
 async function loadAllPredsForScoring(){
   try{
-    const r=await fetch(`${SB_URL}/rest/v1/predictions?select=participant_id,match_id,home_score,away_score&limit=5000`,{headers:SB_HDRS});
-    if(!r.ok) return;
-    const rows=await r.json();
-    // Agrupar por participant_id
     const byPart={};
-    for(const row of rows){
-      if(!byPart[row.participant_id]) byPart[row.participant_id]={};
-      byPart[row.participant_id][row.match_id]={h:row.home_score,a:row.away_score};
+    let offset=0;
+    while(true){
+      const r=await fetch(
+        `${SB_URL}/rest/v1/predictions?select=participant_id,match_id,home_score,away_score&limit=1000&offset=${offset}`,
+        {headers:SB_HDRS}
+      );
+      if(!r.ok) break;
+      const rows=await r.json();
+      if(!rows.length) break;
+      for(const row of rows){
+        if(!byPart[row.participant_id]) byPart[row.participant_id]={};
+        byPart[row.participant_id][row.match_id]={h:row.home_score,a:row.away_score};
+      }
+      if(rows.length<1000) break;
+      offset+=1000;
     }
     // Asignar a cada participante
     for(const p of participants){
       if(byPart[p.id]) p.preds=byPart[p.id];
     }
+    console.log(`loadAllPredsForScoring: ${Object.keys(byPart).length} participantes con preds cargadas`);
   }catch(e){ console.warn('loadAllPredsForScoring:',e); }
 }
 
