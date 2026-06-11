@@ -3895,9 +3895,14 @@ async function init(){
   setInterval(async()=>{
     setSyncing(true);
     await loadScores();
-    await loadParts();
+    await loadParts(); // pts ya vienen de Supabase — NO recalcular aquí
     if(currentEmail) await loadMyPreds();
-    refreshPts();
+    // Solo recalcular pts del usuario actual (tiene preds en memoria)
+    if(currentEmail){
+      const me = participants.find(p=>p.email===currentEmail);
+      if(me){ const r=calcPts(me); me.pts=r.pts; me.exact=r.exact; me.correct=r.correct; }
+    }
+    participants.sort((a,b)=>b.pts-a.pts||b.exact-a.exact||b.correct-a.correct);
     renderDayStrip();
     renderPodium();
     renderRanking();
