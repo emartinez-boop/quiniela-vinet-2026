@@ -3291,8 +3291,8 @@ function updateRegUI(){
     form.querySelectorAll('input:not(#gate-email),select').forEach(el=>el.disabled=true);
     const btn=document.getElementById('btn-reg');
     if(btn){btn.disabled=true;btn.textContent='🔒 Registro Cerrado';}
-    // Hide gate too
-    document.getElementById('email-gate').style.display='none';
+    // Mantener email-gate visible para que usuarios ya registrados puedan hacer login
+    document.getElementById('email-gate').style.display='block';
     document.getElementById('reg-fields').style.display='none';
   }
 }
