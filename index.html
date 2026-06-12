@@ -3876,7 +3876,7 @@ async function init(){
 
   await loadScores();
   await loadParts();
-  refreshPts();
+  // pts vienen de Supabase — NO llamar refreshPts() aquí (sobreescribiría con 0)
   renderCarousel();
   renderDayStrip();
   renderPodium();
