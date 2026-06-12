@@ -2470,7 +2470,8 @@ function renderPodium(){
       </div>`;
   } else {
     // Tournament running: show real podium
-    const top3 = participants.slice(0,3);
+    const sorted = [...participants].sort((a,b)=>b.pts-a.pts||b.exact-a.exact||b.correct-a.correct);
+    const top3 = sorted.slice(0,3);
     document.getElementById('podium-grid').innerHTML=`
       ${top3[1]?`<div class="podium-card pc-silver"><div class="podium-card-inner">
         <span class="podium-medal">🥈</span>
@@ -2502,7 +2503,7 @@ function renderPodium(){
   }
 
   // Prizes banners always visible
-  const top3 = started ? participants.slice(0,3) : [null,null,null];
+  const top3 = started ? [...participants].sort((a,b)=>b.pts-a.pts||b.exact-a.exact||b.correct-a.correct).slice(0,3) : [null,null,null];
   document.getElementById('prizes-list').innerHTML=PRIZES.map((pr,i)=>`
     <div class="prize-banner ${pr.color}">
       <div class="prize-icon">${pr.icon}</div>
