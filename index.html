@@ -3891,13 +3891,23 @@ async function init(){
   updateCountdown();
   setInterval(updateCountdown,1000);
 
-  // Sync every 5s — near-instant updates for all users
-  setInterval(async()=>{
+  // ── SUPABASE REALTIME ──────────────────────────────────────────────────────
+  // Reemplaza el polling de 5s (~31k req/h con 43 users) por WebSocket.
+  // Flujo: cambio en scores/participants → fullRefresh() → re-render completo.
+  // Fallback: si Realtime no conecta en 8s → polling cada 5 min.
+  // ──────────────────────────────────────────────────────────────────────────
+  let rtSocket = null;
+  let rtConnected = false;
+  let rtFallbackTimer = null;
+  let rtHeartbeat = null;
+  let rtReconnectTimer = null;
+  let rtReconnectDelay = 3000; // backoff inicial
+
+  async function fullRefresh(){
     setSyncing(true);
     await loadScores();
-    await loadParts(); // pts ya vienen de Supabase — NO recalcular aquí
+    await loadParts();
     if(currentEmail) await loadMyPreds();
-    // Solo recalcular pts del usuario actual (tiene preds en memoria)
     if(currentEmail){
       const me = participants.find(p=>p.email===currentEmail);
       if(me){ const r=calcPts(me); me.pts=r.pts; me.exact=r.exact; me.correct=r.correct; }
@@ -3912,7 +3922,112 @@ async function init(){
     renderBracket();
     updateStats();
     setSyncing(false);
-  },5000);
+  }
+
+  function startFallbackPolling(){
+    if(rtFallbackTimer) return; // ya corriendo
+    console.warn('[RT] Realtime no disponible — fallback polling cada 5 min');
+    rtFallbackTimer = setInterval(fullRefresh, 5 * 60 * 1000);
+  }
+
+  function stopFallbackPolling(){
+    if(rtFallbackTimer){ clearInterval(rtFallbackTimer); rtFallbackTimer = null; }
+  }
+
+  function connectRealtime(){
+    if(rtSocket) { try{ rtSocket.close(); }catch(e){} rtSocket=null; }
+    clearInterval(rtHeartbeat);
+    clearTimeout(rtReconnectTimer);
+
+    // Supabase Realtime endpoint
+    const wsUrl = `wss://serbnnosjtzmbxmdjtbu.supabase.co/realtime/v1/websocket`
+      + `?apikey=${SB_KEY}&vsn=1.0.0`;
+
+    try {
+      rtSocket = new WebSocket(wsUrl);
+    } catch(e) {
+      console.error('[RT] WebSocket error al conectar:', e);
+      startFallbackPolling();
+      return;
+    }
+
+    // Timeout de conexión: si en 8s no abre → fallback
+    const connTimeout = setTimeout(()=>{
+      if(!rtConnected){
+        console.warn('[RT] Timeout conexión — activando fallback');
+        startFallbackPolling();
+      }
+    }, 8000);
+
+    rtSocket.onopen = ()=>{
+      clearTimeout(connTimeout);
+      rtConnected = true;
+      rtReconnectDelay = 3000; // reset backoff
+      stopFallbackPolling();
+      console.log('[RT] Conectado a Supabase Realtime');
+
+      // Suscribirse a tabla scores
+      rtSocket.send(JSON.stringify({
+        topic: 'realtime:public:scores',
+        event: 'phx_join',
+        payload: { config: { broadcast: { self: false }, presence: { key: '' } } },
+        ref: '1'
+      }));
+
+      // Suscribirse a tabla participants
+      rtSocket.send(JSON.stringify({
+        topic: 'realtime:public:participants',
+        event: 'phx_join',
+        payload: { config: { broadcast: { self: false }, presence: { key: '' } } },
+        ref: '2'
+      }));
+
+      // Heartbeat cada 25s (Supabase desconecta sin actividad a los 60s)
+      rtHeartbeat = setInterval(()=>{
+        if(rtSocket && rtSocket.readyState === WebSocket.OPEN){
+          rtSocket.send(JSON.stringify({
+            topic: 'phoenix', event: 'heartbeat', payload: {}, ref: 'hb'
+          }));
+        }
+      }, 25000);
+    };
+
+    rtSocket.onmessage = (evt)=>{
+      try {
+        const msg = JSON.parse(evt.data);
+        // Ignorar acks de join y heartbeats
+        if(msg.event === 'phx_reply' || msg.event === 'phx_close') return;
+        // Cambio real en scores o participants → refresh completo
+        if(msg.topic && (
+          msg.topic.startsWith('realtime:public:scores') ||
+          msg.topic.startsWith('realtime:public:participants')
+        ) && msg.event !== 'heartbeat'){
+          console.log('[RT] Cambio detectado en', msg.topic, '→ refresh');
+          fullRefresh();
+        }
+      } catch(e){ /* ignorar mensajes malformados */ }
+    };
+
+    rtSocket.onerror = (e)=>{
+      console.error('[RT] Error WebSocket:', e);
+    };
+
+    rtSocket.onclose = (evt)=>{
+      clearTimeout(connTimeout);
+      clearInterval(rtHeartbeat);
+      rtConnected = false;
+      console.warn(`[RT] Desconectado (code ${evt.code}) — reconectando en ${rtReconnectDelay/1000}s`);
+      // Activar fallback mientras reconecta
+      startFallbackPolling();
+      // Reconexión con backoff exponencial (máx 30s)
+      rtReconnectTimer = setTimeout(()=>{
+        rtReconnectDelay = Math.min(rtReconnectDelay * 2, 30000);
+        connectRealtime();
+      }, rtReconnectDelay);
+    };
+  }
+
+  connectRealtime();
 
   // Rebuild carousel daily
   setInterval(()=>{ renderCarousel(); renderDayStrip(); }, 60000);
