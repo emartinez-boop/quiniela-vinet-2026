@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predicciones · Quiniela Vinet 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#D4A017;--bg:#060610;--s1:#0C0C1A;--s2:#111120;--s3:#181828;
+  --brd:rgba(212,160,23,.15);--txt:#E4DCC8;--muted:#7070A0;--dim:#404060;
+  --green:#22C55E;--red:#EF4444;--r:6px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--txt);font-family:'Barlow',sans-serif;min-height:100vh;}
+
+.hero{background:linear-gradient(160deg,#0a0a1e 0%,#0d0d22 60%,rgba(212,160,23,.08) 100%);
+  border-bottom:1px solid var(--brd);padding:22px 16px 18px;text-align:center;}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,6vw,40px);
+  letter-spacing:3px;color:var(--gold);line-height:1;}
+.hero .sub{font-family:'Barlow Condensed',sans-serif;font-size:11px;
+  letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-top:4px;}
+
+.sync-bar{background:var(--s1);border-bottom:1px solid var(--brd);
+  padding:6px 16px;text-align:center;font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;letter-spacing:1.5px;color:var(--muted);}
+.sync-bar span{color:var(--green);}
+
+.toolbar{padding:12px 14px;background:var(--s1);border-bottom:1px solid var(--brd);
+  position:sticky;top:0;z-index:10;}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.filt{background:var(--s2);border:1px solid var(--brd);border-radius:20px;
+  padding:4px 11px;font-family:'Barlow Condensed',sans-serif;font-size:10px;
+  font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);
+  cursor:pointer;transition:all .18s;}
+.filt.on,.filt:hover{border-color:var(--gold);color:var(--gold);}
+.search-inp{width:100%;background:var(--s2);border:1px solid var(--brd);
+  border-radius:var(--r);padding:7px 12px;color:var(--txt);
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;outline:none;}
+.search-inp:focus{border-color:var(--gold);}
+.search-inp::placeholder{color:var(--dim);}
+
+.legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;
+  padding:10px 14px;border-bottom:1px solid var(--brd);}
+.leg-item{display:flex;align-items:center;gap:5px;
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);}
+.leg-dot{width:8px;height:8px;border-radius:2px;}
+
+#container{padding:12px 14px 24px;}
+
+.match-block{margin-bottom:14px;border-radius:var(--r);overflow:hidden;border:1px solid var(--brd);}
+.match-header{background:linear-gradient(135deg,var(--s2),rgba(212,160,23,.05));
+  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;
+  gap:8px;border-bottom:1px solid var(--brd);}
+.match-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;color:#fff;}
+.match-meta{font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:2px;}
+.match-result{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;white-space:nowrap;}
+.match-result.done{color:var(--gold);}
+.match-result.pending{color:var(--dim);font-size:12px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;}
+
+.preds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));}
+.pred-cell{padding:8px 10px;border-right:1px solid var(--brd);border-bottom:1px solid var(--brd);
+  display:flex;flex-direction:column;gap:2px;}
+.pred-name{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);
+  letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pred-score{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;}
+.pred-score.exact{color:var(--green);}
+.pred-score.correct{color:var(--gold);}
+.pred-score.wrong{color:var(--red);}
+.pred-score.pending{color:var(--txt);}
+.pred-chip{font-size:8px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;font-weight:700;}
+.pred-chip.exact{color:var(--green);}
+.pred-chip.correct{color:var(--gold);}
+.pred-chip.wrong{color:var(--red);}
+
+.loading{text-align:center;padding:60px 20px;font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;letter-spacing:2px;color:var(--muted);}
+.no-result{text-align:center;padding:40px;color:var(--dim);
+  font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;font-size:12px;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>⚽ Predicciones · Quiniela Vinet 2026</h1>
+  <div class="sub">Fase de Grupos · Todos los participantes</div>
+</div>
+
+<div class="sync-bar" id="sync-bar">Cargando datos…</div>
+
+<div class="toolbar">
+  <div class="filters">
+    <div class="filt on" onclick="setFilter('all',this)">Todos</div>
+    <div class="filt" onclick="setFilter('A',this)">Gr.A</div>
+    <div class="filt" onclick="setFilter('B',this)">Gr.B</div>
+    <div class="filt" onclick="setFilter('C',this)">Gr.C</div>
+    <div class="filt" onclick="setFilter('D',this)">Gr.D</div>
+    <div class="filt" onclick="setFilter('E',this)">Gr.E</div>
+    <div class="filt" onclick="setFilter('F',this)">Gr.F</div>
+    <div class="filt" onclick="setFilter('G',this)">Gr.G</div>
+    <div class="filt" onclick="setFilter('H',this)">Gr.H</div>
+    <div class="filt" onclick="setFilter('I',this)">Gr.I</div>
+    <div class="filt" onclick="setFilter('J',this)">Gr.J</div>
+    <div class="filt" onclick="setFilter('K',this)">Gr.K</div>
+    <div class="filt" onclick="setFilter('L',this)">Gr.L</div>
+  </div>
+  <input class="search-inp" type="text" placeholder="Buscar equipo o participante…" oninput="doSearch(this.value)"/>
+</div>
+
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>Exacto +3</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div>Correcto +1</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>Incorrecto +0</div>
+  <div class="leg-item"><div class="leg-dot" style="background:var(--dim)"></div>Pendiente</div>
+</div>
+
+<div id="container"><div class="loading">⏳ Cargando predicciones…</div></div>
+
+<script>
+const SB_URL = 'https://serbnnosjtzmbxmdjtbu.supabase.co';
+const SB_KEY = 'sb_publishable_msFNL9C2opQTead4JvFASw_Z6eZhb73';
+const HDRS   = {'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`};
+
+const MATCHES = [
+  {id:1,group:'A',home:'México',away:'Sudáfrica',date:'11 Jun',flag_h:'🇲🇽',flag_a:'🇿🇦'},
+  {id:2,group:'A',home:'Corea del Sur',away:'Rep. Checa',date:'11 Jun',flag_h:'🇰🇷',flag_a:'🇨🇿'},
+  {id:3,group:'B',home:'Canadá',away:'Bosnia y Herz.',date:'12 Jun',flag_h:'🇨🇦',flag_a:'🇧🇦'},
+  {id:4,group:'D',home:'EE.UU.',away:'Paraguay',date:'12 Jun',flag_h:'🇺🇸',flag_a:'🇵🇾'},
+  {id:5,group:'C',home:'Brasil',away:'Marruecos',date:'13 Jun',flag_h:'🇧🇷',flag_a:'🇲🇦'},
+  {id:6,group:'D',home:'Australia',away:'Turquía',date:'13 Jun',flag_h:'🇦🇺',flag_a:'🇹🇷'},
+  {id:7,group:'C',home:'Haití',away:'Escocia',date:'13 Jun',flag_h:'🇭🇹',flag_a:'🏴󠁧󠁢󠁳󠁣󠁴󠁿'},
+  {id:8,group:'B',home:'Catar',away:'Suiza',date:'13 Jun',flag_h:'🇶🇦',flag_a:'🇨🇭'},
+  {id:9,group:'E',home:'Alemania',away:'Curazao',date:'14 Jun',flag_h:'🇩🇪',flag_a:'🇨🇼'},
+  {id:10,group:'F',home:'Países Bajos',away:'Japón',date:'14 Jun',flag_h:'🇳🇱',flag_a:'🇯🇵'},
+  {id:11,group:'E',home:'Costa de Marfil',away:'Ecuador',date:'14 Jun',flag_h:'🇨🇮',flag_a:'🇪🇨'},
+  {id:12,group:'F',home:'Suecia',away:'Túnez',date:'14 Jun',flag_h:'🇸🇪',flag_a:'🇹🇳'},
+  {id:13,group:'H',home:'España',away:'Cabo Verde',date:'15 Jun',flag_h:'🇪🇸',flag_a:'🇨🇻'},
+  {id:14,group:'G',home:'Bélgica',away:'Egipto',date:'15 Jun',flag_h:'🇧🇪',flag_a:'🇪🇬'},
+  {id:15,group:'H',home:'Arabia Saudí',away:'Uruguay',date:'15 Jun',flag_h:'🇸🇦',flag_a:'🇺🇾'},
+  {id:16,group:'G',home:'Irán',away:'Nueva Zelanda',date:'15 Jun',flag_h:'🇮🇷',flag_a:'🇳🇿'},
+  {id:17,group:'I',home:'Francia',away:'Senegal',date:'16 Jun',flag_h:'🇫🇷',flag_a:'🇸🇳'},
+  {id:18,group:'I',home:'Irak',away:'Noruega',date:'16 Jun',flag_h:'🇮🇶',flag_a:'🇳🇴'},
+  {id:19,group:'J',home:'Argentina',away:'Argelia',date:'16 Jun',flag_h:'🇦🇷',flag_a:'🇩🇿'},
+  {id:20,group:'J',home:'Austria',away:'Jordania',date:'16 Jun',flag_h:'🇦🇹',flag_a:'🇯🇴'},
+  {id:21,group:'K',home:'Portugal',away:'RD Congo',date:'17 Jun',flag_h:'🇵🇹',flag_a:'🇨🇩'},
+  {id:22,group:'L',home:'Inglaterra',away:'Croacia',date:'17 Jun',flag_h:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',flag_a:'🇭🇷'},
+  {id:23,group:'L',home:'Ghana',away:'Panamá',date:'17 Jun',flag_h:'🇬🇭',flag_a:'🇵🇦'},
+  {id:24,group:'K',home:'Uzbekistán',away:'Colombia',date:'17 Jun',flag_h:'🇺🇿',flag_a:'🇨🇴'},
+  {id:25,group:'A',home:'Rep. Checa',away:'Sudáfrica',date:'18 Jun',flag_h:'🇨🇿',flag_a:'🇿🇦'},
+  {id:26,group:'B',home:'Suiza',away:'Bosnia y Herz.',date:'18 Jun',flag_h:'🇨🇭',flag_a:'🇧🇦'},
+  {id:27,group:'B',home:'Canadá',away:'Catar',date:'18 Jun',flag_h:'🇨🇦',flag_a:'🇶🇦'},
+  {id:28,group:'A',home:'México',away:'Corea del Sur',date:'18 Jun',flag_h:'🇲🇽',flag_a:'🇰🇷'},
+  {id:29,group:'D',home:'EE.UU.',away:'Australia',date:'19 Jun',flag_h:'🇺🇸',flag_a:'🇦🇺'},
+  {id:30,group:'C',home:'Escocia',away:'Marruecos',date:'19 Jun',flag_h:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',flag_a:'🇲🇦'},
+  {id:31,group:'C',home:'Brasil',away:'Haití',date:'19 Jun',flag_h:'🇧🇷',flag_a:'🇭🇹'},
+  {id:32,group:'D',home:'Turquía',away:'Paraguay',date:'19 Jun',flag_h:'🇹🇷',flag_a:'🇵🇾'},
+  {id:33,group:'E',home:'Alemania',away:'Costa de Marfil',date:'20 Jun',flag_h:'🇩🇪',flag_a:'🇨🇮'},
+  {id:34,group:'F',home:'Países Bajos',away:'Suecia',date:'20 Jun',flag_h:'🇳🇱',flag_a:'🇸🇪'},
+  {id:35,group:'E',home:'Ecuador',away:'Curazao',date:'20 Jun',flag_h:'🇪🇨',flag_a:'🇨🇼'},
+  {id:36,group:'F',home:'Japón',away:'Túnez',date:'20 Jun',flag_h:'🇯🇵',flag_a:'🇹🇳'},
+  {id:37,group:'H',home:'España',away:'Arabia Saudí',date:'21 Jun',flag_h:'🇪🇸',flag_a:'🇸🇦'},
+  {id:38,group:'G',home:'Bélgica',away:'Irán',date:'21 Jun',flag_h:'🇧🇪',flag_a:'🇮🇷'},
+  {id:39,group:'H',home:'Uruguay',away:'Cabo Verde',date:'21 Jun',flag_h:'🇺🇾',flag_a:'🇨🇻'},
+  {id:40,group:'G',home:'Egipto',away:'Nueva Zelanda',date:'21 Jun',flag_h:'🇪🇬',flag_a:'🇳🇿'},
+  {id:41,group:'I',home:'Francia',away:'Irak',date:'22 Jun',flag_h:'🇫🇷',flag_a:'🇮🇶'},
+  {id:42,group:'J',home:'Argentina',away:'Austria',date:'22 Jun',flag_h:'🇦🇷',flag_a:'🇦🇹'},
+  {id:43,group:'I',home:'Senegal',away:'Noruega',date:'22 Jun',flag_h:'🇸🇳',flag_a:'🇳🇴'},
+  {id:44,group:'J',home:'Argelia',away:'Jordania',date:'22 Jun',flag_h:'🇩🇿',flag_a:'🇯🇴'},
+  {id:45,group:'L',home:'Croacia',away:'Ghana',date:'23 Jun',flag_h:'🇭🇷',flag_a:'🇬🇭'},
+  {id:46,group:'K',home:'Portugal',away:'Uzbekistán',date:'23 Jun',flag_h:'🇵🇹',flag_a:'🇺🇿'},
+  {id:47,group:'K',home:'Colombia',away:'RD Congo',date:'23 Jun',flag_h:'🇨🇴',flag_a:'🇨🇩'},
+  {id:48,group:'L',home:'Panamá',away:'Inglaterra',date:'23 Jun',flag_h:'🇵🇦',flag_a:'🏴󠁧󠁢󠁥󠁮󠁧󠁿'},
+  {id:49,group:'A',home:'Rep. Checa',away:'México',date:'24 Jun',flag_h:'🇨🇿',flag_a:'🇲🇽'},
+  {id:50,group:'A',home:'Sudáfrica',away:'Corea del Sur',date:'24 Jun',flag_h:'🇿🇦',flag_a:'🇰🇷'},
+  {id:51,group:'B',home:'Bosnia y Herz.',away:'Catar',date:'24 Jun',flag_h:'🇧🇦',flag_a:'🇶🇦'},
+  {id:52,group:'B',home:'Suiza',away:'Canadá',date:'24 Jun',flag_h:'🇨🇭',flag_a:'🇨🇦'},
+  {id:53,group:'C',home:'Marruecos',away:'Haití',date:'25 Jun',flag_h:'🇲🇦',flag_a:'🇭🇹'},
+  {id:54,group:'C',home:'Escocia',away:'Brasil',date:'25 Jun',flag_h:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',flag_a:'🇧🇷'},
+  {id:55,group:'D',home:'Paraguay',away:'Australia',date:'25 Jun',flag_h:'🇵🇾',flag_a:'🇦🇺'},
+  {id:56,group:'D',home:'Turquía',away:'EE.UU.',date:'25 Jun',flag_h:'🇹🇷',flag_a:'🇺🇸'},
+  {id:57,group:'E',home:'Costa de Marfil',away:'Curazao',date:'26 Jun',flag_h:'🇨🇮',flag_a:'🇨🇼'},
+  {id:58,group:'E',home:'Ecuador',away:'Alemania',date:'26 Jun',flag_h:'🇪🇨',flag_a:'🇩🇪'},
+  {id:59,group:'F',home:'Suecia',away:'Japón',date:'26 Jun',flag_h:'🇸🇪',flag_a:'🇯🇵'},
+  {id:60,group:'F',home:'Túnez',away:'Países Bajos',date:'26 Jun',flag_h:'🇹🇳',flag_a:'🇳🇱'},
+  {id:61,group:'G',home:'Irán',away:'Egipto',date:'27 Jun',flag_h:'🇮🇷',flag_a:'🇪🇬'},
+  {id:62,group:'G',home:'Nueva Zelanda',away:'Bélgica',date:'27 Jun',flag_h:'🇳🇿',flag_a:'🇧🇪'},
+  {id:63,group:'H',home:'Cabo Verde',away:'Arabia Saudí',date:'27 Jun',flag_h:'🇨🇻',flag_a:'🇸🇦'},
+  {id:64,group:'H',home:'Uruguay',away:'España',date:'27 Jun',flag_h:'🇺🇾',flag_a:'🇪🇸'},
+  {id:65,group:'I',home:'Noruega',away:'Francia',date:'27 Jun',flag_h:'🇳🇴',flag_a:'🇫🇷'},
+  {id:66,group:'I',home:'Irak',away:'Senegal',date:'27 Jun',flag_h:'🇮🇶',flag_a:'🇸🇳'},
+  {id:67,group:'J',home:'Argelia',away:'Austria',date:'27 Jun',flag_h:'🇩🇿',flag_a:'🇦🇹'},
+  {id:68,group:'J',home:'Jordania',away:'Argentina',date:'27 Jun',flag_h:'🇯🇴',flag_a:'🇦🇷'},
+  {id:69,group:'K',home:'RD Congo',away:'Uzbekistán',date:'27 Jun',flag_h:'🇨🇩',flag_a:'🇺🇿'},
+  {id:70,group:'K',home:'Colombia',away:'Portugal',date:'27 Jun',flag_h:'🇨🇴',flag_a:'🇵🇹'},
+  {id:71,group:'L',home:'Panamá',away:'Croacia',date:'27 Jun',flag_h:'🇵🇦',flag_a:'🇭🇷'},
+  {id:72,group:'L',home:'Ghana',away:'Inglaterra',date:'27 Jun',flag_h:'🇬🇭',flag_a:'🏴󠁧󠁢󠁥󠁮󠁧󠁿'},
+];
+
+let scores={}, preds={}, participants={};
+let activeFilter='all', searchQ='';
+
+function getRes(h,a){return h>a?'H':h<a?'A':'D';}
+
+function getPtsClass(ph,pa,score){
+  if(!score) return 'pending';
+  if(ph===score.h&&pa===score.a) return 'exact';
+  if(getRes(ph,pa)===getRes(score.h,score.a)) return 'correct';
+  return 'wrong';
+}
+
+function getPtsLabel(cls){
+  if(cls==='exact') return '✓✓ +3';
+  if(cls==='correct') return '✓ +1';
+  if(cls==='wrong') return '+0';
+  return '';
+}
+
+async function fetchAll(){
+  // Scores
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/scores?select=match_id,home_score,away_score&limit=200`,{headers:HDRS});
+    if(r.ok){
+      const rows=await r.json();
+      scores={};
+      rows.forEach(r=>{if(r.home_score!=null&&r.away_score!=null) scores[r.match_id]={h:r.home_score,a:r.away_score};});
+    }
+  }catch(e){}
+
+  // Participants
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/participants?select=id,name&limit=500`,{headers:HDRS});
+    if(r.ok){
+      const rows=await r.json();
+      participants={};
+      rows.forEach(p=>{participants[p.id]=p.name;});
+    }
+  }catch(e){}
+
+  // Predictions with pagination
+  try{
+    preds={};
+    let offset=0;
+    while(true){
+      const r=await fetch(`${SB_URL}/rest/v1/predictions?select=participant_id,match_id,home_score,away_score&limit=1000&offset=${offset}`,{headers:HDRS});
+      if(!r.ok) break;
+      const rows=await r.json();
+      if(!rows.length) break;
+      rows.forEach(row=>{
+        const name=participants[row.participant_id]||row.participant_id;
+        if(!preds[row.match_id]) preds[row.match_id]=[];
+        preds[row.match_id].push({name,h:row.home_score,a:row.away_score});
+      });
+      if(rows.length<1000) break;
+      offset+=1000;
+    }
+    // Sort by name
+    Object.keys(preds).forEach(mid=>{
+      preds[mid].sort((a,b)=>a.name.localeCompare(b.name));
+    });
+  }catch(e){}
+
+  const now=new Date().toLocaleTimeString('es-CR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('sync-bar').innerHTML=`⚡ EN VIVO · Última actualización: <span>${now}</span> · Se actualiza cada 5 minutos`;
+  render();
+}
+
+function setFilter(f,btn){
+  activeFilter=f;
+  document.querySelectorAll('.filt').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+
+function doSearch(v){searchQ=v.toLowerCase().trim();render();}
+
+function render(){
+  let matches=MATCHES;
+  if(activeFilter!=='all') matches=matches.filter(m=>m.group===activeFilter);
+  if(searchQ) matches=matches.filter(m=>
+    m.home.toLowerCase().includes(searchQ)||
+    m.away.toLowerCase().includes(searchQ)||
+    (preds[m.id]||[]).some(p=>p.name.toLowerCase().includes(searchQ))
+  );
+
+  if(!matches.length){
+    document.getElementById('container').innerHTML='<div class="no-result">Sin partidos en esta categoría</div>';
+    return;
+  }
+
+  document.getElementById('container').innerHTML=matches.map(m=>{
+    const score=scores[m.id];
+    const scoreStr=score?`${score.h} – ${score.a} 🔒`:'Pendiente';
+    const scoreCls=score?'done':'pending';
+    const matchPreds=preds[m.id]||[];
+    const cells=matchPreds.map(p=>{
+      const cls=getPtsClass(p.h,p.a,score);
+      const lbl=getPtsLabel(cls);
+      const predStr=`${p.h} - ${p.a}`;
+      return `<div class="pred-cell">
+        <div class="pred-name" title="${p.name}">${p.name}</div>
+        <div class="pred-score ${cls}">${predStr}</div>
+        ${lbl?`<div class="pred-chip ${cls}">${lbl}</div>`:''}
+      </div>`;
+    }).join('');
+
+    return `<div class="match-block">
+      <div class="match-header">
+        <div>
+          <div class="match-title">${m.flag_h} ${m.home} vs ${m.away} ${m.flag_a}</div>
+          <div class="match-meta">Grupo ${m.group} · ${m.date}</div>
+        </div>
+        <div class="match-result ${scoreCls}">${scoreStr}</div>
+      </div>
+      <div class="preds-grid">${cells||'<div class="pred-cell"><div class="pred-name" style="color:var(--dim)">Sin predicciones</div></div>'}</div>
+    </div>`;
+  }).join('');
+}
+
+// Initial load + refresh every 5 min
+fetchAll();
+setInterval(fetchAll, 5 * 60 * 1000);
+</script>
+</body>
+</html>
