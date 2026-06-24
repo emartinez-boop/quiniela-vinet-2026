@@ -287,6 +287,13 @@ function render(){
     return;
   }
 
+  // Ordenar cronológicamente por fecha
+  const _mo={'Jun':6,'Jul':7};
+  matches.sort((a,b)=>{
+    const pd=d=>{if(!d)return 9999;const[day,mon]=d.split(' ');return((_mo[mon]||0)*100)+parseInt(day);};
+    return pd(a.date)-pd(b.date);
+  });
+
   document.getElementById('container').innerHTML=matches.map(m=>{
     const score=scores[m.id];
     const scoreStr=score?`${score.h} – ${score.a} 🔒`:'Pendiente';
