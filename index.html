@@ -2201,6 +2201,9 @@ async function fetchOfficialScores(){
     for(const fx of data.response||[]){
       const status=fx.fixture?.status?.short;
       if(!['FT','AET','PEN'].includes(status))continue;
+      // Ignorar si la fecha del fixture en la API es futura
+      const fixDate=fx.fixture?.date?.split('T')[0];
+      if(fixDate && fixDate > today)continue;
       const hGoals=fx.goals?.home, aGoals=fx.goals?.away;
       if(hGoals==null||aGoals==null)continue;
       const res=findMatchByTeams(fx.teams?.home?.name,fx.teams?.away?.name);
@@ -2233,7 +2236,14 @@ async function fetchRecentScores(){
     if(!r.ok)return;
     const data=await r.json();
     let updated=false;
+    const todayStr=new Date().toISOString().split('T')[0];
     for(const fx of data.response||[]){
+      // Solo procesar partidos con status final real
+      const status=fx.fixture?.status?.short;
+      if(!['FT','AET','PEN'].includes(status))continue;
+      // Ignorar si la fecha del fixture en la API es futura
+      const fixtureDate=fx.fixture?.date?.split('T')[0];
+      if(fixtureDate && fixtureDate > todayStr)continue;
       const hGoals=fx.goals?.home, aGoals=fx.goals?.away;
       if(hGoals==null||aGoals==null)continue;
       const res=findMatchByTeams(fx.teams?.home?.name,fx.teams?.away?.name);
