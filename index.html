@@ -2139,10 +2139,18 @@ function mapTeam(n){ return AF_TEAM_MAP[n]||n; }
 
 function findMatchByTeams(home,away){
   const h=mapTeam(home), a=mapTeam(away);
-  return MATCHES.find(m=>
+  const direct=MATCHES.find(m=>
     ((m.resolvedHome||m.home)===h&&(m.resolvedAway||m.away)===a)||
     (m.home===h&&m.away===a)
   );
+  if(direct)return {match:direct,inverted:false};
+  // Buscar invertido: la API puede traer home/away al revés
+  const inv=MATCHES.find(m=>
+    ((m.resolvedHome||m.home)===a&&(m.resolvedAway||m.away)===h)||
+    (m.home===a&&m.away===h)
+  );
+  if(inv)return {match:inv,inverted:true};
+  return null;
 }
 
 // ─────────────────────────────────────────────
@@ -2193,10 +2201,12 @@ async function fetchOfficialScores(){
     for(const fx of data.response||[]){
       const status=fx.fixture?.status?.short;
       if(!['FT','AET','PEN'].includes(status))continue;
-      const h=fx.goals?.home, a=fx.goals?.away;
-      if(h==null||a==null)continue;
-      const match=findMatchByTeams(fx.teams?.home?.name,fx.teams?.away?.name);
-      if(!match)continue;
+      const hGoals=fx.goals?.home, aGoals=fx.goals?.away;
+      if(hGoals==null||aGoals==null)continue;
+      const res=findMatchByTeams(fx.teams?.home?.name,fx.teams?.away?.name);
+      if(!res)continue;
+      const {match,inverted}=res;
+      const h=inverted?aGoals:hGoals, a=inverted?hGoals:aGoals;
       if(scores[match.id]?.h===h&&scores[match.id]?.a===a)continue;
       scores[match.id]={h,a};
       await saveOneScore(match.id,h,a);
@@ -2224,10 +2234,12 @@ async function fetchRecentScores(){
     const data=await r.json();
     let updated=false;
     for(const fx of data.response||[]){
-      const h=fx.goals?.home, a=fx.goals?.away;
-      if(h==null||a==null)continue;
-      const match=findMatchByTeams(fx.teams?.home?.name,fx.teams?.away?.name);
-      if(!match)continue;
+      const hGoals=fx.goals?.home, aGoals=fx.goals?.away;
+      if(hGoals==null||aGoals==null)continue;
+      const res=findMatchByTeams(fx.teams?.home?.name,fx.teams?.away?.name);
+      if(!res)continue;
+      const {match,inverted}=res;
+      const h=inverted?aGoals:hGoals, a=inverted?hGoals:aGoals;
       if(scores[match.id]?.h===h&&scores[match.id]?.a===a)continue;
       scores[match.id]={h,a};
       await saveOneScore(match.id,h,a);
