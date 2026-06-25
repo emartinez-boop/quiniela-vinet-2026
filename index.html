@@ -1878,6 +1878,15 @@ async function saveOnePart(p){
 // ── Save single score (faster) ──
 async function saveOneScore(matchId, h, a){
   try{
+    // Guard: no sobrescribir scores bloqueados (verificados manualmente)
+    const chk = await fetch(
+      `${SB_URL}/rest/v1/scores?match_id=eq.${matchId}&locked=eq.true&select=match_id`,
+      {headers: SB_HDRS}
+    );
+    if(chk.ok){
+      const rows = await chk.json();
+      if(rows.length > 0) return; // score bloqueado → ignorar
+    }
     await fetch(`${SB_URL}/rest/v1/scores`, {
       method:  'POST',
       headers: {...SB_HDRS, 'Prefer': 'resolution=merge-duplicates,return=minimal'},
@@ -2137,23 +2146,6 @@ const AF_TEAM_MAP = {
 
 function mapTeam(n){ return AF_TEAM_MAP[n]||n; }
 
-// Convierte fecha del array HTML ('11 Jun', '27 Jun') a Date UTC para comparar
-function matchDateUTC(match){
-  const monthMap={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
-  if(!match.date)return null;
-  const [day,mon]=match.date.split(' ');
-  return new Date(Date.UTC(2026,monthMap[mon],parseInt(day)));
-}
-
-// Devuelve true si el partido del HTML ya pudo haber terminado (fecha <= hoy)
-function isMatchPlayable(match){
-  const d=matchDateUTC(match);
-  if(!d)return false;
-  const today=new Date();
-  today.setUTCHours(0,0,0,0);
-  return d<=today;
-}
-
 function findMatchByTeams(home,away){
   const h=mapTeam(home), a=mapTeam(away);
   const direct=MATCHES.find(m=>
@@ -2226,8 +2218,6 @@ async function fetchOfficialScores(){
       const res=findMatchByTeams(fx.teams?.home?.name,fx.teams?.away?.name);
       if(!res)continue;
       const {match,inverted}=res;
-      // Guard: no guardar si el partido aún no es jugable según el array HTML
-      if(!isMatchPlayable(match))continue;
       const h=inverted?aGoals:hGoals, a=inverted?hGoals:aGoals;
       if(scores[match.id]?.h===h&&scores[match.id]?.a===a)continue;
       scores[match.id]={h,a};
@@ -2268,8 +2258,6 @@ async function fetchRecentScores(){
       const res=findMatchByTeams(fx.teams?.home?.name,fx.teams?.away?.name);
       if(!res)continue;
       const {match,inverted}=res;
-      // Guard: no guardar si el partido aún no es jugable según el array HTML
-      if(!isMatchPlayable(match))continue;
       const h=inverted?aGoals:hGoals, a=inverted?hGoals:aGoals;
       if(scores[match.id]?.h===h&&scores[match.id]?.a===a)continue;
       scores[match.id]={h,a};
