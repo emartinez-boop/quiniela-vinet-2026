@@ -4204,8 +4204,9 @@ async function init(){
   setInterval(()=>{ renderCarousel(); renderDayStrip(); }, 60000);
 
   // Fetch official scores on load, then every 10 minutes (Free plan: 100 req/day)
-  await fetchRecentScores();
-  setInterval(fetchOfficialScores, 10 * 60 * 1000);
+  // Fetch oficial deshabilitado — resultados se ingresan manualmente vía Admin
+  // await fetchRecentScores();
+  // setInterval(fetchOfficialScores, 10 * 60 * 1000);
 
   // Show welcome modal on first visit (only after auth)
   if(authed && !sessionStorage.getItem('wm-seen') && !isDeadlinePassed()){
