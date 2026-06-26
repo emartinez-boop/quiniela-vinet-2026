@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pronósticos R32 — Quiniela Vinet 2026</title>
+<style>
+  :root {
+    --bg: #0c0e14;
+    --surface: #13161f;
+    --surface2: #1c2030;
+    --border: #252a3a;
+    --accent: #e8c84a;
+    --accent2: #c9a832;
+    --text: #ecedf4;
+    --muted: #6b7194;
+    --muted2: #8f95b2;
+    --danger: #e85a4a;
+    --success: #3dd68c;
+    --warn: #f0a04a;
+    --font: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
+
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .site-header .logo { font-size: 1.25rem; }
+  .site-header h1 { font-size: 0.95rem; font-weight: 700; color: var(--accent); line-height: 1.2; }
+  .site-header p  { font-size: 0.72rem; color: var(--muted2); }
+
+  .page { max-width: 640px; margin: 0 auto; padding: 24px 16px 80px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+  .card-label {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+  }
+
+  input[type="text"], input[type="email"] {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 13px; color: var(--text);
+    font-size: 0.92rem; font-family: var(--font); outline: none;
+    transition: border-color 0.15s;
+  }
+  input:focus { border-color: var(--accent); }
+  input::placeholder { color: var(--muted); }
+
+  .match-list { display: flex; flex-direction: column; gap: 8px; }
+  .match-row {
+    display: grid;
+    grid-template-columns: 26px 1fr auto;
+    align-items: center; gap: 10px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 9px; padding: 10px 12px;
+    transition: border-color 0.15s;
+  }
+  .match-row:focus-within { border-color: var(--accent); }
+  .match-row.filled  { border-color: #1e3d2a; }
+  .match-row.saved   { border-color: #1a3a28; background: #0d1f16; }
+
+  .match-num {
+    width: 22px; height: 22px; background: var(--surface2); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.68rem; font-weight: 700; color: var(--muted); flex-shrink: 0;
+  }
+  .match-num.done { background: #1a3a28; color: var(--success); }
+
+  .match-meta { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
+  .match-teams { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .match-date  { font-size: 0.68rem; color: var(--muted2); }
+
+  .score-box { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+  .score-box input[type="number"] {
+    width: 42px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 7px; padding: 7px 4px; color: var(--text);
+    font-size: 1rem; font-weight: 700; text-align: center;
+    outline: none; font-family: var(--font);
+    -moz-appearance: textfield; transition: border-color 0.15s;
+  }
+  .score-box input[type="number"]::-webkit-outer-spin-button,
+  .score-box input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .score-box input[type="number"]:focus { border-color: var(--accent); }
+  .score-box input[type="number"]:disabled { opacity: 0.5; }
+  .score-sep { color: var(--muted); font-weight: 700; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px; padding: 12px 20px; border-radius: 9px;
+    font-size: 0.92rem; font-weight: 700; cursor: pointer; border: none;
+    font-family: var(--font); transition: background 0.15s, opacity 0.15s, transform 0.1s;
+    width: 100%;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary  { background: var(--accent); color: #0c0e14; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+  .btn-ghost {
+    background: transparent; color: var(--muted2); border: 1px solid var(--border);
+    font-size: 0.82rem; padding: 9px 16px; width: auto;
+  }
+  .btn-ghost:hover { color: var(--text); border-color: var(--muted2); }
+  .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .progress-bar  { height: 4px; background: var(--surface2); border-radius: 2px; margin-bottom: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s ease; }
+  .progress-label { font-size: 0.75rem; color: var(--muted2); display: flex; justify-content: space-between; }
+
+  #toast {
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 20px; font-size: 0.85rem; font-weight: 600;
+    transition: transform 0.3s ease; z-index: 9999;
+    white-space: nowrap; max-width: calc(100vw - 32px);
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.ok   { border-color: var(--success); color: var(--success); }
+  #toast.err  { border-color: var(--danger);  color: var(--danger);  }
+  #toast.warn { border-color: var(--warn);    color: var(--warn);    }
+
+  /* admin */
+  .stat-row  { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .stat-chip { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 0.78rem; }
+  .stat-chip strong { display: block; font-size: 1.1rem; color: var(--accent); }
+
+  .p-row {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 9px;
+    padding: 11px 14px; margin-bottom: 7px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  }
+  .p-row .name  { font-size: 0.88rem; font-weight: 600; }
+  .p-row .email { font-size: 0.75rem; color: var(--muted2); margin-top: 1px; }
+
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
+  .b-full    { background: #1a3a28; color: var(--success); }
+  .b-partial { background: #1a1a30; color: #8090ff; }
+  .b-none    { background: #2a1a10; color: var(--warn); }
+
+  #adminPinWrap { text-align: center; padding: 60px 20px; }
+  #adminPinWrap h2 { color: var(--accent); margin-bottom: 8px; }
+  #adminPinWrap p  { color: var(--muted2); font-size: 0.85rem; margin-bottom: 20px; }
+  #adminPinInput   { max-width: 220px; text-align: center; letter-spacing: 3px; font-size: 1rem; margin: 0 auto 14px; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+
+  .spinner {
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid var(--border); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 480px) {
+    .match-teams { font-size: 0.8rem; }
+    .score-box input[type="number"] { width: 38px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <span class="logo">⚽</span>
+  <div>
+    <h1 id="headerTitle">Pronósticos R32 — Quiniela Vinet 2026</h1>
+    <p id="headerSub">16avos de final · Cierre: dom 28 jun · 12:30 CR</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     VISTA PARTICIPANTE
+══════════════════════════════════ -->
+<div id="viewForm">
+  <div class="page">
+
+    <!-- Paso 1: correo -->
+    <div class="card" id="emailCard">
+      <div class="card-label">Tu correo Vinet</div>
+      <div style="display:flex;gap:8px">
+        <input type="email" id="emailInput" placeholder="nombre@vinet.co.cr" autocomplete="email" style="flex:1">
+        <button class="btn btn-ghost" id="verifyBtn" onclick="verifyEmail()">Verificar →</button>
+      </div>
+      <div id="emailErr" style="font-size:0.75rem;color:var(--danger);margin-top:6px;display:none"></div>
+      <div id="emailOk"  style="font-size:0.78rem;color:var(--success);margin-top:6px;display:none"></div>
+    </div>
+
+    <!-- Progreso -->
+    <div class="card" id="progressCard" style="padding:14px 20px;display:none">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-label">
+        <span id="progressLabel">0 de 16 pronósticos</span>
+        <span id="savedLabel" style="color:var(--success);display:none">✓ Guardado</span>
+      </div>
+    </div>
+
+    <!-- Partidos -->
+    <div class="card" id="matchesCard" style="display:none">
+      <div class="card-label">16avos de final — ingresá tu marcador</div>
+      <div class="match-list" id="matchList"></div>
+    </div>
+
+    <!-- Botón guardar -->
+    <button class="btn btn-primary" id="saveFormBtn" onclick="saveForm()" disabled style="display:none">
+      Guardar pronósticos en la quiniela
+    </button>
+
+    <!-- Nota editable -->
+    <p id="editNote" style="display:none;text-align:center;font-size:0.75rem;color:var(--muted);margin-top:12px">
+      Podés volver a editar y guardar hasta el cierre del domingo 28 · 12:30 CR
+    </p>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     VISTA ADMIN
+══════════════════════════════════ -->
+<div id="viewAdmin" style="display:none">
+
+  <!-- PIN -->
+  <div id="adminPinWrap">
+    <h2>🔐 Admin R32</h2>
+    <p>Solo para Ericka · Quiniela Vinet 2026</p>
+    <input type="text" id="adminPinInput" placeholder="contraseña" maxlength="30">
+    <br>
+    <button class="btn btn-primary" style="max-width:200px;margin:0 auto" onclick="checkPin()">Entrar</button>
+    <div id="pinErr" style="font-size:0.75rem;color:var(--danger);margin-top:10px;display:none">Contraseña incorrecta</div>
+  </div>
+
+  <!-- Panel -->
+  <div id="adminPanel" style="display:none">
+    <div class="page">
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-size:1rem;font-weight:700;color:var(--accent)">Panel Admin — R32</div>
+          <div style="font-size:0.75rem;color:var(--muted2)">Estado de pronósticos en Supabase</div>
+        </div>
+        <button class="btn btn-ghost" onclick="loadAdmin()">↻ Actualizar</button>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-chip"><strong id="sTot">—</strong>Participantes</div>
+        <div class="stat-chip"><strong id="sFull">—</strong>Con 16/16</div>
+        <div class="stat-chip"><strong id="sPartial">—</strong>Parciales</div>
+        <div class="stat-chip"><strong id="sNone">—</strong>Sin picks R32</div>
+      </div>
+
+      <div id="adminList"></div>
+
+      <hr class="divider">
+
+      <p style="font-size:0.8rem;color:var(--muted2);margin-bottom:12px">
+        El recálculo actualiza puntos de todos los participantes. Hacelo después de cada partido o cuando necesites.
+      </p>
+      <button class="btn btn-primary" id="recalcBtn" onclick="recalcAll()">
+        🔄 Recalcular Puntos de Todos
+      </button>
+      <div id="recalcStatus" style="font-size:0.78rem;color:var(--muted2);margin-top:10px;text-align:center;display:none"></div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════
+const SUPA_URL = 'https://serbnnosjtzmbxmdjtbu.supabase.co';
+const SUPA_KEY = 'sb_publishable_msFNL9C2opQTead4JvFASw_Z6eZhb73';
+const ADMIN_PIN = 'Vinet2026Admin';
+
+// ⚠️ Actualizar labels cuando FIFA confirme los 16 cruces
+// match_id = posición en el array del index.html (no cambiar orden)
+const MATCHES = [
+  { id: 73,  n: 1,  label: '— vs —',                           date: 'Dom 28 jun',             ok: false },
+  { id: 74,  n: 2,  label: '— vs —',                           date: 'Dom 28 jun',             ok: false },
+  { id: 75,  n: 3,  label: '🇿🇦 Sudáfrica vs 🇨🇦 Canadá',      date: 'Dom 28 jun · 13:00 CR', ok: true  },
+  { id: 76,  n: 4,  label: '🇳🇱 Países Bajos vs 🇲🇦 Marruecos', date: 'Lun 29 jun · 19:00 CR', ok: true  },
+  { id: 77,  n: 5,  label: '— vs —',                           date: 'Lun 29 jun',             ok: false },
+  { id: 78,  n: 6,  label: '— vs —',                           date: 'Lun 29 jun',             ok: false },
+  { id: 79,  n: 7,  label: '🇺🇸 EE.UU. vs 🇧🇦 Bosnia y Herz.', date: 'Mié 1 jul · 18:00 CR',  ok: true  },
+  { id: 80,  n: 8,  label: '— vs —',                           date: 'Mar 30 jun',             ok: false },
+  { id: 81,  n: 9,  label: '🇧🇷 Brasil vs 🇯🇵 Japón',          date: 'Lun 29 jun · 11:00 CR', ok: true  },
+  { id: 82,  n: 10, label: '🇨🇮 Costa de Marfil vs 🇳🇴 Noruega',date: 'Mar 30 jun · 11:00 CR', ok: true  },
+  { id: 83,  n: 11, label: '— vs —',                           date: 'Mar 30 jun',             ok: false },
+  { id: 84,  n: 12, label: '— vs —',                           date: 'Mar 30 jun',             ok: false },
+  { id: 85,  n: 13, label: '— vs —',                           date: 'Mié 1 jul',              ok: false },
+  { id: 86,  n: 14, label: '— vs —',                           date: 'Mié 1 jul',              ok: false },
+  { id: 87,  n: 15, label: '— vs —',                           date: 'Mié 1 jul',              ok: false },
+  { id: 88,  n: 16, label: '— vs —',                           date: 'Mié 1 jul',              ok: false },
+];
+
+let participant = null; // { id, name, email }
+
+// ═══════════════════════════════════════
+// ROUTING
+// ═══════════════════════════════════════
+(function init() {
+  const p = new URLSearchParams(location.search).get('view');
+  if (p === 'admin') {
+    document.getElementById('viewForm').style.display  = 'none';
+    document.getElementById('viewAdmin').style.display = 'block';
+    document.getElementById('headerTitle').textContent = 'Admin R32 — Quiniela Vinet';
+    document.getElementById('headerSub').textContent   = 'Estado de pronósticos';
+  } else {
+    document.getElementById('emailInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') verifyEmail();
+    });
+    document.getElementById('emailInput').addEventListener('input', resetVerification);
+  }
+})();
+
+// ═══════════════════════════════════════
+// FORMULARIO — verificación
+// ═══════════════════════════════════════
+function resetVerification() {
+  if (!participant) return;
+  participant = null;
+  document.getElementById('emailOk').style.display    = 'none';
+  document.getElementById('progressCard').style.display = 'none';
+  document.getElementById('matchesCard').style.display  = 'none';
+  document.getElementById('saveFormBtn').style.display  = 'none';
+  document.getElementById('editNote').style.display     = 'none';
+}
+
+async function verifyEmail() {
+  const errEl = document.getElementById('emailErr');
+  const okEl  = document.getElementById('emailOk');
+  const btn   = document.getElementById('verifyBtn');
+  errEl.style.display = 'none';
+  okEl.style.display  = 'none';
+
+  const email = document.getElementById('emailInput').value.trim().toLowerCase();
+  if (!email) { errEl.textContent = 'Ingresá tu correo'; errEl.style.display = 'block'; return; }
+  if (!email.endsWith('@vinet.co.cr')) {
+    errEl.textContent = 'Debe ser un correo @vinet.co.cr';
+    errEl.style.display = 'block'; return;
+  }
+
+  btn.innerHTML = '<span class="spinner"></span>';
+  btn.disabled  = true;
+
+  try {
+    const res  = await supa(`participants?email=eq.${enc(email)}&select=id,name,email`);
+    const data = await res.json();
+
+    if (!data.length) {
+      errEl.textContent   = 'Correo no registrado en la quiniela';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    participant = data[0];
+    okEl.textContent   = `✓ Hola, ${participant.name} — ingresá tus 16 pronósticos`;
+    okEl.style.display = 'block';
+
+    // Cargar picks existentes de R32
+    const predsRes  = await supa(`predictions?participant_id=eq.${participant.id}&match_id=gte.73&match_id=lte.88&select=match_id,home_score,away_score`);
+    const existing  = await predsRes.json();
+    const map = {};
+    existing.forEach(p => { map[p.match_id] = p; });
+
+    renderMatches(map);
+    document.getElementById('progressCard').style.display = 'block';
+    document.getElementById('matchesCard').style.display  = 'block';
+    document.getElementById('saveFormBtn').style.display  = 'block';
+    document.getElementById('editNote').style.display     = 'block';
+    updateProgress();
+
+  } finally {
+    btn.textContent = 'Verificar →';
+    btn.disabled    = false;
+  }
+}
+
+// ═══════════════════════════════════════
+// FORMULARIO — partidos
+// ═══════════════════════════════════════
+function renderMatches(map = {}) {
+  const list = document.getElementById('matchList');
+  list.innerHTML = '';
+  MATCHES.forEach(m => {
+    const ex = map[m.id];
+    const hv = ex != null ? ex.home_score : '';
+    const av = ex != null ? ex.away_score : '';
+    const row = document.createElement('div');
+    row.className = `match-row${ex != null ? ' saved' : ''}`;
+    row.id = `row_${m.id}`;
+    row.innerHTML = `
+      <div class="match-num${ex != null ? ' done' : ''}" id="num_${m.id}">${m.n}</div>
+      <div class="match-meta">
+        <div class="match-teams">${m.label}${!m.ok ? ' <span style="font-size:0.62rem;color:var(--muted);font-weight:400">(por confirmar)</span>' : ''}</div>
+        <div class="match-date">${m.date}</div>
+      </div>
+      <div class="score-box">
+        <input type="number" min="0" max="20" id="h_${m.id}" value="${hv}" placeholder="0" oninput="onInput(${m.id})">
+        <span class="score-sep">:</span>
+        <input type="number" min="0" max="20" id="a_${m.id}" value="${av}" placeholder="0" oninput="onInput(${m.id})">
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function onInput(mid) {
+  const h = document.getElementById(`h_${mid}`);
+  const a = document.getElementById(`a_${mid}`);
+  const filled = h.value !== '' && a.value !== '';
+  document.getElementById(`row_${mid}`).classList.toggle('filled', filled);
+  document.getElementById(`num_${mid}`).classList.toggle('done', filled);
+  updateProgress();
+}
+
+function updateProgress() {
+  const filled = MATCHES.filter(m => {
+    const h = document.getElementById(`h_${m.id}`);
+    const a = document.getElementById(`a_${m.id}`);
+    return h && h.value !== '' && a && a.value !== '';
+  }).length;
+  document.getElementById('progressFill').style.width   = (filled / 16 * 100) + '%';
+  document.getElementById('progressLabel').textContent  = `${filled} de 16 pronósticos`;
+  document.getElementById('saveFormBtn').disabled       = (filled === 0 || !participant);
+}
+
+// ═══════════════════════════════════════
+// FORMULARIO — guardar (upsert directo)
+// ═══════════════════════════════════════
+async function saveForm() {
+  if (!participant) return;
+
+  const btn = document.getElementById('saveFormBtn');
+  btn.innerHTML = '<span class="spinner"></span> Guardando…';
+  btn.disabled  = true;
+
+  const rows = [];
+  MATCHES.forEach(m => {
+    const h = document.getElementById(`h_${m.id}`);
+    const a = document.getElementById(`a_${m.id}`);
+    if (h && h.value !== '' && a && a.value !== '') {
+      rows.push({ participant_id: participant.id, match_id: m.id,
+                  home_score: parseInt(h.value), away_score: parseInt(a.value) });
+    }
+  });
+
+  let ok = 0, err = 0;
+  for (const row of rows) {
+    const res = await supa(
+      `predictions?participant_id=eq.${row.participant_id}&match_id=eq.${row.match_id}`,
+      { method: 'POST',
+        headers: { 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+        body: JSON.stringify(row) }
+    );
+    if (res.ok) ok++; else err++;
+  }
+
+  btn.innerHTML = 'Guardar pronósticos en la quiniela';
+  btn.disabled  = false;
+
+  if (err === 0) {
+    toast(`✓ ${ok} pronóstico${ok !== 1 ? 's' : ''} guardados`, 'ok');
+    document.getElementById('savedLabel').style.display = 'inline';
+    // Marcar filas como guardadas
+    rows.forEach(r => {
+      document.getElementById(`row_${r.match_id}`)?.classList.add('saved');
+    });
+  } else {
+    toast(`${ok} OK · ${err} con error — intentá de nuevo`, 'err');
+  }
+}
+
+// ═══════════════════════════════════════
+// ADMIN — PIN
+// ═══════════════════════════════════════
+function checkPin() {
+  const val = document.getElementById('adminPinInput').value.trim();
+  if (val === ADMIN_PIN) {
+    document.getElementById('adminPinWrap').style.display = 'none';
+    document.getElementById('adminPanel').style.display   = 'block';
+    loadAdmin();
+  } else {
+    document.getElementById('pinErr').style.display = 'block';
+  }
+}
+
+// ═══════════════════════════════════════
+// ADMIN — cargar estado
+// ═══════════════════════════════════════
+async function loadAdmin() {
+  const listEl = document.getElementById('adminList');
+  listEl.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;padding:10px 0">Cargando…</div>';
+
+  // Todos los participantes
+  const pRes  = await supa('participants?select=id,name,email&order=name');
+  const parts = await pRes.json();
+
+  // Picks R32 existentes (match_id 73–88)
+  const prRes = await supa('predictions?match_id=gte.73&match_id=lte.88&select=participant_id,match_id');
+  const preds = await prRes.json();
+
+  // Agrupar conteo por participante
+  const count = {};
+  preds.forEach(p => { count[p.participant_id] = (count[p.participant_id] || 0) + 1; });
+
+  const full    = parts.filter(p => (count[p.id] || 0) === 16);
+  const partial = parts.filter(p => (count[p.id] || 0) > 0 && (count[p.id] || 0) < 16);
+  const none    = parts.filter(p => !count[p.id]);
+
+  document.getElementById('sTot').textContent     = parts.length;
+  document.getElementById('sFull').textContent    = full.length;
+  document.getElementById('sPartial').textContent = partial.length;
+  document.getElementById('sNone').textContent    = none.length;
+
+  // Render lista — primero los que faltan, luego completos
+  listEl.innerHTML = '';
+  const sorted = [...none, ...partial, ...full];
+  sorted.forEach(p => {
+    const c = count[p.id] || 0;
+    const badgeClass = c === 16 ? 'b-full' : c > 0 ? 'b-partial' : 'b-none';
+    const badgeText  = c === 16 ? '✓ 16/16' : c > 0 ? `${c}/16` : 'Sin picks';
+    const row = document.createElement('div');
+    row.className = 'p-row';
+    row.innerHTML = `
+      <div>
+        <div class="name">${p.name}</div>
+        <div class="email">${p.email}</div>
+      </div>
+      <span class="badge ${badgeClass}">${badgeText}</span>`;
+    listEl.appendChild(row);
+  });
+}
+
+// ═══════════════════════════════════════
+// ADMIN — recalcular (llama función del index.html vía Supabase RPC si existe,
+// o muestra instrucción para hacerlo manual)
+// ═══════════════════════════════════════
+async function recalcAll() {
+  const btn    = document.getElementById('recalcBtn');
+  const status = document.getElementById('recalcStatus');
+  btn.innerHTML = '<span class="spinner"></span> Recalculando…';
+  btn.disabled  = true;
+  status.style.display = 'none';
+
+  // Intentar RPC recalc_all si existe en Supabase
+  try {
+    const res = await supa('rpc/recalculate_all_points', { method: 'POST', body: '{}' });
+    if (res.ok) {
+      toast('✓ Puntos recalculados', 'ok');
+      status.textContent    = '✓ Recálculo completado — actualizá la app para ver los cambios';
+      status.style.color    = 'var(--success)';
+      status.style.display  = 'block';
+      loadAdmin();
+    } else {
+      throw new Error('no rpc');
+    }
+  } catch {
+    // Si no hay RPC, recordatorio manual
+    status.innerHTML = '⚠️ Abrí la quiniela principal → tab Admin → <strong>🔄 Recalcular Puntos de Todos</strong>';
+    status.style.color   = 'var(--warn)';
+    status.style.display = 'block';
+    toast('Hacelo desde el Admin de la quiniela principal', 'warn');
+  }
+
+  btn.innerHTML = '🔄 Recalcular Puntos de Todos';
+  btn.disabled  = false;
+}
+
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+function supa(path, opts = {}) {
+  return fetch(`${SUPA_URL}/rest/v1/${path}`, {
+    headers: {
+      'apikey': SUPA_KEY,
+      'Authorization': `Bearer ${SUPA_KEY}`,
+      'Content-Type': 'application/json',
+      ...(opts.headers || {})
+    },
+    ...opts
+  });
+}
+
+function enc(s) { return encodeURIComponent(s); }
+
+function toast(msg, type = 'ok') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = `show ${type}`;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.className = ''; }, 3500);
+}
+</script>
+</body>
+</html>
