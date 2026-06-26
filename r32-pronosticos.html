@@ -457,12 +457,18 @@ async function saveForm() {
   let ok = 0, err = 0;
   for (const row of rows) {
     const res = await supa(
-      `predictions?participant_id=eq.${row.participant_id}&match_id=eq.${row.match_id}`,
+      `predictions`,
       { method: 'POST',
-        headers: { 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+        headers: { 'Prefer': 'resolution=merge-duplicates,return=minimal', 'Content-Type': 'application/json' },
         body: JSON.stringify(row) }
     );
-    if (res.ok) ok++; else err++;
+    if (res.ok) {
+      ok++;
+    } else {
+      const txt = await res.text();
+      console.error('Match ' + row.match_id + ':', txt);
+      err++;
+    }
   }
 
   btn.innerHTML = 'Guardar pronósticos en la quiniela';
