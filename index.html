@@ -2358,7 +2358,8 @@ function resolveKnockout(){
 function calcPts(p){
   let pts=0,exact=0,correct=0;
   const preds=p.preds||{};
-  MATCHES.filter(m=>m.group).forEach(m=>{
+  // Sumar puntos de TODOS los partidos con resultado (grupos + eliminación)
+  MATCHES.forEach(m=>{
     const sc=scores[m.id];
     if(!sc||sc.h==null) return;
     const pr=preds[m.id];
