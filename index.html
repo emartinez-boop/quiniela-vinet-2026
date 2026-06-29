@@ -2395,9 +2395,11 @@ function refreshPts(){
 // Recalcula y guarda puntos de TODOS en Supabase (solo admin)
 async function recalcAllPts(){
   toast('⏳ Recalculando puntos de todos...');
-  // 1. Asegurar que todos los participantes estén en memoria
+  // 1. Cargar scores actualizados desde Supabase
+  await loadScores();
+  // 2. Asegurar que todos los participantes estén en memoria
   await loadParts();
-  // 2. Cargar TODAS las predicciones con paginación
+  // 3. Cargar TODAS las predicciones con paginación
   await loadAllPredsForScoring();
   // 3. Recalcular puntos en memoria
   refreshPts();
