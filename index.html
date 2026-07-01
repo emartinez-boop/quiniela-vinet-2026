@@ -2329,15 +2329,23 @@ function resolveSlot(slot, koResults){
   return null;
 }
 
+// Ganadores por penales — actualizar manualmente cuando un partido termina en empate
+// Formato: { match_id: 'Nombre del equipo ganador' }
+const PENALTY_WINNERS = {
+  74: 'Paraguay',   // Alemania vs Paraguay 1-1 → Paraguay gana en penales
+  76: 'Marruecos',  // Países Bajos vs Marruecos 1-1 → Marruecos gana en penales
+};
+
 // Build a koResults map: matchId -> winner name, from saved scores
 function buildKoResults(){
   const res={};
   MATCHES.filter(m=>!m.group).forEach(m=>{
     const sc=scores[m.id];
     if(!sc||sc.h==null) return;
-    // In knockout, higher score wins; ties -> we mark as TBD (would need penalties)
+    // In knockout, higher score wins; ties -> check penalty winners map
     if(sc.h>sc.a) res[m.id]=m.resolvedHome||m.home;
     else if(sc.h<sc.a) res[m.id]=m.resolvedAway||m.away;
+    else if(PENALTY_WINNERS[m.id]) res[m.id]=PENALTY_WINNERS[m.id];
     else res[m.id]='(penales)';
   });
   return res;
@@ -3024,6 +3032,7 @@ function buildKoResultsFrom(sc){
     if(!s||s.h==null) return;
     if(s.h>s.a) res[m.id]=m.resolvedHome||m.home;
     else if(s.h<s.a) res[m.id]=m.resolvedAway||m.away;
+    else if(PENALTY_WINNERS[m.id]) res[m.id]=PENALTY_WINNERS[m.id];
     else res[m.id]='(penales)';
   });
   return res;
