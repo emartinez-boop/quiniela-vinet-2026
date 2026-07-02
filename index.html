@@ -986,6 +986,22 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
     <div id="admin-scores-list" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);">Cargando…</div>
   </div>
 
+
+  <!-- GANADORES POR PENALES -->
+  <div style="background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:24px;max-width:480px;margin-top:24px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;">🥅 Ganador por Penales</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--muted);margin-bottom:16px;letter-spacing:.5px;">Usá esto cuando un partido termine en empate y se defina por penales. El bracket mostrará el equipo correcto.</div>
+    <div style="margin-bottom:12px;">
+      <label style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--dim);letter-spacing:1px;display:block;margin-bottom:6px;">PARTIDO</label>
+      <select id="penalty-match-sel" style="width:100%;background:var(--s3);border:1px solid var(--brd2);border-radius:var(--r);padding:10px 12px;color:var(--txt);font-family:'Barlow Condensed',sans-serif;font-size:13px;cursor:pointer;"><option value="">— Seleccioná un partido —</option></select>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--dim);letter-spacing:1px;display:block;margin-bottom:6px;">EQUIPO GANADOR EN PENALES</label>
+      <input id="penalty-winner-input" type="text" placeholder="Ej: Paraguay" style="width:100%;background:var(--s3);border:1px solid var(--brd2);border-radius:var(--r);padding:10px 12px;color:var(--txt);font-family:'Barlow Condensed',sans-serif;font-size:14px;box-sizing:border-box;">
+    </div>
+    <button onclick="adminSavePenaltyWinner()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;border-radius:var(--r);padding:12px 28px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;width:100%;margin-bottom:8px;">🥅 Guardar Ganador por Penales</button>
+    <div id="penalty-list" style="margin-top:12px;font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--muted);"></div>
+  </div>
   <!-- EXPORTAR Y RECALCULAR -->
   <div style="background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:24px;max-width:480px;">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);margin-bottom:16px;letter-spacing:.5px;">
@@ -2331,10 +2347,80 @@ function resolveSlot(slot, koResults){
 
 // Ganadores por penales — actualizar manualmente cuando un partido termina en empate
 // Formato: { match_id: 'Nombre del equipo ganador' }
-const PENALTY_WINNERS = {
-  74: 'Paraguay',   // Alemania vs Paraguay 1-1 → Paraguay gana en penales
-  76: 'Marruecos',  // Países Bajos vs Marruecos 1-1 → Marruecos gana en penales
+// ─────────────────────────────────────────────
+// PENALTY WINNERS — dynamic, loaded from Supabase
+// ─────────────────────────────────────────────
+let PENALTY_WINNERS = {
+  74: 'Paraguay',
+  76: 'Marruecos',
 };
+
+async function loadPenaltyWinners(){
+  try{
+    const r = await fetch(`${SB_URL}/rest/v1/penalty_winners?select=match_id,winner`, {
+      headers: SB_HDRS
+    });
+    if(r.ok){
+      const rows = await r.json();
+      rows.forEach(row => { PENALTY_WINNERS[row.match_id] = row.winner; });
+    }
+  }catch(e){ console.warn('loadPenaltyWinners:', e); }
+}
+
+async function adminSavePenaltyWinner(){
+  const sel     = document.getElementById('penalty-match-sel');
+  const input   = document.getElementById('penalty-winner-input');
+  const matchId = parseInt(sel.value);
+  const winner  = input.value.trim();
+  if(!matchId){ alert('Seleccioná un partido.'); return; }
+  if(!winner){  alert('Escribí el nombre del equipo ganador.'); return; }
+  const match = MATCHES.find(m=>m.id===matchId);
+  const label = match ? `${match.home} vs ${match.away}` : `match ${matchId}`;
+  if(!confirm(`¿Confirmar que el ganador por penales de "${label}" es "${winner}"?`)) return;
+  try{
+    const r = await fetch(`${SB_URL}/rest/v1/penalty_winners`, {
+      method: 'POST',
+      headers: {...SB_HDRS, 'Prefer': 'resolution=merge-duplicates,return=minimal'},
+      body: JSON.stringify([{match_id: matchId, winner: winner}])
+    });
+    if(r.ok){
+      PENALTY_WINNERS[matchId] = winner;
+      input.value = '';
+      sel.value = '';
+      renderPenaltyList();
+      resolveKnockout();
+      renderBracket();
+      renderMatches();
+      alert(`✅ Guardado: ${label} → ${winner}`);
+    } else {
+      alert('❌ Error al guardar. Revisá la tabla penalty_winners en Supabase.');
+    }
+  }catch(e){ alert('❌ Error de red: '+e); }
+}
+
+function renderPenaltyList(){
+  const el = document.getElementById('penalty-list');
+  if(!el) return;
+  const entries = Object.entries(PENALTY_WINNERS);
+  if(!entries.length){ el.innerHTML='Sin registros aún.'; return; }
+  el.innerHTML = '<div style="margin-bottom:6px;color:var(--dim);font-size:11px;letter-spacing:1px;">REGISTRADOS:</div>' +
+    entries.map(([id,w])=>{
+      const m = MATCHES.find(x=>x.id===parseInt(id));
+      const lbl = m ? `${m.home} vs ${m.away}` : `match ${id}`;
+      return `<div style="padding:4px 0;border-bottom:1px solid var(--brd1);">🥅 <b>${lbl}</b> → ${w}</div>`;
+    }).join('');
+}
+
+function initPenaltyMatchDropdown(){
+  const sel = document.getElementById('penalty-match-sel');
+  if(!sel) return;
+  MATCHES.filter(m=>!m.group).forEach(m=>{
+    const opt = document.createElement('option');
+    opt.value = m.id;
+    opt.textContent = `${m.home} vs ${m.away} (id ${m.id})`;
+    sel.appendChild(opt);
+  });
+}
 
 // Build a koResults map: matchId -> winner name, from saved scores
 function buildKoResults(){
@@ -4056,6 +4142,7 @@ async function init(){
 
   await loadScores();
   await loadParts();
+  await loadPenaltyWinners();
   // pts vienen de Supabase — NO llamar refreshPts() aquí (sobreescribiría con 0)
   renderCarousel();
   renderDayStrip();
@@ -4066,6 +4153,8 @@ async function init(){
   renderGroups();
   renderBracket();
   buildRegForm();
+  initPenaltyMatchDropdown();
+  renderPenaltyList();
   updateStats();
   setSyncing(false);
   updateCountdown();
