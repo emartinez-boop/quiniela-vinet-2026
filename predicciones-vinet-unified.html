@@ -156,6 +156,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Barlow',sans-serif;min-h
 <div class="phase-tabs">
   <div class="phase-tab active" id="tab-grupos" onclick="setPhase('grupos')">🏆 Fase de Grupos</div>
   <div class="phase-tab" id="tab-r32" onclick="setPhase('r32')">⚔️ Dieciseisavos</div>
+  <div class="phase-tab" id="tab-r16" onclick="setPhase('r16')">🥊 Octavos</div>
 </div>
 
 <!-- TOOLBAR -->
@@ -310,12 +311,23 @@ const MATCHES_R32 = [
   {id:88,home:'Colombia',away:'Ghana',date:'3 Jul',timeCR:'19:30 CR',venue:'Kansas City',flag_h:'🇨🇴',flag_a:'🇬🇭'},
 ];
 
+const MATCHES_R16 = [
+  {id:89,home:'Canadá',away:'Marruecos',date:'4 Jul',timeCR:'11:00 CR',venue:'Filadelfia',flag_h:'🇨🇦',flag_a:'🇲🇦'},
+  {id:90,home:'Paraguay',away:'Francia',date:'4 Jul',timeCR:'15:00 CR',venue:'Houston',flag_h:'🇵🇾',flag_a:'🇫🇷'},
+  {id:91,home:'Brasil',away:'Noruega',date:'5 Jul',timeCR:'14:00 CR',venue:'Nueva York',flag_h:'🇧🇷',flag_a:'🇳🇴'},
+  {id:92,home:'México',away:'Inglaterra',date:'5 Jul',timeCR:'18:00 CR',venue:'Ciudad de México',flag_h:'🇲🇽',flag_a:'🏴󠁧󠁢󠁥󠁮󠁧󠁿'},
+  {id:93,home:'Bélgica',away:'EE.UU.',date:'6 Jul',timeCR:'14:00 CR',venue:'Seattle',flag_h:'🇧🇪',flag_a:'🇺🇸'},
+  {id:94,home:'España',away:'Portugal',date:'6 Jul',timeCR:'18:00 CR',venue:'Dallas',flag_h:'🇪🇸',flag_a:'🇵🇹'},
+  {id:95,home:'Suiza/Argelia',away:'Colombia/Ghana',date:'7 Jul',timeCR:'14:00 CR',venue:'Los Ángeles',flag_h:'🏳️',flag_a:'🏳️'},
+  {id:96,home:'Australia/Egipto',away:'Argentina/Cabo Verde',date:'7 Jul',timeCR:'18:00 CR',venue:'Atlanta',flag_h:'🏳️',flag_a:'🏳️'},
+];
+
 // ── STATE ────────────────────────────────────────────────────────────────────
-let scoresG={}, scoresR={};
-let predsG={}, predsR={};
+let scoresG={}, scoresR={}, scoresR16={};
+let predsG={}, predsR={}, predsR16={};
 let participants={};             // id → name
 let participantNames=[];         // sorted list of names
-let activePhase = 'grupos';      // 'grupos' | 'r32'
+let activePhase = 'grupos';      // 'grupos' | 'r32' | 'r16'
 let activeFilter = 'all';        // group letter or 'all'
 let searchQ = '';
 let selectedParticipant = '';    // name string, or ''
@@ -366,6 +378,16 @@ async function fetchAll(){
     }
   }catch(e){}
 
+  // Scores R16 (89-104)
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/scores?select=match_id,home_score,away_score&match_id=gte.89&match_id=lte.104&limit=20`,{headers:HDRS});
+    if(r.ok){
+      const rows=await r.json();
+      scoresR16={};
+      rows.forEach(row=>{if(row.home_score!=null&&row.away_score!=null) scoresR16[row.match_id]={h:row.home_score,a:row.away_score};});
+    }
+  }catch(e){}
+
   // Participants
   try{
     const r=await fetch(`${SB_URL}/rest/v1/participants?select=id,name&limit=500`,{headers:HDRS});
@@ -413,6 +435,21 @@ async function fetchAll(){
     }
   }catch(e){}
 
+  // Predictions R16 (match_id 89-104)
+  try{
+    predsR16={};
+    const r=await fetch(`${SB_URL}/rest/v1/predictions?select=participant_id,match_id,home_score,away_score&match_id=gte.89&match_id=lte.104&limit=1000`,{headers:HDRS});
+    if(r.ok){
+      const rows=await r.json();
+      rows.forEach(row=>{
+        const name=participants[row.participant_id]||row.participant_id;
+        if(!predsR16[row.match_id]) predsR16[row.match_id]=[];
+        predsR16[row.match_id].push({name,h:row.home_score,a:row.away_score});
+      });
+      Object.keys(predsR16).forEach(mid=>predsR16[mid].sort((a,b)=>a.name.localeCompare(b.name)));
+    }
+  }catch(e){}
+
   const now=new Date().toLocaleTimeString('es-CR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   document.getElementById('sync-bar').innerHTML=`⚡ EN VIVO · Última actualización: <span>${now}</span> · Se actualiza cada 5 min`;
   render();
@@ -437,10 +474,11 @@ function setPhase(phase){
   activePhase=phase;
   document.getElementById('tab-grupos').classList.toggle('active',phase==='grupos');
   document.getElementById('tab-r32').classList.toggle('active',phase==='r32');
+  document.getElementById('tab-r16').classList.toggle('active',phase==='r16');
   // Show/hide group filters
   document.getElementById('group-filters').style.display = phase==='grupos' ? 'flex' : 'none';
-  // Reset group filter when switching to R32
-  if(phase==='r32'){activeFilter='all';}
+  // Reset group filter when switching away from grupos
+  if(phase!=='grupos'){activeFilter='all';}
   render();
 }
 
@@ -491,9 +529,9 @@ function updateParticipantCard(){
   if(!selectedParticipant){card.classList.add('hidden');return;}
 
   // Calculate stats across BOTH phases
-  const allMatches=[...MATCHES_GRUPOS,...MATCHES_R32];
-  const allScores={...scoresG,...scoresR};
-  const allPreds={...predsG,...predsR};
+  const allMatches=[...MATCHES_GRUPOS,...MATCHES_R32,...MATCHES_R16];
+  const allScores={...scoresG,...scoresR,...scoresR16};
+  const allPreds={...predsG,...predsR,...predsR16};
 
   let exact=0,correct=0,wrong=0,pending=0;
   allMatches.forEach(m=>{
@@ -523,9 +561,9 @@ function updateParticipantCard(){
 // ── RENDER ────────────────────────────────────────────────────────────────────
 function render(){
   const isGroups = activePhase==='grupos';
-  const matches   = isGroups ? [...MATCHES_GRUPOS] : [...MATCHES_R32];
-  const scores    = isGroups ? scoresG : scoresR;
-  const preds     = isGroups ? predsG  : predsR;
+  const matches   = activePhase==='grupos' ? [...MATCHES_GRUPOS] : activePhase==='r32' ? [...MATCHES_R32] : [...MATCHES_R16];
+  const scores    = activePhase==='grupos' ? scoresG : activePhase==='r32' ? scoresR : scoresR16;
+  const preds     = activePhase==='grupos' ? predsG  : activePhase==='r32' ? predsR : predsR16;
 
   // Apply group filter (grupos only)
   let filtered=matches;
