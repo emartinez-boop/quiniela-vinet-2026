@@ -318,8 +318,8 @@ const MATCHES_R16 = [
   {id:92,home:'México',away:'Inglaterra',date:'5 Jul',timeCR:'18:00 CR',venue:'Ciudad de México',flag_h:'🇲🇽',flag_a:'🏴󠁧󠁢󠁥󠁮󠁧󠁿'},
   {id:93,home:'Bélgica',away:'EE.UU.',date:'6 Jul',timeCR:'14:00 CR',venue:'Seattle',flag_h:'🇧🇪',flag_a:'🇺🇸'},
   {id:94,home:'España',away:'Portugal',date:'6 Jul',timeCR:'18:00 CR',venue:'Dallas',flag_h:'🇪🇸',flag_a:'🇵🇹'},
-  {id:95,home:'Suiza/Argelia',away:'Colombia/Ghana',date:'7 Jul',timeCR:'14:00 CR',venue:'Los Ángeles',flag_h:'🏳️',flag_a:'🏳️'},
-  {id:96,home:'Australia/Egipto',away:'Argentina/Cabo Verde',date:'7 Jul',timeCR:'18:00 CR',venue:'Atlanta',flag_h:'🏳️',flag_a:'🏳️'},
+  {id:95,home:'Suiza',away:'Colombia',date:'7 Jul',timeCR:'14:00 CR',venue:'Los Ángeles',flag_h:'🇨🇭',flag_a:'🇨🇴'},
+  {id:96,home:'Egipto',away:'Argentina',date:'7 Jul',timeCR:'18:00 CR',venue:'Atlanta',flag_h:'🇪🇬',flag_a:'🇦🇷'},
 ];
 
 // ── STATE ────────────────────────────────────────────────────────────────────
@@ -587,7 +587,7 @@ function render(){
   // Stats bar
   const total=Object.values(preds).reduce((s,a)=>s+a.length,0);
   const participantes=new Set(Object.values(preds).flatMap(a=>a.map(p=>p.name))).size;
-  const matchLabel=isGroups?'72':'16';
+  const matchLabel=activePhase==='grupos'?'72':activePhase==='r32'?'16':'8';
   document.getElementById('stats-bar').innerHTML=`
     <div class="stat-chip">Participantes: <span>${participantes}</span></div>
     <div class="stat-chip">Predicciones: <span>${total}</span></div>
@@ -610,9 +610,11 @@ function render(){
     byDate[m.date].push(m);
   });
 
-  const dateOrder=isGroups
+  const dateOrder=activePhase==='grupos'
     ? ['11 Jun','12 Jun','13 Jun','14 Jun','15 Jun','16 Jun','17 Jun','18 Jun','19 Jun','20 Jun','21 Jun','22 Jun','23 Jun','24 Jun','25 Jun','26 Jun','27 Jun']
-    : ['28 Jun','29 Jun','30 Jun','1 Jul','2 Jul','3 Jul'];
+    : activePhase==='r32'
+    ? ['28 Jun','29 Jun','30 Jun','1 Jul','2 Jul','3 Jul']
+    : ['4 Jul','5 Jul','6 Jul','7 Jul'];
 
   let html='';
   dateOrder.forEach(date=>{
