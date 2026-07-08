@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Picks · Quiniela Vinet 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --s1: #141414;
+    --s2: #1a1a1a;
+    --s3: #222;
+    --brd: #2a2a2a;
+    --txt: #f0f0f0;
+    --muted: #888;
+    --dim: #555;
+    --gold: #D4A017;
+    --green: #22c55e;
+    --green-bg: rgba(34,197,94,0.12);
+    --green-brd: rgba(34,197,94,0.35);
+    --red: #ef4444;
+    --red-bg: rgba(239,68,68,0.10);
+    --r: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--txt); font-family: 'Barlow Condensed', sans-serif; min-height: 100vh; }
+
+  header {
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a1a0a 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 28px 24px 20px;
+    text-align: center;
+  }
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 5vw, 48px);
+    letter-spacing: 4px;
+    color: var(--gold);
+  }
+  header p { font-size: 13px; color: var(--muted); letter-spacing: 2px; margin-top: 4px; }
+
+  .alive-bar {
+    background: var(--s1);
+    border-bottom: 1px solid var(--brd);
+    padding: 14px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+  }
+  .alive-label { font-size: 11px; letter-spacing: 2px; color: var(--dim); margin-right: 4px; }
+  .alive-chip {
+    background: var(--green-bg);
+    border: 1px solid var(--green-brd);
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  .legend {
+    display: flex; gap: 16px; justify-content: center;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--brd);
+    font-size: 12px; letter-spacing: 1px;
+  }
+  .leg-alive { color: var(--green); }
+  .leg-out   { color: var(--muted); }
+
+  .search-bar {
+    padding: 14px 24px;
+    display: flex; justify-content: center;
+  }
+  .search-bar input {
+    background: var(--s2); border: 1px solid var(--brd); border-radius: var(--r);
+    padding: 10px 16px; color: var(--txt); font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; width: 100%; max-width: 400px; outline: none; letter-spacing: .5px;
+  }
+  .search-bar input:focus { border-color: var(--gold); }
+
+  .stats-bar {
+    display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    padding: 0 24px 16px;
+    font-size: 12px; color: var(--muted); letter-spacing: 1px;
+  }
+  .stat-chip {
+    background: var(--s2); border: 1px solid var(--brd);
+    padding: 4px 12px; border-radius: 20px;
+  }
+  .stat-chip span { color: var(--gold); font-weight: 700; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    padding: 0 16px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--s1);
+    border: 1px solid var(--brd);
+    border-radius: var(--r);
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: #444; }
+
+  .card-name {
+    background: var(--s2);
+    border-bottom: 1px solid var(--brd);
+    padding: 10px 14px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 2px;
+    color: var(--txt);
+  }
+
+  .card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+
+  .pick-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 10px; border-radius: 6px;
+    border: 1px solid transparent;
+  }
+  .pick-row.alive {
+    background: var(--green-bg);
+    border-color: var(--green-brd);
+  }
+  .pick-row.out {
+    opacity: .45;
+  }
+
+  .pick-icon { font-size: 18px; line-height: 1; flex-shrink: 0; }
+  .pick-content { flex: 1; min-width: 0; }
+  .pick-label {
+    font-size: 10px; letter-spacing: 1.5px; color: var(--dim); display: block; margin-bottom: 1px;
+  }
+  .pick-value {
+    font-size: 15px; font-weight: 700; letter-spacing: .5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .pick-row.alive .pick-value { color: var(--green); }
+  .pick-row.out .pick-value { color: var(--muted); }
+
+  .pick-badge {
+    font-size: 10px; letter-spacing: 1px; padding: 2px 7px; border-radius: 10px; flex-shrink: 0;
+    font-weight: 700;
+  }
+  .badge-alive { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-brd); }
+  .badge-out   { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,.3); }
+
+  .scorer-row {
+    border-top: 1px solid var(--brd);
+    margin-top: 4px; padding-top: 8px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .scorer-goals { font-size: 11px; color: var(--dim); letter-spacing: 1px; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 500px) {
+    .grid { grid-template-columns: 1fr; padding: 0 10px 40px; }
+    header { padding: 20px 16px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚽ Picks · Quiniela Vinet 2026</h1>
+  <p>CAMPEÓN · SUBCAMPEÓN · TERCER LUGAR · GOLEADOR · EQUIPOS EN VERDE = AÚN VIVOS</p>
+</header>
+
+<div class="alive-bar">
+  <span class="alive-label">EQUIPOS VIVOS:</span>
+  <span class="alive-chip">🇫🇷 Francia</span>
+  <span class="alive-chip">🇲🇦 Marruecos</span>
+  <span class="alive-chip">🇪🇸 España</span>
+  <span class="alive-chip">🇧🇪 Bélgica</span>
+  <span class="alive-chip">🇳🇴 Noruega</span>
+  <span class="alive-chip">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</span>
+  <span class="alive-chip">🇦🇷 Argentina</span>
+  <span class="alive-chip">🇨🇭 Suiza</span>
+</div>
+
+<div class="legend">
+  <span class="leg-alive">🟢 En verde = equipo aún vivo</span>
+  <span class="leg-out">⚫ Opaco = eliminado</span>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="search" placeholder="Buscar participante..." oninput="filterCards()">
+</div>
+
+<div class="stats-bar" id="stats-bar"></div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const ALIVE = new Set([
+  'francia','marruecos','espana','belgica','noruega','inglaterra','argentina','suiza'
+]);
+
+function isAlive(team){
+  if(!team) return false;
+  const n = team.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  return ALIVE.has(n);
+}
+
+function normalize(str){
+  return (str||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
+// Mapa goleador → equipo
+const SCORER_TEAM = {
+  'kylian mbappé': 'francia',
+  'kylian mbappe': 'francia',
+  'mbappé': 'francia',
+  'mbappe': 'francia',
+  'harry kane': 'inglaterra',
+  'harry kayne': 'inglaterra',
+  'lamine yamal': 'espana',
+  'michael olise': 'francia',
+  'luis diaz': 'colombia',
+  'luis díaz': 'colombia',
+  'cristiano ronaldo': 'portugal',
+  'dembélé': 'francia',
+  'dembele': 'francia',
+};
+
+function isScorerAlive(scorer){
+  if(!scorer) return false;
+  const n = scorer.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  for(const [key, team] of Object.entries(SCORER_TEAM)){
+    const kn = key.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    if(n.includes(kn) || kn.includes(n)) return ALIVE.has(team);
+  }
+  return false; // equipo no identificado = OUT
+}
+
+function teamFlag(team){
+  const t = normalize(team);
+  const flags = {
+    'francia':'🇫🇷','marruecos':'🇲🇦','espana':'🇪🇸','belgica':'🇧🇪',
+    'noruega':'🇳🇴','inglaterra':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','argentina':'🇦🇷','suiza':'🇨🇭',
+    'portugal':'🇵🇹','brasil':'🇧🇷','alemania':'🇩🇪','paises bajos':'🇳🇱',
+    'mexico':'🇲🇽','colombia':'🇨🇴','eeuu':'🇺🇸','croacia':'🇭🇷',
+    'suecia':'🇸🇪','japon':'🇯🇵','canada':'🇨🇦','australia':'🇦🇺',
+    'egipto':'🇪🇬','senegal':'🇸🇳','ghana':'🇬🇭','uruguay':'🇺🇾',
+  };
+  for(const [key,flag] of Object.entries(flags)){
+    if(t.includes(key)) return flag;
+  }
+  return '🏳️';
+}
+
+const PICKS = [
+  {name:"Adrian Castro",champion:"Francia",runner:"España",third:"Brasil",scorer:"Kylian Mbappé",goals:296},
+  {name:"Anthony Chaves",champion:"España",runner:"Argentina",third:"Francia",scorer:"Kylian Mbappé",goals:186},
+  {name:"Beatriz Bejarano",champion:"Portugal",runner:"Países Bajos",third:"Inglaterra",scorer:"Cristiano Ronaldo",goals:101},
+  {name:"Bryan Masis",champion:"Francia",runner:"Portugal",third:"España",scorer:"Kylian Mbappé",goals:195},
+  {name:"Carlos Soto",champion:"Francia",runner:"Portugal",third:"España",scorer:"Kylian Mbappé",goals:277},
+  {name:"Catalina Arias",champion:"Brasil",runner:"Francia",third:"Argentina",scorer:"Luis Díaz",goals:325},
+  {name:"Cristofer Rodriguez",champion:"Francia",runner:"Brasil",third:"España",scorer:"Mbappé",goals:9},
+  {name:"Daniela Morales Obando",champion:"Portugal",runner:"Inglaterra",third:"Francia",scorer:"Michael Olise",goals:265},
+  {name:"David Zuñiga Redondo",champion:"España",runner:"Francia",third:"Argentina",scorer:"Mbappé",goals:134},
+  {name:"Diego Mcmilty",champion:"Países Bajos",runner:"Portugal",third:"Argentina",scorer:"Dembélé",goals:207},
+  {name:"Doryan Zúñiga Sánchez",champion:"Portugal",runner:"Francia",third:"España",scorer:"Kylian Mbappé",goals:280},
+  {name:"Dylan Castro Z",champion:"España",runner:"Francia",third:"Argentina",scorer:"Kylian Mbappé",goals:301},
+  {name:"Eddy Navarro",champion:"Portugal",runner:"Alemania",third:"Alemania",scorer:"Mbappé",goals:210},
+  {name:"Edgar",champion:"Francia",runner:"Inglaterra",third:"España",scorer:"Harry Kane",goals:7},
+  {name:"Eimer González",champion:"España",runner:"Francia",third:"Portugal",scorer:"Harry Kane",goals:296},
+  {name:"ERIKA MARTINEZ",champion:"Argentina",runner:"Francia",third:"Países Bajos",scorer:"Kylian Mbappé",goals:280},
+  {name:"Fernando Lopez",champion:"Alemania",runner:"Portugal",third:"Francia",scorer:"Cristiano Ronaldo",goals:9},
+  {name:"Franklin Murillo Chaves",champion:"España",runner:"Francia",third:"Portugal",scorer:"Kylian Mbappé",goals:290},
+  {name:"Freddy Contreras",champion:"Argentina",runner:"España",third:"Francia",scorer:"Kylian Mbappé",goals:7},
+  {name:"Heigelbert",champion:"Alemania",runner:"Portugal",third:"Inglaterra",scorer:"Cristiano Ronaldo",goals:7},
+  {name:"Jafet Alvarez Soto",champion:"Portugal",runner:"España",third:"Francia",scorer:"Kylian Mbappé",goals:276},
+  {name:"Jaritza Calero",champion:"España",runner:"Francia",third:"Argentina",scorer:"Mbappé",goals:275},
+  {name:"Jeaustin Jiménez",champion:"Francia",runner:"España",third:"Argentina",scorer:"Kylian Mbappé",goals:271},
+  {name:"Jimena Salazar",champion:"España",runner:"Francia",third:"Brasil",scorer:"Mbappé",goals:280},
+  {name:"Jordan Reyes",champion:"Inglaterra",runner:"España",third:"Argentina",scorer:"Lamine Yamal",goals:220},
+  {name:"Josue Rivera",champion:"Francia",runner:"Portugal",third:"España",scorer:"Kylian Mbappé",goals:203},
+  {name:"Juan Carlos Picado Castro",champion:"España",runner:"Francia",third:"Brasil",scorer:"Kylian Mbappé",goals:258},
+  {name:"Katherine Garcia",champion:"Francia",runner:"España",third:"Brasil",scorer:"Kylian Mbappé",goals:285},
+  {name:"LORLYN ROMERO OMODEO",champion:"España",runner:"Francia",third:"Argentina",scorer:"Kylian Mbappé",goals:12},
+  {name:"Lucía Calderon",champion:"Portugal",runner:"Francia",third:"Argentina",scorer:"Cristiano Ronaldo",goals:350},
+  {name:"Mauro Gonzalez Badilla",champion:"España",runner:"Inglaterra",third:"Alemania",scorer:"Harry Kane",goals:296},
+  {name:"Minor",champion:"Francia",runner:"España",third:"Brasil",scorer:"Kylian Mbappé",goals:6},
+  {name:"Natali Padilla",champion:"España",runner:"Francia",third:"Argentina",scorer:"Kylian Mbappé",goals:285},
+  {name:"Norlan Esquivel",champion:"Portugal",runner:"España",third:"Francia",scorer:"Mbappé",goals:243},
+  {name:"Oscar Acevedo",champion:"España",runner:"Francia",third:"Inglaterra",scorer:"Kylian Mbappé",goals:285},
+  {name:"Raquel Evans Góngora",champion:"Portugal",runner:"España",third:"Francia",scorer:"Harry Kane",goals:10},
+  {name:"Roy Valerio",champion:"España",runner:"Francia",third:"Inglaterra",scorer:"Kylian Mbappé",goals:298},
+  {name:"Rudy Miguel Méndez Araica",champion:"Argentina",runner:"España",third:"Francia",scorer:"Kylian Mbappé",goals:6},
+  {name:"Santiago Herrera Barrientos",champion:"Francia",runner:"España",third:"Portugal",scorer:"Harry Kane",goals:293},
+  {name:"Schneyder Oviedo Jimenez",champion:"Países Bajos",runner:"Portugal",third:"España",scorer:"Kylian Mbappé",goals:293},
+  {name:"Sergio Vargas",champion:"Portugal",runner:"Francia",third:"Brasil",scorer:"Cristiano Ronaldo",goals:244},
+  {name:"William",champion:"España",runner:"Brasil",third:"Alemania",scorer:"Harry Kane",goals:112},
+  {name:"XAVIER RAMIREZ",champion:"Francia",runner:"Alemania",third:"Argentina",scorer:"Mbappé",goals:12},
+];
+
+function buildCard(p){
+  const champAlive = isAlive(p.champion);
+  const runnerAlive = isAlive(p.runner);
+  const thirdAlive = isAlive(p.third);
+  const anyAlive = champAlive || runnerAlive || thirdAlive;
+
+  return `
+  <div class="card" data-name="${p.name.toLowerCase()}">
+    <div class="card-name">${p.name}</div>
+    <div class="card-body">
+      <div class="pick-row ${champAlive?'alive':'out'}">
+        <span class="pick-icon">🏆</span>
+        <div class="pick-content">
+          <span class="pick-label">CAMPEÓN</span>
+          <span class="pick-value">${teamFlag(p.champion)} ${p.champion}</span>
+        </div>
+        <span class="pick-badge ${champAlive?'badge-alive':'badge-out'}">${champAlive?'VIVO':'OUT'}</span>
+      </div>
+      <div class="pick-row ${runnerAlive?'alive':'out'}">
+        <span class="pick-icon">🥈</span>
+        <div class="pick-content">
+          <span class="pick-label">SUBCAMPEÓN</span>
+          <span class="pick-value">${teamFlag(p.runner)} ${p.runner}</span>
+        </div>
+        <span class="pick-badge ${runnerAlive?'badge-alive':'badge-out'}">${runnerAlive?'VIVO':'OUT'}</span>
+      </div>
+      <div class="pick-row ${thirdAlive?'alive':'out'}">
+        <span class="pick-icon">🥉</span>
+        <div class="pick-content">
+          <span class="pick-label">TERCER LUGAR</span>
+          <span class="pick-value">${teamFlag(p.third)} ${p.third}</span>
+        </div>
+        <span class="pick-badge ${thirdAlive?'badge-alive':'badge-out'}">${thirdAlive?'VIVO':'OUT'}</span>
+      </div>
+      <div class="pick-row scorer-row ${isScorerAlive(p.scorer)?'alive':'out'}">
+        <span class="pick-icon">⚽</span>
+        <div class="pick-content">
+          <span class="pick-label">GOLEADOR</span>
+          <span class="pick-value" style="color:${isScorerAlive(p.scorer)?'var(--green)':'var(--muted)'}">${p.scorer}</span>
+        </div>
+        <span class="pick-badge ${isScorerAlive(p.scorer)?'badge-alive':'badge-out'}">${isScorerAlive(p.scorer)?'VIVO':'OUT'}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderStats(){
+  const total = PICKS.length;
+  const withChamp = PICKS.filter(p=>isAlive(p.champion)).length;
+  const withRunner = PICKS.filter(p=>isAlive(p.runner)).length;
+  const withThird = PICKS.filter(p=>isAlive(p.third)).length;
+  const anyAlive = PICKS.filter(p=>isAlive(p.champion)||isAlive(p.runner)||isAlive(p.third)).length;
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat-chip">Participantes: <span>${total}</span></div>
+    <div class="stat-chip">Campeón vivo: <span>${withChamp}</span></div>
+    <div class="stat-chip">Sub. vivo: <span>${withRunner}</span></div>
+    <div class="stat-chip">3ro vivo: <span>${withThird}</span></div>
+    <div class="stat-chip">Al menos 1 vivo: <span>${anyAlive}</span></div>
+  `;
+}
+
+function render(){
+  document.getElementById('grid').innerHTML = PICKS.map(buildCard).join('');
+  renderStats();
+}
+
+function filterCards(){
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  document.querySelectorAll('.card').forEach(card=>{
+    card.classList.toggle('hidden', q && !card.dataset.name.includes(q));
+  });
+}
+
+render();
+</script>
+</body>
+</html>
