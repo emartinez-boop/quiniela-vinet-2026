@@ -157,6 +157,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Barlow',sans-serif;min-h
   <div class="phase-tab active" id="tab-grupos" onclick="setPhase('grupos')">🏆 Fase de Grupos</div>
   <div class="phase-tab" id="tab-r32" onclick="setPhase('r32')">⚔️ Dieciseisavos</div>
   <div class="phase-tab" id="tab-r16" onclick="setPhase('r16')">🥊 Octavos</div>
+  <div class="phase-tab" id="tab-qf" onclick="setPhase('qf')">🏅 Cuartos</div>
 </div>
 
 <!-- TOOLBAR -->
@@ -322,12 +323,19 @@ const MATCHES_R16 = [
   {id:96,home:'Egipto',away:'Argentina',date:'7 Jul',timeCR:'18:00 CR',venue:'Atlanta',flag_h:'🇪🇬',flag_a:'🇦🇷'},
 ];
 
+const MATCHES_QF = [
+  {id:97,home:'Marruecos',away:'Francia',date:'9 Jul',timeCR:'14:00 CR',venue:'Filadelfia',flag_h:'🇲🇦',flag_a:'🇫🇷'},
+  {id:98,home:'Bélgica',away:'España',date:'10 Jul',timeCR:'13:00 CR',venue:'Nueva York',flag_h:'🇧🇪',flag_a:'🇪🇸'},
+  {id:99,home:'Noruega',away:'Inglaterra',date:'11 Jul',timeCR:'15:00 CR',venue:'Dallas',flag_h:'🇳🇴',flag_a:'🏴󠁧󠁢󠁥󠁮󠁧󠁿'},
+  {id:100,home:'Suiza',away:'Argentina',date:'11 Jul',timeCR:'19:00 CR',venue:'Los Ángeles',flag_h:'🇨🇭',flag_a:'🇦🇷'},
+];
+
 // ── STATE ────────────────────────────────────────────────────────────────────
-let scoresG={}, scoresR={}, scoresR16={};
-let predsG={}, predsR={}, predsR16={};
+let scoresG={}, scoresR={}, scoresR16={}, scoresQF={};
+let predsG={}, predsR={}, predsR16={}, predsQF={};
 let participants={};             // id → name
 let participantNames=[];         // sorted list of names
-let activePhase = 'grupos';      // 'grupos' | 'r32' | 'r16'
+let activePhase = 'grupos';      // 'grupos' | 'r32' | 'r16' | 'qf'
 let activeFilter = 'all';        // group letter or 'all'
 let searchQ = '';
 let selectedParticipant = '';    // name string, or ''
@@ -385,6 +393,16 @@ async function fetchAll(){
       const rows=await r.json();
       scoresR16={};
       rows.forEach(row=>{if(row.home_score!=null&&row.away_score!=null) scoresR16[row.match_id]={h:row.home_score,a:row.away_score};});
+    }
+  }catch(e){}
+
+  // Scores QF (97-100)
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/scores?select=match_id,home_score,away_score&match_id=gte.97&match_id=lte.100&limit=10`,{headers:HDRS});
+    if(r.ok){
+      const rows=await r.json();
+      scoresQF={};
+      rows.forEach(row=>{if(row.home_score!=null&&row.away_score!=null) scoresQF[row.match_id]={h:row.home_score,a:row.away_score};});
     }
   }catch(e){}
 
@@ -450,6 +468,21 @@ async function fetchAll(){
     }
   }catch(e){}
 
+  // Predictions QF (match_id 97-100)
+  try{
+    predsQF={};
+    const r=await fetch(`${SB_URL}/rest/v1/predictions?select=participant_id,match_id,home_score,away_score&match_id=gte.97&match_id=lte.100&limit=500`,{headers:HDRS});
+    if(r.ok){
+      const rows=await r.json();
+      rows.forEach(row=>{
+        const name=participants[row.participant_id]||row.participant_id;
+        if(!predsQF[row.match_id]) predsQF[row.match_id]=[];
+        predsQF[row.match_id].push({name,h:row.home_score,a:row.away_score});
+      });
+      Object.keys(predsQF).forEach(mid=>predsQF[mid].sort((a,b)=>a.name.localeCompare(b.name)));
+    }
+  }catch(e){}
+
   const now=new Date().toLocaleTimeString('es-CR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   document.getElementById('sync-bar').innerHTML=`⚡ EN VIVO · Última actualización: <span>${now}</span> · Se actualiza cada 5 min`;
   render();
@@ -475,6 +508,7 @@ function setPhase(phase){
   document.getElementById('tab-grupos').classList.toggle('active',phase==='grupos');
   document.getElementById('tab-r32').classList.toggle('active',phase==='r32');
   document.getElementById('tab-r16').classList.toggle('active',phase==='r16');
+  document.getElementById('tab-qf').classList.toggle('active',phase==='qf');
   // Show/hide group filters
   document.getElementById('group-filters').style.display = phase==='grupos' ? 'flex' : 'none';
   // Reset group filter when switching away from grupos
@@ -529,9 +563,9 @@ function updateParticipantCard(){
   if(!selectedParticipant){card.classList.add('hidden');return;}
 
   // Calculate stats across BOTH phases
-  const allMatches=[...MATCHES_GRUPOS,...MATCHES_R32,...MATCHES_R16];
-  const allScores={...scoresG,...scoresR,...scoresR16};
-  const allPreds={...predsG,...predsR,...predsR16};
+  const allMatches=[...MATCHES_GRUPOS,...MATCHES_R32,...MATCHES_R16,...MATCHES_QF];
+  const allScores={...scoresG,...scoresR,...scoresR16,...scoresQF};
+  const allPreds={...predsG,...predsR,...predsR16,...predsQF};
 
   let exact=0,correct=0,wrong=0,pending=0;
   allMatches.forEach(m=>{
@@ -561,9 +595,9 @@ function updateParticipantCard(){
 // ── RENDER ────────────────────────────────────────────────────────────────────
 function render(){
   const isGroups = activePhase==='grupos';
-  const matches   = activePhase==='grupos' ? [...MATCHES_GRUPOS] : activePhase==='r32' ? [...MATCHES_R32] : [...MATCHES_R16];
-  const scores    = activePhase==='grupos' ? scoresG : activePhase==='r32' ? scoresR : scoresR16;
-  const preds     = activePhase==='grupos' ? predsG  : activePhase==='r32' ? predsR : predsR16;
+  const matches   = activePhase==='grupos' ? [...MATCHES_GRUPOS] : activePhase==='r32' ? [...MATCHES_R32] : activePhase==='r16' ? [...MATCHES_R16] : [...MATCHES_QF];
+  const scores    = activePhase==='grupos' ? scoresG : activePhase==='r32' ? scoresR : activePhase==='r16' ? scoresR16 : scoresQF;
+  const preds     = activePhase==='grupos' ? predsG  : activePhase==='r32' ? predsR : activePhase==='r16' ? predsR16 : predsQF;
 
   // Apply group filter (grupos only)
   let filtered=matches;
@@ -587,7 +621,7 @@ function render(){
   // Stats bar
   const total=Object.values(preds).reduce((s,a)=>s+a.length,0);
   const participantes=new Set(Object.values(preds).flatMap(a=>a.map(p=>p.name))).size;
-  const matchLabel=activePhase==='grupos'?'72':activePhase==='r32'?'16':'8';
+  const matchLabel=activePhase==='grupos'?'72':activePhase==='r32'?'16':activePhase==='r16'?'8':'4';
   document.getElementById('stats-bar').innerHTML=`
     <div class="stat-chip">Participantes: <span>${participantes}</span></div>
     <div class="stat-chip">Predicciones: <span>${total}</span></div>
@@ -614,6 +648,7 @@ function render(){
     ? ['11 Jun','12 Jun','13 Jun','14 Jun','15 Jun','16 Jun','17 Jun','18 Jun','19 Jun','20 Jun','21 Jun','22 Jun','23 Jun','24 Jun','25 Jun','26 Jun','27 Jun']
     : activePhase==='r32'
     ? ['28 Jun','29 Jun','30 Jun','1 Jul','2 Jul','3 Jul']
+    : activePhase==='qf' ? ['9 Jul','10 Jul','11 Jul']
     : ['4 Jul','5 Jul','6 Jul','7 Jul'];
 
   let html='';
