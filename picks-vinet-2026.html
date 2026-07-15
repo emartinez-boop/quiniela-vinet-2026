@@ -41,27 +41,27 @@
 
   .card { background: var(--s1); border: 1px solid var(--brd); border-radius: var(--r); overflow: hidden; }
   .card-name { background: var(--s2); border-bottom: 1px solid var(--brd); padding: 10px 14px; font-family: 'Bebas Neue',sans-serif; font-size: 17px; letter-spacing: 2px; color: var(--txt); display: flex; justify-content: space-between; align-items: center; }
-  .impossible-tag { font-size: 10px; color: var(--orange); letter-spacing: 1px; font-family: 'Barlow Condensed',sans-serif; font-weight: 700; }
+  .impossible-tag { font-size: 10px; color: var(--red); letter-spacing: 1px; font-family: 'Barlow Condensed',sans-serif; font-weight: 700; }
 
   .card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
 
   .pick-row { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; border: 1px solid transparent; }
   .pick-row.alive { background: var(--green-bg); border-color: var(--green-brd); }
-  .pick-row.impossible { background: var(--orange-bg); border-color: var(--orange-brd); }
-  .pick-row.out { opacity: .45; }
+  .pick-row.impossible { background: var(--red-bg); border-color: rgba(239,68,68,.3); }
+  .pick-row.out { opacity: .45; background: var(--red-bg); border-color: rgba(239,68,68,.2); }
 
   .pick-icon { font-size: 18px; line-height: 1; flex-shrink: 0; }
   .pick-content { flex: 1; min-width: 0; }
   .pick-label { font-size: 10px; letter-spacing: 1.5px; color: var(--dim); display: block; margin-bottom: 1px; }
   .pick-value { font-size: 15px; font-weight: 700; letter-spacing: .5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pick-row.alive .pick-value { color: var(--green); }
-  .pick-row.impossible .pick-value { color: var(--orange); }
-  .pick-row.out .pick-value { color: var(--muted); }
+  .pick-row.impossible .pick-value { color: var(--red); }
+  .pick-row.out .pick-value { color: var(--red); }
 
   .pick-badge { font-size: 10px; letter-spacing: 1px; padding: 2px 7px; border-radius: 10px; flex-shrink: 0; font-weight: 700; }
   .badge-alive { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-brd); }
   .badge-out { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,.3); }
-  .badge-impossible { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-brd); }
+  .badge-impossible { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,.3); }
 
   .scorer-row { border-top: 1px solid var(--brd); margin-top: 4px; padding-top: 8px; }
   .scorer-goals { font-size: 11px; color: var(--dim); letter-spacing: 1px; }
@@ -75,18 +75,17 @@
 <header>
   <h1>⚽ Picks · Quiniela Vinet 2026</h1>
   <p>CAMPEÓN · SUBCAMPEÓN · TERCER LUGAR · GOLEADOR · EQUIPOS EN VERDE = AÚN VIVOS</p>
+  <p style="font-size:12px;color:var(--gold);margin-top:6px;letter-spacing:2px;">🏆 FINAL: 🇪🇸 España vs Argentina 🇦🇷 · 3ER LUGAR: 🇫🇷 Francia vs Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿</p>
 </header>
 
 <div class="alive-bar">
   <span class="alive-label">EQUIPOS VIVOS:</span>
-  <span class="alive-chip">🇫🇷 Francia</span>
-  <span class="alive-chip">🇲🇦 Marruecos</span>
+  <span class="alive-chip" style="border-color:rgba(212,160,23,.5);color:var(--gold);">🏆 FINAL:</span>
   <span class="alive-chip">🇪🇸 España</span>
-  <span class="alive-chip">🇧🇪 Bélgica</span>
-  <span class="alive-chip">🇳🇴 Noruega</span>
-  <span class="alive-chip">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</span>
   <span class="alive-chip">🇦🇷 Argentina</span>
-  <span class="alive-chip">🇨🇭 Suiza</span>
+  <span class="alive-chip" style="border-color:rgba(212,160,23,.5);color:var(--gold);">🥉 3ER LUGAR:</span>
+  <span class="alive-chip">🇫🇷 Francia</span>
+  <span class="alive-chip">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</span>
 </div>
 
 <div class="legend">
@@ -104,7 +103,11 @@
 
 <script>
 // Equipos vivos (normalizados sin tildes)
-const ALIVE = new Set(['francia','marruecos','espana','belgica','noruega','inglaterra','argentina','suiza']);
+// Equipos en Final: España vs Argentina
+// Equipos en 3er lugar: Francia vs Inglaterra
+const FINAL_TEAMS = new Set(['espana','argentina']);
+const THIRD_TEAMS = new Set(['francia','inglaterra']);
+const ALIVE = new Set(['espana','argentina','francia','inglaterra']);
 
 // Lado del bracket
 // Lado A (Semi 1): Francia, Marruecos, España, Bélgica
@@ -137,11 +140,13 @@ function getBracketSide(team){
   return BRACKET_SIDE[norm(team)] || null;
 }
 
+// isImpossibleCombo is no longer used for the overall card label
+// Each pick is evaluated independently
+function isChampImpossible(team){ return !FINAL_TEAMS.has(norm(team)); }
+function isRunnerImpossible(team){ return !FINAL_TEAMS.has(norm(team)); }
+function isThirdImpossible(team){ return !THIRD_TEAMS.has(norm(team)); }
 function isImpossibleCombo(champion, runner){
-  if(!isAlive(champion) || !isAlive(runner)) return false;
-  const sc = getBracketSide(champion);
-  const sr = getBracketSide(runner);
-  return sc && sr && sc === sr;
+  return isChampImpossible(champion) && isRunnerImpossible(runner);
 }
 
 function isScorerAlive(scorer){
@@ -216,24 +221,26 @@ const PICKS = [
 
 function rowClass(team, isImp){ 
   if(isImp) return 'impossible';
-  if(isAlive(team)) return 'alive';
+  if(FINAL_TEAMS.has(norm(team))) return 'alive';
   return 'out';
 }
 function badgeClass(team, isImp){
   if(isImp) return 'badge-impossible';
-  if(isAlive(team)) return 'badge-alive';
+  if(FINAL_TEAMS.has(norm(team))) return 'badge-alive';
   return 'badge-out';
 }
 function badgeText(team, isImp){
-  if(isImp) return '⚠️';
-  if(isAlive(team)) return 'VIVO';
+  if(isImp) return '⚠️ IMPOSIBLE';
+  if(FINAL_TEAMS.has(norm(team))) return '✅ FINALISTA';
   return 'OUT';
 }
 
 function buildCard(p){
-  const imp = isImpossibleCombo(p.champion, p.runner);
-  const champClass = rowClass(p.champion, imp);
-  const runnerClass = rowClass(p.runner, imp);
+  const champImp = isChampImpossible(p.champion);
+  const runnerImp = isRunnerImpossible(p.runner);
+  const imp = champImp && runnerImp; // card label: only show COMBO IMPOSIBLE if BOTH are impossible
+  const champClass = rowClass(p.champion, champImp);
+  const runnerClass = rowClass(p.runner, runnerImp);
   const thirdClass = rowClass(p.third, false);
   const scorerAlive = isScorerAlive(p.scorer);
 
@@ -249,7 +256,7 @@ function buildCard(p){
           <span class="pick-label">CAMPEÓN</span>
           <span class="pick-value">${teamFlag(p.champion)} ${p.champion}</span>
         </div>
-        <span class="pick-badge ${badgeClass(p.champion,imp)}">${badgeText(p.champion,imp)}</span>
+        <span class="pick-badge ${badgeClass(p.champion,champImp)}">${badgeText(p.champion,champImp)}</span>
       </div>
       <div class="pick-row ${runnerClass}">
         <span class="pick-icon">🥈</span>
@@ -257,15 +264,15 @@ function buildCard(p){
           <span class="pick-label">SUBCAMPEÓN</span>
           <span class="pick-value">${teamFlag(p.runner)} ${p.runner}</span>
         </div>
-        <span class="pick-badge ${badgeClass(p.runner,imp)}">${badgeText(p.runner,imp)}</span>
+        <span class="pick-badge ${badgeClass(p.runner,runnerImp)}">${badgeText(p.runner,runnerImp)}</span>
       </div>
-      <div class="pick-row ${thirdClass}">
+      <div class="pick-row ${isThirdImpossible(p.third)?'impossible':'alive'}">
         <span class="pick-icon">🥉</span>
         <div class="pick-content">
           <span class="pick-label">TERCER LUGAR</span>
           <span class="pick-value">${teamFlag(p.third)} ${p.third}</span>
         </div>
-        <span class="pick-badge ${badgeClass(p.third,false)}">${badgeText(p.third,false)}</span>
+        <span class="pick-badge ${isThirdImpossible(p.third)?'badge-impossible':'badge-alive'}">${isThirdImpossible(p.third)?'⚠️ IMPOSIBLE':'✅ POSIBLE'}</span>
       </div>
       <div class="pick-row scorer-row ${scorerAlive?'alive':'out'}">
         <span class="pick-icon">⚽</span>
@@ -281,16 +288,16 @@ function buildCard(p){
 
 function renderStats(){
   const total = PICKS.length;
-  const withChamp = PICKS.filter(p=>isAlive(p.champion)).length;
-  const withRunner = PICKS.filter(p=>isAlive(p.runner)).length;
-  const withThird = PICKS.filter(p=>isAlive(p.third)).length;
-  const impossible = PICKS.filter(p=>isImpossibleCombo(p.champion,p.runner)).length;
+  const champOk = PICKS.filter(p=>FINAL_TEAMS.has(norm(p.champion))).length;
+  const runnerOk = PICKS.filter(p=>FINAL_TEAMS.has(norm(p.runner))).length;
+  const thirdOk = PICKS.filter(p=>!isThirdImpossible(p.third)).length;
+  const impossible = PICKS.filter(p=>isChampImpossible(p.champion)||isRunnerImpossible(p.runner)).length;
   document.getElementById('stats-bar').innerHTML = `
     <div class="stat-chip">Participantes: <span>${total}</span></div>
-    <div class="stat-chip">Campeón vivo: <span>${withChamp}</span></div>
-    <div class="stat-chip">Sub. vivo: <span>${withRunner}</span></div>
-    <div class="stat-chip">3ro vivo: <span>${withThird}</span></div>
-    <div class="stat-chip">Combo imposible: <span style="color:var(--orange)">${impossible}</span></div>
+    <div class="stat-chip">Campeón posible: <span>${champOk}</span></div>
+    <div class="stat-chip">Sub. posible: <span>${runnerOk}</span></div>
+    <div class="stat-chip">3ro posible: <span>${thirdOk}</span></div>
+    <div class="stat-chip">Combo imposible: <span style="color:var(--red)">${impossible}</span></div>
   `;
 }
 
