@@ -1443,6 +1443,10 @@ function buildMatches(){
 }
 const MATCHES = buildMatches();
 
+// ── GOLEADOR OFICIAL DEL TORNEO ───────────────────────────────────────────
+// Actualizar cuando termine el torneo. Dejar null si aún no hay resultado.
+const OFFICIAL_SCORER = 'Mbappe'; // Kylian Mbappé — Campeón goleador Mundial 2026
+
 // ─────────────────────────────────────────────
 // VISUAL CAROUSEL ENGINE
 // ─────────────────────────────────────────────
@@ -2477,6 +2481,14 @@ function calcPts(p){
     const koRes=buildKoResults();
     const third=koRes[103];
     if(third&&p.third===third) pts+=3;
+  }
+  // Bonus for scorer — compare against OFFICIAL_SCORER constant
+  if(OFFICIAL_SCORER && p.scorer){
+    const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+    const scorerNorm = norm(p.scorer);
+    const officialNorm = norm(OFFICIAL_SCORER);
+    // Match if one contains the other (handles "Kylian Mbappé", "Mbappé", "Mbappe")
+    if(scorerNorm.includes(officialNorm) || officialNorm.includes(scorerNorm)) pts+=4;
   }
   return{pts,exact,correct};
 }
