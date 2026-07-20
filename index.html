@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiniela Mundial 2026 · Familia Martínez</title>
+<title>Quiniela Mundial 2026 · Vinet</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -585,10 +585,11 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
 <div id="app-gate">
   <div class="gate-box">
     <div class="gate-header">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--gold);letter-spacing:3px;margin-bottom:14px;line-height:1;">Familia Martínez</div>
+      <img class="gate-logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQ0IiB2aWV3Qm94PSIwIDAgMTIwIDQ0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDx0ZXh0IHg9IjQiIHk9IjM2IiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSIzOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0iI0M4MTAyRSIgbGV0dGVyLXNwYWNpbmc9Ii0xIj52aW5ldDwvdGV4dD4KICA8Y2lyY2xlIGN4PSIxMTMiIGN5PSIzNCIgcj0iNSIgZmlsbD0iIzAwM0RBNSIvPgogIDxjaXJjbGUgY3g9IjIyIiBjeT0iOCIgcj0iNCIgZmlsbD0iI0Y1QzUxOCIvPgo8L3N2Zz4=" alt="Vinet"
         />
+      <div id="gate-logo-txt" style="display:none;font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--vred);letter-spacing:2px;margin-bottom:10px;">vinet.</div>
       <div class="gate-title">Quiniela Mundial 2026</div>
-      <div class="gate-sub">Acceso exclusivo · Familia Martínez</div>
+      <div class="gate-sub">Acceso exclusivo colaboradores</div>
     </div>
     <div class="gate-body">
       <div class="gate-label">Contraseña de acceso</div>
@@ -604,8 +605,8 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
     </div>
     <div class="gate-footer">
       <div class="gate-footer-txt">
-        🔒 Acceso exclusivo · Familia Martínez<br>
-        <strong>¿Olvidaste la contraseña? Contactá a Ericka</strong>
+        🔒 Acceso restringido a colaboradores de Vinet<br>
+        <strong>¿Olvidaste la contraseña? Contacta a RRHH</strong>
       </div>
       <button id="gate-clear-btn" onclick="clearTestData()" style="
         display:none;
@@ -629,11 +630,12 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
   <!-- Logo bar -->
   <div class="hdr-logo-bar">
     <div class="hdr-logo-wrap">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--gold);letter-spacing:3px;line-height:1;">Familia Martínez</div>
+      <img class="hdr-logo-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQ0IiB2aWV3Qm94PSIwIDAgMTIwIDQ0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDx0ZXh0IHg9IjQiIHk9IjM2IiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSIzOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZvbnQtc3R5bGU9Iml0YWxpYyIgZmlsbD0iI0M4MTAyRSIgbGV0dGVyLXNwYWNpbmc9Ii0xIj52aW5ldDwvdGV4dD4KICA8Y2lyY2xlIGN4PSIxMTMiIGN5PSIzNCIgcj0iNSIgZmlsbD0iIzAwM0RBNSIvPgogIDxjaXJjbGUgY3g9IjIyIiBjeT0iOCIgcj0iNCIgZmlsbD0iI0Y1QzUxOCIvPgo8L3N2Zz4=" alt="Vinet" />
+      <span id="vinet-text-fallback" style="display:none;font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--vred);letter-spacing:2px;">vinet.</span>
       <div class="hdr-logo-divider"></div>
       <div class="hdr-logo-text">
         <div class="hdr-logo-title">Quiniela Interna</div>
-        <div class="hdr-logo-sub">Mundial 2026</div>
+        <div class="hdr-logo-sub">Colaboradores 2026</div>
       </div>
     </div>
     <div class="official-badge">✅ FIFA Oficial</div>
@@ -729,7 +731,7 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
 
   <!-- PODIUM -->
   <div class="podium-section">
-    <div class="sec-ttl">🏆 Podio Familia Martínez</div>
+    <div class="sec-ttl">🏆 Podio Vinet</div>
     <div class="podium-grid" id="podium-grid">
       <!-- rendered by JS -->
     </div>
@@ -741,7 +743,7 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
   <!-- FULL RANKING -->
   <div class="sec-ttl">Clasificación Completa</div>
   <div style="margin-bottom:16px;">
-    <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--muted);letter-spacing:.5px;">📲 Ranking actualizado en tiempo real para toda la Familia Martínez</span>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--muted);letter-spacing:.5px;">📲 Ranking actualizado en tiempo real para todos los colaboradores de Vinet</span>
   </div>
   <div class="fbar">
     <input class="search-inp" type="text" placeholder="Buscar colaborador…" oninput="searchR(this.value)" style="margin-left:0;width:100%;max-width:260px;"/>
@@ -856,12 +858,12 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
       <div id="email-gate" style="display:none">
         <div class="frow single" style="margin-bottom:0">
           <div class="fg">
-            <label class="fl">Correo para acceder</label>
+            <label class="fl">Correo Vinet para acceder</label>
             <div style="display:flex;gap:8px">
-              <input class="fi" type="email" id="gate-email" placeholder="tucorreo@gmail.com" oninput="validateGateEmail()" onkeydown="if(event.key==='Enter')verifyEmail()"/>
+              <input class="fi" type="email" id="gate-email" placeholder="tucorreo@vinet.co.cr" oninput="validateGateEmail()" onkeydown="if(event.key==='Enter')verifyEmail()"/>
               <button class="btn-reg" id="email-verify-btn" onclick="verifyEmail()" style="width:auto;padding:0 18px;font-size:15px;margin:0;flex-shrink:0" disabled>Entrar</button>
             </div>
-            <div class="wm-email-hint" id="email-gate-hint">Cualquier correo es válido</div>
+            <div class="wm-email-hint" id="email-gate-hint">Solo correos @vinet.co.cr pueden registrarse</div>
           </div>
         </div>
       </div>
@@ -877,7 +879,7 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
         <!-- Editable picks (shown before first save) -->
         <div id="picks-editable-view">
           <div class="frow">
-            <div class="fg"><label class="fl">Tu Nombre</label><input class="fi" type="text" id="r-name" placeholder="Nombre completo"/></div>
+            <div class="fg"><label class="fl">Tu Nombre (Colaborador Vinet)</label><input class="fi" type="text" id="r-name" placeholder="Nombre completo"/></div>
             <div class="fg"><label class="fl">🏆 Campeón del Mundial</label><select class="fs" id="r-champ"></select></div>
           </div>
           <div class="frow">
@@ -942,11 +944,11 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
 <div id="panel-admin" class="panel">
   <div class="sec-ttl">🔐 Panel de Administración</div>
 
-  <!-- INGRESAR RESULTADOS -->
-  <div style="background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:20px;margin-bottom:16px;">
+  <!-- INGRESAR RESULTADO MANUAL -->
+  <div style="background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:24px;max-width:480px;margin-bottom:16px;">
     <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--gold);margin-bottom:4px;">⚽ Ingresar Resultado de Partido</div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--muted);margin-bottom:16px;letter-spacing:.5px;">
-      Seleccioná el partido y escribí el marcador final.
+      Los resultados se jalan automáticamente de API-Football cada 10 min. Usá esto para corregir o ingresar manualmente.
     </div>
 
     <!-- Selector de partido -->
@@ -961,23 +963,15 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
     <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-bottom:16px;">
       <div>
         <label style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:6px;" id="admin-home-lbl">Local</label>
-        <input id="admin-home-score" type="number" min="0" max="20" placeholder="0" oninput="adminCheckPen()"
-          style="width:100%;background:var(--s3);border:1px solid var(--brd2);border-radius:var(--r);padding:12px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;"/>
+        <input id="admin-home-score" type="number" min="0" max="20" placeholder="0"
+          style="width:100%;background:var(--s3);border:1px solid var(--brd2);border-radius:var(--r);padding:12px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;box-sizing:border-box;"/>
       </div>
       <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--dim);padding-top:22px;">–</div>
       <div>
         <label style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim);text-transform:uppercase;display:block;margin-bottom:6px;" id="admin-away-lbl">Visitante</label>
-        <input id="admin-away-score" type="number" min="0" max="20" placeholder="0" oninput="adminCheckPen()"
-          style="width:100%;background:var(--s3);border:1px solid var(--brd2);border-radius:var(--r);padding:12px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;"/>
+        <input id="admin-away-score" type="number" min="0" max="20" placeholder="0"
+          style="width:100%;background:var(--s3);border:1px solid var(--brd2);border-radius:var(--r);padding:12px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:28px;text-align:center;box-sizing:border-box;"/>
       </div>
-    </div>
-
-    <!-- Definición por penales (solo eliminatoria + empate) -->
-    <div id="admin-pen-wrap" style="display:none;margin-bottom:16px;background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.3);border-radius:var(--r);padding:12px;">
-      <label style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:6px;">🥅 Empate — ¿Quién avanza por penales?</label>
-      <select id="admin-pen-winner" style="width:100%;background:var(--s3);border:1px solid var(--brd2);border-radius:var(--r);padding:10px 12px;color:var(--txt);font-family:'Barlow Condensed',sans-serif;font-size:14px;">
-        <option value="">— Seleccioná el ganador —</option>
-      </select>
     </div>
 
     <button onclick="adminSaveResult()" style="background:linear-gradient(135deg,#1e3a8a,#1d4ed8);border:none;border-radius:var(--r);padding:12px 28px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;width:100%;margin-bottom:8px;">
@@ -987,31 +981,41 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
   </div>
 
   <!-- RESULTADOS GUARDADOS -->
-  <div style="background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:20px;margin-bottom:16px;">
+  <div style="background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:20px;max-width:480px;margin-bottom:16px;">
     <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;">📋 Resultados Guardados</div>
     <div id="admin-scores-list" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);">Cargando…</div>
   </div>
 
-  <!-- EXPORTAR CSV -->
-  <div style="background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:20px;">
+
+  <!-- GANADORES POR PENALES -->
+  <div style="background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:24px;max-width:480px;margin-top:24px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;">🥅 Ganador por Penales</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--muted);margin-bottom:16px;letter-spacing:.5px;">Usá esto cuando un partido termine en empate y se defina por penales. El bracket mostrará el equipo correcto.</div>
+    <div style="margin-bottom:12px;">
+      <label style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--dim);letter-spacing:1px;display:block;margin-bottom:6px;">PARTIDO</label>
+      <select id="penalty-match-sel" style="width:100%;background:var(--s3);border:1px solid var(--brd2);border-radius:var(--r);padding:10px 12px;color:var(--txt);font-family:'Barlow Condensed',sans-serif;font-size:13px;cursor:pointer;"><option value="">— Seleccioná un partido —</option></select>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--dim);letter-spacing:1px;display:block;margin-bottom:6px;">EQUIPO GANADOR EN PENALES</label>
+      <input id="penalty-winner-input" type="text" placeholder="Ej: Paraguay" style="width:100%;background:var(--s3);border:1px solid var(--brd2);border-radius:var(--r);padding:10px 12px;color:var(--txt);font-family:'Barlow Condensed',sans-serif;font-size:14px;box-sizing:border-box;">
+    </div>
+    <button onclick="adminSavePenaltyWinner()" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;border-radius:var(--r);padding:12px 28px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;width:100%;margin-bottom:8px;">🥅 Guardar Ganador por Penales</button>
+    <div id="penalty-list" style="margin-top:12px;font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--muted);"></div>
+  </div>
+  <!-- EXPORTAR Y RECALCULAR -->
+  <div style="background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:24px;max-width:480px;">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--muted);margin-bottom:16px;letter-spacing:.5px;">
       Descargá un respaldo completo de todos los registros con picks, emails y puntos.
     </div>
     <button onclick="exportAdminCSV()" style="background:linear-gradient(135deg,#166534,#15803d);border:none;border-radius:var(--r);padding:12px 28px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;width:100%;">
       📥 Exportar CSV de Participantes
     </button>
-  </div>
-
-  <!-- RECALCULAR PUNTOS -->
-  <div style="background:var(--s4);border:1px solid var(--brd2);border-radius:var(--r);padding:20px;margin-top:16px;">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--gold);margin-bottom:4px;">🔄 Recalcular Puntos de Todos</div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--muted);margin-bottom:16px;letter-spacing:.5px;">
-      Carga las predicciones de todos los participantes desde Supabase, recalcula sus puntos y los guarda.
-    </div>
-    <button onclick="adminRecalcAll()" style="background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;border-radius:var(--r);padding:12px 28px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;width:100%;margin-bottom:8px;">
+    <button onclick="recalcAllPts()" style="margin-top:10px;background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border:none;border-radius:var(--r);padding:12px 28px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;width:100%;">
       🔄 Recalcular Puntos de Todos
     </button>
-    <div id="admin-recalc-msg" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;text-align:center;min-height:18px;letter-spacing:.5px;"></div>
+    <div style="margin-top:12px;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--dim);letter-spacing:.5px;">
+      El archivo incluye: nombre, email, campeón, subcampeón, 3er lugar, goleador, goles, estado y puntos.
+    </div>
   </div>
 </div>
 
@@ -1038,10 +1042,10 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
     <div class="faq-section-title">🔐 Acceso y Registro</div>
 
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Cómo entro a la quiniela?</span><span class="faq-icon">+</span></button>
-    <div class="faq-a">Entrá a la app, ingresá la contraseña general <strong>Familia2026</strong> y andá a la pestaña <strong>✏️ Mi Quiniela</strong>. Un banner verde te guiará al siguiente paso.</div></div>
+    <div class="faq-a">Entrá a la app, ingresá la contraseña general <strong>Vinet2026</strong> y andá a la pestaña <strong>✏️ Mi Quiniela</strong>. Un banner verde te guiará al siguiente paso.</div></div>
 
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Qué correo debo usar?</span><span class="faq-icon">+</span></button>
-    <div class="faq-a">Cualquier correo es válido — personal, Gmail, Hotmail, lo que uses.</div></div>
+    <div class="faq-a">Únicamente tu correo corporativo <strong>@vinet.co.cr</strong>. No se aceptan correos personales ni de otros dominios. El sistema los bloquea automáticamente.</div></div>
 
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Puedo registrarme desde el celular?</span><span class="faq-icon">+</span></button>
     <div class="faq-a">Sí, la app está optimizada para mobile y desktop. Podés usarla desde cualquier dispositivo.</div></div>
@@ -1057,8 +1061,8 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Para qué sirve la contraseña personal?</span><span class="faq-icon">+</span></button>
     <div class="faq-a">Protege tu quiniela. Solo vos podés ver tus picks. La vas a necesitar cada vez que entrés a la plataforma.</div></div>
 
-    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Es la misma contraseña que Familia2026?</span><span class="faq-icon">+</span></button>
-    <div class="faq-a"><strong>No.</strong> <strong>Familia2026</strong> es la contraseña general para entrar a la app — igual para todos. La contraseña personal la creás vos al registrarte y es única tuya.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Es la misma contraseña que Vinet2026?</span><span class="faq-icon">+</span></button>
+    <div class="faq-a"><strong>No.</strong> <strong>Vinet2026</strong> es la contraseña general para entrar a la app — igual para todos. La contraseña personal la creás vos al registrarte y es única tuya.</div></div>
 
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Qué hago si olvidé mi contraseña personal?</span><span class="faq-icon">+</span></button>
     <div class="faq-a">⚠️ <strong>Tip importante:</strong> Guardá bien tu contraseña. Por seguridad, no se puede recuperar. Si la perdés, también perdés el acceso a tu cuenta.</div></div>
@@ -1139,16 +1143,16 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
 
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Cuáles son los premios?</span><span class="faq-icon">+</span></button>
     <div class="faq-a"><ul>
-      <li>🥇 1er lugar → Premio Sorpresa</li>
-      <li>🥈 2do lugar → Premio Sorpresa</li>
-      <li>🥉 3er lugar → Premio Sorpresa</li>
+      <li>🥇 1er lugar → MacBook Neo de 13 pulgadas</li>
+      <li>🥈 2do lugar → Altavoz JBL Authentics 300</li>
+      <li>🥉 3er lugar → Audífonos Apple Beats Studio Pro</li>
     </ul></div></div>
 
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Los gerentes de área pueden ganar premio?</span><span class="faq-icon">+</span></button>
     <div class="faq-a">Pueden participar y aparecer en el ranking, pero <strong>no son sujetos de ganar premio</strong>.</div></div>
 
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Qué requisito debo cumplir para ganar?</span><span class="faq-icon">+</span></button>
-    <div class="faq-a">Estar <strong>participante activo de la Familia Martínez</strong> al cierre del Mundial (19 de julio de 2026).</div></div>
+    <div class="faq-a">Estar <strong>activo en planillas de Vinet</strong> al cierre del Mundial (19 de julio de 2026).</div></div>
 
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Qué pasa si hay una falla técnica grave?</span><span class="faq-icon">+</span></button>
     <div class="faq-a">Si ocurre una falla insubsanable por fuerza mayor que comprometa la integridad de los datos, la competencia se resolverá mediante una <strong>rifa equitativa de todos los premios</strong> entre los participantes inscritos.</div></div>
@@ -1162,7 +1166,7 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
     <div class="faq-a">Recargá la página con <strong>Ctrl+Shift+R</strong> (Windows) o <strong>Cmd+Shift+R</strong> (Mac) para limpiar el caché.</div></div>
 
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">No me aparece el formulario de registro en Mi Quiniela.</span><span class="faq-icon">+</span></button>
-    <div class="faq-a">Asegurate de haber ingresado tu correo correctamente y hacer click en "Entrar". Si ya te registraste antes, el sistema te pedirá tu contraseña personal.</div></div>
+    <div class="faq-a">Asegurate de haber ingresado tu correo @vinet.co.cr y hacer click en "Entrar". Si ya te registraste antes, el sistema te pedirá tu contraseña personal.</div></div>
 
     <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">¿Puedo usar la quiniela desde varios dispositivos?</span><span class="faq-icon">+</span></button>
     <div class="faq-a">Sí. Tus datos están guardados en la nube, así que podés entrar desde cualquier dispositivo con tu correo y contraseña personal.</div></div>
@@ -1177,13 +1181,13 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
 <div class="wm-overlay" id="wm-overlay" style="display:none">
   <div class="wm-box">
     <div class="wm-header">
-      <div class="wm-logo">⚽ Familia Martínez · Mundial 2026</div>
+      <div class="wm-logo">⬡ Vinet · Edición Oficial</div>
       <div class="wm-title">QUINIELA<br><em>MUNDIAL</em> 2026</div>
       <div class="wm-sub">México · Canadá · Estados Unidos</div>
       <div class="wm-prizes">
-        <div class="wm-prize-tag">🎁 1° Premio Sorpresa</div>
-        <div class="wm-prize-tag">🎁 2° Premio Sorpresa</div>
-        <div class="wm-prize-tag">🎁 3° Premio Sorpresa</div>
+        <div class="wm-prize-tag">💻 1° MacBook Neo de 13 pulgadas</div>
+        <div class="wm-prize-tag">🔊 2° Altavoz JBL Authentics 300</div>
+        <div class="wm-prize-tag">🎧 3° Audífonos Apple Beats Studio Pro</div>
       </div>
     </div>
     <div class="wm-body">
@@ -1191,8 +1195,8 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
         <div class="wm-step">
           <div class="wm-step-num">1</div>
           <div class="wm-step-text">
-            <div class="wm-step-title">Ingresá tu correo</div>
-            <div class="wm-step-sub">Ingresá tu correo para acceder</div>
+            <div class="wm-step-title">Verifica tu correo Vinet</div>
+            <div class="wm-step-sub">Ingresa tu correo @vinet.co.cr para acceder</div>
           </div>
         </div>
         <div class="wm-step">
@@ -1212,14 +1216,14 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
       </div>
 
       <div class="wm-email-section">
-        <div class="wm-email-label">Ingresá tu correo para comenzar</div>
+        <div class="wm-email-label">Ingresa tu correo Vinet para comenzar</div>
         <div class="wm-email-row">
-          <input class="wm-email-inp" type="email" id="wm-email" placeholder="tucorreo@gmail.com"
+          <input class="wm-email-inp" type="email" id="wm-email" placeholder="tucorreo@vinet.co.cr"
             oninput="validateWmEmail()"
             onkeydown="if(event.key==='Enter')submitWmEmail()"/>
           <button class="wm-btn" id="wm-btn" onclick="submitWmEmail()" disabled>Entrar</button>
         </div>
-        <div class="wm-email-hint" id="wm-hint">Ingresá tu correo para acceder</div>
+        <div class="wm-email-hint" id="wm-hint">Solo correos @vinet.co.cr</div>
       </div>
 
       <div class="wm-deadline">⏰ Cierre de registro: <strong>Miér 10 Jun · 11:59 PM (CR)</strong></div>
@@ -1256,7 +1260,7 @@ body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml
         </div>
       </div>
       <div class="sm-note">
-        💡 Si el link no abre directamente, usa <strong>Copiar link</strong> y pégalo en el chat de WhatsApp familiar.
+        💡 Si el link no abre directamente, usa <strong>Copiar link</strong> y pégalo en el chat de WhatsApp del equipo Vinet.
       </div>
     </div>
   </div>
@@ -1401,43 +1405,47 @@ function buildMatches(){
     //         D=USA,PRY,AUS,TUR  E=GER,CUW,CIV,ECU  F=NED,JPN,SWE,TUN
     //         G=BEL,EGY,IRN,NZL  H=ESP,CPV,KSA,URU  I=FRA,SEN,IRQ,NOR
     //         J=ARG,ALG,AUT,JOR  K=POR,COD,UZB,COL  L=ENG,CRO,GHA,PAN
-    {stage:'R32',label:'16avos 1', home:'México',         away:'Ecuador',        date:'30 Jun',venue:'Ciudad de México'},
-    {stage:'R32',label:'16avos 2', home:'Alemania',        away:'Paraguay',       date:'29 Jun',venue:'Boston'},
-    {stage:'R32',label:'16avos 3', home:'Sudáfrica',       away:'Canadá',         date:'28 Jun',venue:'Los Ángeles'},
-    {stage:'R32',label:'16avos 4', home:'Países Bajos',    away:'Marruecos',      date:'30 Jun',venue:'Monterrey'},
-    {stage:'R32',label:'16avos 5', home:'Portugal',        away:'Croacia',        date:'2 Jul', venue:'Toronto'},
-    {stage:'R32',label:'16avos 6', home:'España',          away:'Austria',        date:'2 Jul', venue:'Los Ángeles'},
-    {stage:'R32',label:'16avos 7', home:'EE.UU.',          away:'Bosnia y Herz.', date:'1 Jul', venue:'San Francisco'},
-    {stage:'R32',label:'16avos 8', home:'Bélgica',         away:'Senegal',        date:'1 Jul', venue:'Seattle'},
-    {stage:'R32',label:'16avos 9', home:'Brasil',          away:'Japón',          date:'29 Jun',venue:'Houston'},
-    {stage:'R32',label:'16avos 10',home:'Costa de Marfil', away:'Noruega',        date:'30 Jun',venue:'Dallas'},
-    {stage:'R32',label:'16avos 11',home:'Francia',         away:'Suecia',         date:'30 Jun',venue:'Nueva York'},
-    {stage:'R32',label:'16avos 12',home:'Inglaterra',      away:'RD Congo',       date:'1 Jul', venue:'Atlanta'},
-    {stage:'R32',label:'16avos 13',home:'Argentina',       away:'Cabo Verde',     date:'3 Jul', venue:'Miami'},
-    {stage:'R32',label:'16avos 14',home:'Australia',       away:'Egipto',         date:'3 Jul', venue:'Dallas'},
-    {stage:'R32',label:'16avos 15',home:'Suiza',           away:'Argelia',        date:'2 Jul', venue:'Vancouver'},
-    {stage:'R32',label:'16avos 16',home:'Colombia',        away:'Ghana',          date:'3 Jul', venue:'Kansas City'},
-    {stage:'R16',label:'Octavos 1',home:'Gan.16-2',away:'Gan.16-11',  date:'4 Jul', venue:'Filadelfia'},
-    {stage:'R16',label:'Octavos 2',home:'Gan.16-3',away:'Gan.16-4',  date:'4 Jul', venue:'Houston'},
-    {stage:'R16',label:'Octavos 3',home:'Gan.16-5',away:'Gan.16-6',  date:'6 Jul', venue:'Nueva York'},
-    {stage:'R16',label:'Octavos 4',home:'Gan.16-7',away:'Gan.16-8',  date:'6 Jul', venue:'Ciudad de México'},
-    {stage:'R16',label:'Octavos 5',home:'Gan.16-9',away:'Gan.16-10', date:'5 Jul', venue:'Dallas'},
-    {stage:'R16',label:'Octavos 6',home:'Gan.16-1',away:'Gan.16-12',date:'5 Jul', venue:'Seattle'},
-    {stage:'R16',label:'Octavos 7',home:'Gan.16-13',away:'Gan.16-14',date:'7 Jul', venue:'Los Ángeles'},
-    {stage:'R16',label:'Octavos 8',home:'Gan.16-15',away:'Gan.16-16',date:'7 Jul', venue:'Atlanta'},
+    {stage:'R32',label:'16avos 1', home:'Sudáfrica',away:'Canadá',date:'28 Jun',venue:'Los Ángeles',timeCR:'13:00 CR'},
+    {stage:'R32',label:'16avos 2', home:'Alemania',away:'Paraguay',date:'29 Jun',venue:'Boston',timeCR:'14:30 CR'},
+    {stage:'R32',label:'16avos 3', home:'Brasil',away:'Japón',date:'29 Jun',venue:'Houston',timeCR:'11:00 CR'},
+    {stage:'R32',label:'16avos 4', home:'Países Bajos',away:'Marruecos',date:'29 Jun',venue:'Monterrey',timeCR:'19:00 CR'},
+    {stage:'R32',label:'16avos 5', home:'Portugal',away:'Croacia',date:'2 Jul',venue:'Toronto',timeCR:'17:00 CR'},
+    {stage:'R32',label:'16avos 6', home:'España',away:'Austria',date:'2 Jul',venue:'Los Ángeles',timeCR:'13:00 CR'},
+    {stage:'R32',label:'16avos 7', home:'EE.UU.',away:'Bosnia y Herz.',date:'1 Jul',venue:'San Francisco',timeCR:'18:00 CR'},
+    {stage:'R32',label:'16avos 8', home:'Bélgica',away:'Senegal',date:'1 Jul',venue:'Seattle',timeCR:'14:00 CR'},
+    {stage:'R32',label:'16avos 9', home:'Costa de Marfil',away:'Noruega',date:'30 Jun',venue:'Dallas',timeCR:'11:00 CR'},
+    {stage:'R32',label:'16avos 10',home:'Francia',away:'Suecia',date:'30 Jun',venue:'Nueva York',timeCR:'15:00 CR'},
+    {stage:'R32',label:'16avos 11',home:'México',away:'Ecuador',date:'30 Jun',venue:'Ciudad de México',timeCR:'19:00 CR'},
+    {stage:'R32',label:'16avos 12',home:'Inglaterra',away:'RD Congo',date:'1 Jul',venue:'Atlanta',timeCR:'10:00 CR'},
+    {stage:'R32',label:'16avos 13',home:'Argentina',away:'Cabo Verde',date:'3 Jul',venue:'Miami',timeCR:'16:00 CR'},
+    {stage:'R32',label:'16avos 14',home:'Australia',away:'Egipto',date:'3 Jul',venue:'Dallas',timeCR:'12:00 CR'},
+    {stage:'R32',label:'16avos 15',home:'Suiza',away:'Argelia',date:'2 Jul',venue:'Vancouver',timeCR:'21:00 CR'},
+    {stage:'R32',label:'16avos 16',home:'Colombia',away:'Ghana',date:'3 Jul',venue:'Kansas City',timeCR:'19:30 CR'},
+    {stage:'R16',label:'Octavos 1',home:'Gan.16-1', away:'Gan.16-4',  date:'4 Jul', venue:'Filadelfia'},
+    {stage:'R16',label:'Octavos 2',home:'Gan.16-2', away:'Gan.16-10', date:'4 Jul', venue:'Houston'},
+    {stage:'R16',label:'Octavos 3',home:'Gan.16-3', away:'Gan.16-9',  date:'5 Jul', venue:'Nueva York'},
+    {stage:'R16',label:'Octavos 4',home:'Gan.16-11',away:'Gan.16-12', date:'5 Jul', venue:'Ciudad de México'},
+    {stage:'R16',label:'Octavos 5',home:'Gan.16-8', away:'Gan.16-7',  date:'6 Jul', venue:'Seattle'},
+    {stage:'R16',label:'Octavos 6',home:'Gan.16-6', away:'Gan.16-5',  date:'6 Jul', venue:'Dallas'},
+    {stage:'R16',label:'Octavos 7',home:'Gan.16-15',away:'Gan.16-16', date:'7 Jul', venue:'Los Ángeles'},
+    {stage:'R16',label:'Octavos 8',home:'Gan.16-14',away:'Gan.16-13', date:'7 Jul', venue:'Atlanta'},
     {stage:'QF', label:'Cuartos 1',home:'Gan.Oct-1',away:'Gan.Oct-2', date:'9 Jul', venue:'Filadelfia'},
-    {stage:'QF', label:'Cuartos 2',home:'Gan.Oct-3',away:'Gan.Oct-4', date:'10 Jul',venue:'Nueva York'},
-    {stage:'QF', label:'Cuartos 3',home:'Gan.Oct-5',away:'Gan.Oct-6', date:'11 Jul',venue:'Dallas'},
+    {stage:'QF', label:'Cuartos 2',home:'Gan.Oct-5',away:'Gan.Oct-6', date:'10 Jul',venue:'Nueva York'},
+    {stage:'QF', label:'Cuartos 3',home:'Gan.Oct-3',away:'Gan.Oct-4', date:'11 Jul',venue:'Dallas'},
     {stage:'QF', label:'Cuartos 4',home:'Gan.Oct-7',away:'Gan.Oct-8', date:'11 Jul',venue:'Los Ángeles'},
-    {stage:'SF', label:'Semifinal 1',home:'Gan.CF-1',away:'Gan.CF-2',date:'14 Jul',venue:'Atlanta'},
-    {stage:'SF', label:'Semifinal 2',home:'Gan.CF-3',away:'Gan.CF-4',date:'15 Jul',venue:'Dallas'},
-    {stage:'3RD',label:'3er Lugar',home:'Per.SF-1',away:'Per.SF-2',  date:'18 Jul',venue:'Miami'},
-    {stage:'FIN',label:'⭐ GRAN FINAL',home:'Gan.SF-1',away:'Gan.SF-2',date:'19 Jul',venue:'Nueva Jersey'},
+    {stage:'SF', label:'Semifinal 1',home:'Francia',   away:'España',    date:'14 Jul',venue:'Atlanta'},
+    {stage:'SF', label:'Semifinal 2',home:'Inglaterra', away:'Argentina', date:'15 Jul',venue:'Dallas'},
+    {stage:'3RD',label:'3er Lugar',  home:'Francia',    away:'Inglaterra',date:'18 Jul',venue:'Miami'},
+    {stage:'FIN',label:'⭐ GRAN FINAL',home:'España',   away:'Argentina', date:'19 Jul',venue:'Nueva Jersey'},
   ];
   ko.forEach(k=>M.push({id:id++,...k,homeScore:null,awayScore:null}));
   return M;
 }
 const MATCHES = buildMatches();
+
+// ── GOLEADOR OFICIAL DEL TORNEO ───────────────────────────────────────────
+// Actualizar cuando termine el torneo. Dejar null si aún no hay resultado.
+const OFFICIAL_SCORER = 'Mbappe'; // Kylian Mbappé — Campeón goleador Mundial 2026
 
 // ─────────────────────────────────────────────
 // VISUAL CAROUSEL ENGINE
@@ -1547,8 +1555,8 @@ const ATMOSPHERE_SLIDES = [
     bg:'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80&fit=crop',
   },
   {
-    tag:'Quiniela Familia Martínez 2026',
-    title:'Quiniela Familia Martínez 2026',
+    tag:'Quiniela Vinet 2026',
+    title:'Quiniela Vinet 2026',
     sub:'Registra tu quiniela antes del 10 Jun',
     flags:['🥇','🥈','🥉'],
     bg:'https://images.unsplash.com/photo-1551958219-acbc595d9e40?w=1200&q=80&fit=crop',
@@ -1724,9 +1732,9 @@ let searchMQ='';
 let searchRQ='';
 
 const PRIZES = [
-  {pos:1,icon:'🎁',title:'Primer Lugar',color:'gold',  desc:'Premio Sorpresa'},
-  {pos:2,icon:'🎁',title:'Segundo Lugar',color:'silver',desc:'Premio Sorpresa'},
-  {pos:3,icon:'🎁',title:'Tercer Lugar',color:'bronze',desc:'Premio Sorpresa'},
+  {pos:1,icon:'💻',title:'Primer Lugar',color:'gold',  desc:'MacBook Neo de 13 pulgadas'},
+  {pos:2,icon:'🔊',title:'Segundo Lugar',color:'silver',desc:'Altavoz JBL Authentics 300'},
+  {pos:3,icon:'🎧',title:'Tercer Lugar',color:'bronze',desc:'Audífonos Apple Beats Studio Pro'},
 ];
 
 // DEADLINE: 10 Jun 2026 23:59:59 hora Costa Rica (UTC-6)
@@ -1745,8 +1753,8 @@ const LS_SYNC_TS = 'wc26-sync-ts';
 // SUPABASE — base de datos compartida real
 // Todos los dispositivos leen/escriben aquí
 // ─────────────────────────────────────────────
-const SB_URL  = 'https://pjzctcmfsuvddzonnbng.supabase.co';
-const SB_KEY  = 'sb_publishable_QnOi04fhZfjduMm6RoeAUA_5RY4PBNk';
+const SB_URL  = 'https://serbnnosjtzmbxmdjtbu.supabase.co';
+const SB_KEY  = 'sb_publishable_msFNL9C2opQTead4JvFASw_Z6eZhb73';
 const SB_HDRS = {
   'Content-Type':  'application/json',
   'apikey':        SB_KEY,
@@ -1757,13 +1765,13 @@ const SB_HDRS = {
 // ── SCORES ──
 async function loadScores(){
   try{
-    const r = await fetch(`${SB_URL}/rest/v1/scores?select=match_id,home_score,away_score,is_locked,pen_winner`, {
+    const r = await fetch(`${SB_URL}/rest/v1/scores?select=match_id,home_score,away_score`, {
       headers: SB_HDRS
     });
     if(r.ok){
       const rows = await r.json();
       scores = {};
-      rows.forEach(row => scores[row.match_id] = {h: row.home_score, a: row.away_score, locked: row.is_locked||false, pen: row.pen_winner||null});
+      rows.forEach(row => scores[row.match_id] = {h: row.home_score, a: row.away_score});
     }
   }catch(e){
     // fallback localStorage
@@ -1772,15 +1780,13 @@ async function loadScores(){
 }
 
 async function saveScores(){
-  // Save to Supabase — upsert all changed scores (skip locked)
+  // Save to Supabase — upsert all changed scores
   try{
-    const rows = Object.entries(scores)
-      .filter(([id,sc])=>!sc.locked)
-      .map(([id,sc])=>({
-        match_id: parseInt(id),
-        home_score: sc.h,
-        away_score: sc.a
-      }));
+    const rows = Object.entries(scores).map(([id,sc])=>({
+      match_id: parseInt(id),
+      home_score: sc.h,
+      away_score: sc.a
+    }));
     if(rows.length){
       await fetch(`${SB_URL}/rest/v1/scores`, {
         method:  'POST',
@@ -1833,26 +1839,22 @@ async function loadParts(){
 async function saveParts(){
   // Upsert all participants to Supabase
   try{
-    const rows = participants.map(p=>{
-      const row = {
-        name:         p.name,
-        email:        p.email||'',
-        champion:     p.champion||'',
-        runner:       p.runner||'',
-        third:        p.third||'',
-        scorer:       p.scorer||'',
-        goals:        p.goals||0,
-        picks_locked: p.picksLocked||false,
-        preds_locked: p.predsLocked||false,
-        registered:   p.registered ? (typeof p.registered === 'string' ? p.registered : new Date().toISOString()) : null,
-        pts:          p.pts||0,
-        exact:        p.exact||0,
-        correct:      p.correct||0,
-        pwd_hash:     p.pwd_hash||null,
-      };
-      if(p.id && p.id.toString().includes('-')) row.id = p.id;
-      return row;
-    });
+    const rows = participants.map(p=>({
+      id:           p.id,
+      name:         p.name,
+      email:        p.email||'',
+      champion:     p.champion||'',
+      runner:       p.runner||'',
+      third:        p.third||'',
+      scorer:       p.scorer||'',
+      goals:        p.goals||0,
+      picks_locked: p.picksLocked||false,
+      preds_locked: p.predsLocked||false,
+      registered:   p.registered||false,
+      pts:          p.pts||0,
+      exact:        p.exact||0,
+      correct:      p.correct||0,
+    }));
     if(rows.length){
       await fetch(`${SB_URL}/rest/v1/participants`, {
         method:  'POST',
@@ -1868,51 +1870,33 @@ async function saveParts(){
 // ── Save single participant (faster than saving all) ──
 async function saveOnePart(p){
   try{
-    // Si tiene UUID válido, hacer upsert por id; si no, insertar sin id
-    const payload = {
-      name:         p.name,
-      email:        p.email||'',
-      champion:     p.champion||'',
-      runner:       p.runner||'',
-      third:        p.third||'',
-      scorer:       p.scorer||'',
-      goals:        p.goals||0,
-      picks_locked: p.picksLocked||false,
-      preds_locked: p.predsLocked||false,
-      registered:   p.registered ? (typeof p.registered === 'string' ? p.registered : new Date().toISOString()) : null,
-      pts:          p.pts||0,
-      exact:        p.exact||0,
-      correct:      p.correct||0,
-      pwd_hash:     p.pwd_hash||null,
-    };
-    // Solo incluir id si es un UUID válido (no empieza con 'u')
-    if(p.id && !p.id.toString().startsWith('u') && p.id.includes('-')){
-      payload.id = p.id;
-    }
-    const res = await fetch(`${SB_URL}/rest/v1/participants`, {
+    await fetch(`${SB_URL}/rest/v1/participants`, {
       method:  'POST',
-      headers: {...SB_HDRS, 'Prefer': 'resolution=merge-duplicates,return=representation'},
-      body: JSON.stringify([payload])
+      headers: {...SB_HDRS, 'Prefer': 'resolution=merge-duplicates,return=minimal'},
+      body: JSON.stringify([{
+        id:           p.id,
+        name:         p.name,
+        email:        p.email||'',
+        champion:     p.champion||'',
+        runner:       p.runner||'',
+        third:        p.third||'',
+        scorer:       p.scorer||'',
+        goals:        p.goals||0,
+        picks_locked: p.picksLocked||false,
+        preds_locked: p.predsLocked||false,
+        registered:   p.registered||false,
+        pts:          p.pts||0,
+        exact:        p.exact||0,
+        correct:      p.correct||0,
+        pwd_hash:     p.pwd_hash||null,
+      }])
     });
-    if(res.ok){
-      const data = await res.json();
-      // Actualizar el id local con el que generó Supabase
-      if(data && data[0] && data[0].id) p.id = data[0].id;
-    } else {
-      const err = await res.text();
-      console.error('saveOnePart error:', res.status, err);
-    }
-  }catch(e){ console.error('saveOnePart catch:', e); }
+  }catch(e){}
   try{ localStorage.setItem(LS_PARTS, JSON.stringify(participants)); }catch(e){}
 }
 
 // ── Save single score (faster) ──
 async function saveOneScore(matchId, h, a){
-  // No sobreescribir si el score está bloqueado en BD
-  if(scores[matchId]?.locked){
-    console.warn(`Score match ${matchId} está bloqueado — no se sobreescribe`);
-    return;
-  }
   try{
     await fetch(`${SB_URL}/rest/v1/scores`, {
       method:  'POST',
@@ -2204,29 +2188,9 @@ async function getLastScoreUpdate(){
 }
 
 async function shouldCallApi(){
-  // Llamar si hay partidos ya terminados sin resultado en scores
-  const now = new Date();
-  const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11,
-                  Ene:0,Abr:3,Mai:4,Jun:5,Jul:6,Ago:7,Sep:8,Oct:9,Nov:10,Dic:11};
-  const hasFinishedWithoutScore = MATCHES.some(m => {
-    if(scores[m.id]?.h != null) return false; // ya tiene resultado
-    if(!m.date || !m.timeCR) return false;
-    // Parsear fecha "11 Jun" y hora "20:00 CR"
-    const dp = m.date.match(/(\d{1,2})\s+(\w{3})/);
-    const tp = m.timeCR.match(/(\d{1,2}):(\d{2})/);
-    if(!dp || !tp) return false;
-    const mon = MONTHS[dp[2]];
-    if(mon == null) return false;
-    // Construir fecha del partido en UTC (CR = UTC-6, sumar 6h)
-    const kickoff = new Date(Date.UTC(2026, mon, parseInt(dp[1]), parseInt(tp[1]) + 6, parseInt(tp[2])));
-    // Si el partido empezó hace más de 105 minutos → debería tener resultado
-    return (now - kickoff) > 105 * 60 * 1000;
-  });
-  if(hasFinishedWithoutScore) return true;
-
-  // Si no, respetar throttle de 15 min para no agotar el API
+  // Devuelve true solo si el último update en Supabase tiene más de 15 min
   const lastUpdate = await getLastScoreUpdate();
-  if(!lastUpdate) return true;
+  if(!lastUpdate) return true; // sin datos → llamar
   return (Date.now() - lastUpdate) > AF_THROTTLE_MS;
 }
 
@@ -2379,18 +2343,87 @@ function resolveSlot(slot, koResults){
   // Semifinal winners / losers
   if(slot==='Gan.SF-1') return koResults[101]||null;
   if(slot==='Gan.SF-2') return koResults[102]||null;
-  if(slot==='Per.SF-1'){
-    const w=koResults[101]; if(!w) return null;
-    const m=MATCHES.find(x=>x.id===101);
-    return (m?.resolvedHome===w ? m?.resolvedAway : m?.resolvedHome) || null;
-  }
-  if(slot==='Per.SF-2'){
-    const w=koResults[102]; if(!w) return null;
-    const m=MATCHES.find(x=>x.id===102);
-    return (m?.resolvedHome===w ? m?.resolvedAway : m?.resolvedHome) || null;
-  }
+  if(slot==='Per.SF-1') return koResults[101]?('loser:101'):'—';
+  if(slot==='Per.SF-2') return koResults[102]?('loser:102'):'—';
 
   return null;
+}
+
+// Ganadores por penales — actualizar manualmente cuando un partido termina en empate
+// Formato: { match_id: 'Nombre del equipo ganador' }
+// ─────────────────────────────────────────────
+// PENALTY WINNERS — dynamic, loaded from Supabase
+// ─────────────────────────────────────────────
+let PENALTY_WINNERS = {
+  74: 'Paraguay',
+  76: 'Marruecos',
+};
+
+async function loadPenaltyWinners(){
+  try{
+    const r = await fetch(`${SB_URL}/rest/v1/penalty_winners?select=match_id,winner`, {
+      headers: SB_HDRS
+    });
+    if(r.ok){
+      const rows = await r.json();
+      rows.forEach(row => { PENALTY_WINNERS[row.match_id] = row.winner; });
+    }
+  }catch(e){ console.warn('loadPenaltyWinners:', e); }
+}
+
+async function adminSavePenaltyWinner(){
+  const sel     = document.getElementById('penalty-match-sel');
+  const input   = document.getElementById('penalty-winner-input');
+  const matchId = parseInt(sel.value);
+  const winner  = input.value.trim();
+  if(!matchId){ alert('Seleccioná un partido.'); return; }
+  if(!winner){  alert('Escribí el nombre del equipo ganador.'); return; }
+  const match = MATCHES.find(m=>m.id===matchId);
+  const label = match ? `${match.home} vs ${match.away}` : `match ${matchId}`;
+  if(!confirm(`¿Confirmar que el ganador por penales de "${label}" es "${winner}"?`)) return;
+  try{
+    const r = await fetch(`${SB_URL}/rest/v1/penalty_winners`, {
+      method: 'POST',
+      headers: {...SB_HDRS, 'Prefer': 'resolution=merge-duplicates,return=minimal'},
+      body: JSON.stringify([{match_id: matchId, winner: winner}])
+    });
+    if(r.ok){
+      PENALTY_WINNERS[matchId] = winner;
+      input.value = '';
+      sel.value = '';
+      renderPenaltyList();
+      resolveKnockout();
+      renderBracket();
+      renderMatches();
+      alert(`✅ Guardado: ${label} → ${winner}`);
+    } else {
+      alert('❌ Error al guardar. Revisá la tabla penalty_winners en Supabase.');
+    }
+  }catch(e){ alert('❌ Error de red: '+e); }
+}
+
+function renderPenaltyList(){
+  const el = document.getElementById('penalty-list');
+  if(!el) return;
+  const entries = Object.entries(PENALTY_WINNERS);
+  if(!entries.length){ el.innerHTML='Sin registros aún.'; return; }
+  el.innerHTML = '<div style="margin-bottom:6px;color:var(--dim);font-size:11px;letter-spacing:1px;">REGISTRADOS:</div>' +
+    entries.map(([id,w])=>{
+      const m = MATCHES.find(x=>x.id===parseInt(id));
+      const lbl = m ? `${m.home} vs ${m.away}` : `match ${id}`;
+      return `<div style="padding:4px 0;border-bottom:1px solid var(--brd1);">🥅 <b>${lbl}</b> → ${w}</div>`;
+    }).join('');
+}
+
+function initPenaltyMatchDropdown(){
+  const sel = document.getElementById('penalty-match-sel');
+  if(!sel) return;
+  MATCHES.filter(m=>!m.group).forEach(m=>{
+    const opt = document.createElement('option');
+    opt.value = m.id;
+    opt.textContent = `${m.home} vs ${m.away} (id ${m.id})`;
+    sel.appendChild(opt);
+  });
 }
 
 // Build a koResults map: matchId -> winner name, from saved scores
@@ -2399,10 +2432,11 @@ function buildKoResults(){
   MATCHES.filter(m=>!m.group).forEach(m=>{
     const sc=scores[m.id];
     if(!sc||sc.h==null) return;
-    // In knockout, higher score wins; ties are resolved by the saved penalty winner
+    // In knockout, higher score wins; ties -> check penalty winners map
     if(sc.h>sc.a) res[m.id]=m.resolvedHome||m.home;
     else if(sc.h<sc.a) res[m.id]=m.resolvedAway||m.away;
-    else res[m.id]=sc.pen||'(penales)';
+    else if(PENALTY_WINNERS[m.id]) res[m.id]=PENALTY_WINNERS[m.id];
+    else res[m.id]='(penales)';
   });
   return res;
 }
@@ -2422,7 +2456,7 @@ function resolveKnockout(){
 function calcPts(p){
   let pts=0,exact=0,correct=0;
   const preds=p.preds||{};
-  // Incluye grupos Y todos los partidos knockout con resultado
+  // Sumar puntos de TODOS los partidos con resultado (grupos + eliminación)
   MATCHES.forEach(m=>{
     const sc=scores[m.id];
     if(!sc||sc.h==null) return;
@@ -2448,12 +2482,69 @@ function calcPts(p){
     const third=koRes[103];
     if(third&&p.third===third) pts+=3;
   }
+  // Bonus for scorer — compare against OFFICIAL_SCORER constant
+  if(OFFICIAL_SCORER && p.scorer){
+    const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+    const scorerNorm = norm(p.scorer);
+    const officialNorm = norm(OFFICIAL_SCORER);
+    // Match if one contains the other (handles "Kylian Mbappé", "Mbappé", "Mbappe")
+    if(scorerNorm.includes(officialNorm) || officialNorm.includes(scorerNorm)) pts+=4;
+  }
   return{pts,exact,correct};
 }
 function refreshPts(){
   resolveKnockout();
   participants.forEach(p=>{const r=calcPts(p);p.pts=r.pts;p.exact=r.exact;p.correct=r.correct;});
   participants.sort((a,b)=>b.pts-a.pts||b.exact-a.exact||b.correct-a.correct);
+}
+
+// Recalcula y guarda puntos de TODOS en Supabase (solo admin)
+async function recalcAllPts(){
+  toast('⏳ Recalculando puntos de todos...');
+  // 1. Cargar scores actualizados desde Supabase
+  await loadScores();
+  // 2. Asegurar que todos los participantes estén en memoria
+  await loadParts();
+  // 3. Cargar TODAS las predicciones con paginación
+  await loadAllPredsForScoring();
+  // 3. Recalcular puntos en memoria
+  refreshPts();
+  // 4. Guardar cada participante en Supabase
+  let saved=0;
+  for(const p of participants){
+    await saveOnePart(p);
+    saved++;
+  }
+  renderRanking();renderPodium();updateStats();
+  toast(`✅ Puntos actualizados para ${saved} participantes`);
+}
+
+// Carga predicciones de TODOS con paginación (evita límite de 1000 filas)
+async function loadAllPredsForScoring(){
+  try{
+    const byPart={};
+    let offset=0;
+    while(true){
+      const r=await fetch(
+        `${SB_URL}/rest/v1/predictions?select=participant_id,match_id,home_score,away_score&limit=1000&offset=${offset}`,
+        {headers:SB_HDRS}
+      );
+      if(!r.ok) break;
+      const rows=await r.json();
+      if(!rows.length) break;
+      for(const row of rows){
+        if(!byPart[row.participant_id]) byPart[row.participant_id]={};
+        byPart[row.participant_id][row.match_id]={h:row.home_score,a:row.away_score};
+      }
+      if(rows.length<1000) break;
+      offset+=1000;
+    }
+    // Asignar a cada participante
+    for(const p of participants){
+      if(byPart[p.id]) p.preds=byPart[p.id];
+    }
+    console.log(`loadAllPredsForScoring: ${Object.keys(byPart).length} participantes con preds cargadas`);
+  }catch(e){ console.warn('loadAllPredsForScoring:',e); }
 }
 
 // ─────────────────────────────────────────────
@@ -2488,7 +2579,8 @@ function renderPodium(){
       </div>`;
   } else {
     // Tournament running: show real podium
-    const top3 = participants.slice(0,3);
+    const sorted = [...participants].sort((a,b)=>b.pts-a.pts||b.exact-a.exact||b.correct-a.correct);
+    const top3 = sorted.slice(0,3);
     document.getElementById('podium-grid').innerHTML=`
       ${top3[1]?`<div class="podium-card pc-silver"><div class="podium-card-inner">
         <span class="podium-medal">🥈</span>
@@ -2497,16 +2589,16 @@ function renderPodium(){
         <div class="podium-pts">${top3[1].pts}</div>
         <div class="podium-pts-label">puntos</div>
         <div class="podium-champ">${F[top3[1].champion]||'🏆'} ${top3[1].champion}</div>
-        <div style="margin-top:8px;font-size:11px;color:var(--silver);font-family:'Barlow Condensed',sans-serif;">🎁 Premio Sorpresa</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--silver);font-family:'Barlow Condensed',sans-serif;">🔊 Altavoz JBL Authentics 300</div>
       </div></div>`:'<div></div>'}
       ${top3[0]?`<div class="podium-card pc-gold"><div class="podium-card-inner">
         <span class="podium-medal">🥇</span>
-        <div class="podium-pos">1° Lugar · Campeón Familia Martínez</div>
+        <div class="podium-pos">1° Lugar · Campeón Vinet</div>
         <div class="podium-name">${top3[0].name}</div>
         <div class="podium-pts">${top3[0].pts}</div>
         <div class="podium-pts-label">puntos</div>
         <div class="podium-champ">${F[top3[0].champion]||'🏆'} ${top3[0].champion}</div>
-        <div style="margin-top:8px;font-size:11px;color:var(--gold);font-family:'Barlow Condensed',sans-serif;">🎁 Premio Sorpresa</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--gold);font-family:'Barlow Condensed',sans-serif;">💻 MacBook Neo de 13 pulgadas</div>
       </div></div>`:'<div></div>'}
       ${top3[2]?`<div class="podium-card pc-bronze"><div class="podium-card-inner">
         <span class="podium-medal">🥉</span>
@@ -2515,12 +2607,12 @@ function renderPodium(){
         <div class="podium-pts">${top3[2].pts}</div>
         <div class="podium-pts-label">puntos</div>
         <div class="podium-champ">${F[top3[2].champion]||'🏆'} ${top3[2].champion}</div>
-        <div style="margin-top:8px;font-size:11px;color:var(--bronze2);font-family:'Barlow Condensed',sans-serif;">🎁 Premio Sorpresa</div>
+        <div style="margin-top:8px;font-size:11px;color:var(--bronze2);font-family:'Barlow Condensed',sans-serif;">🎧 Audífonos Apple Beats Studio Pro</div>
       </div></div>`:'<div></div>'}`;
   }
 
   // Prizes banners always visible
-  const top3 = started ? participants.slice(0,3) : [null,null,null];
+  const top3 = started ? [...participants].sort((a,b)=>b.pts-a.pts||b.exact-a.exact||b.correct-a.correct).slice(0,3) : [null,null,null];
   document.getElementById('prizes-list').innerHTML=PRIZES.map((pr,i)=>`
     <div class="prize-banner ${pr.color}">
       <div class="prize-icon">${pr.icon}</div>
@@ -2573,7 +2665,6 @@ function renderRanking(){
         <td class="c" style="color:var(--dim)">—</td>
         <td><span class="rchamp-cell">${cf} ${p.champion}</span></td>
         <td><span class="rchamp-cell">${rf} ${p.runner}</span></td>
-        <td class="c"><span style="color:var(--green);font-size:9px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">✅ Listo</span></td>
       </tr>`;
     }
     // Tournament running
@@ -2593,7 +2684,6 @@ function renderRanking(){
       <td class="c" style="color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:16px">${p.correct||0}</td>
       <td><span class="rchamp-cell">${cf} ${p.champion}</span></td>
       <td><span class="rchamp-cell">${rf} ${p.runner}</span></td>
-      <td class="c"><span style="color:var(--green);font-size:9px;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;">✅</span></td>
     </tr>`;
   }).join('');
 }
@@ -2790,7 +2880,7 @@ function renderMatches(){
         const myUser = currentEmail ? participants.find(p=>p.email===currentEmail) : null;
         const myPred = myUser?.preds?.[m.id];
         // Bloqueo por fase: no usar flag global predsLocked para fases futuras
-        const faseLocked = isPhraseLocked(getFaseFromMatch(m));
+        const faseLocked = isPhaseLocked(getFaseFromMatch(m));
 
         let predRow = '';
         if(currentEmail && myUser){
@@ -2867,7 +2957,7 @@ async function saveInlinePred(matchId){
   const myUser = currentEmail ? participants.find(p=>p.email===currentEmail) : null;
   if(!myUser) return;
 
-  // ── Verificar bloqueo de fase (único control válido para partidos de eliminación) ──
+  // ── Verificar bloqueo de fase (único control válido para fases de eliminación) ──
   const match = MATCHES.find(m=>m.id===matchId);
   if(!match) return;
   if(!canSavePhase(getFaseFromMatch(match))){ toast('🔒 Esta fase ya cerró'); return; }
@@ -2884,9 +2974,22 @@ async function saveInlinePred(matchId){
 
   myUser.preds[matchId] = {h, a};
 
-  // Save to Supabase silently
+  // Feedback visual inmediato — deshabilitar inputs mientras guarda
+  hInp.disabled = true; aInp.disabled = true;
+
+  // Mostrar ícono de carga junto a los inputs
+  const predRow = hInp.closest('.mc-pred-row');
+  let statusSpan = predRow?.querySelector('.pred-status');
+  if(!statusSpan && predRow){
+    statusSpan = document.createElement('span');
+    statusSpan.className = 'pred-status';
+    statusSpan.style.cssText = 'font-size:14px;transition:opacity .2s;';
+    predRow.appendChild(statusSpan);
+  }
+  if(statusSpan) statusSpan.textContent = '⏳';
+
   try{
-    await fetch(`${SB_URL}/rest/v1/predictions`, {
+    const res = await fetch(`${SB_URL}/rest/v1/predictions`, {
       method: 'POST',
       headers: {...SB_HDRS, 'Prefer': 'resolution=merge-duplicates,return=minimal'},
       body: JSON.stringify([{
@@ -2896,11 +2999,30 @@ async function saveInlinePred(matchId){
         away_score: a,
       }])
     });
-    // Visual feedback — brief green border
-    hInp.style.borderColor='var(--green)';
-    aInp.style.borderColor='var(--green)';
-    setTimeout(()=>{ hInp.style.borderColor=''; aInp.style.borderColor=''; }, 800);
-  }catch(e){}
+    if(res.ok){
+      // ✅ Guardado exitoso
+      hInp.style.borderColor = 'var(--green)';
+      aInp.style.borderColor = 'var(--green)';
+      if(statusSpan) statusSpan.textContent = '✅';
+      toast(`✅ Predicción guardada`);
+      setTimeout(()=>{
+        hInp.style.borderColor = '';
+        aInp.style.borderColor = '';
+        if(statusSpan) statusSpan.textContent = '💾';
+      }, 2000);
+    } else {
+      throw new Error('Error al guardar');
+    }
+  }catch(e){
+    // ❌ Error — restaurar inputs
+    hInp.style.borderColor = 'var(--red,#ef4444)';
+    aInp.style.borderColor = 'var(--red,#ef4444)';
+    if(statusSpan) statusSpan.textContent = '❌';
+    toast('⚠️ Error al guardar, intentá de nuevo');
+    setTimeout(()=>{ hInp.style.borderColor=''; aInp.style.borderColor=''; }, 2000);
+  } finally {
+    hInp.disabled = false; aInp.disabled = false;
+  }
 }
 
 async function saveScore(id){
@@ -3006,7 +3128,8 @@ function buildKoResultsFrom(sc){
     if(!s||s.h==null) return;
     if(s.h>s.a) res[m.id]=m.resolvedHome||m.home;
     else if(s.h<s.a) res[m.id]=m.resolvedAway||m.away;
-    else res[m.id]=s.pen||'(penales)';
+    else if(PENALTY_WINNERS[m.id]) res[m.id]=PENALTY_WINNERS[m.id];
+    else res[m.id]='(penales)';
   });
   return res;
 }
@@ -3162,13 +3285,13 @@ function renderBracket(){
     </div>`;
   }).join('');
 }
-const VINET_DOMAIN = '';
+const VINET_DOMAIN = 'vinet.co.cr';
 let currentEmail = null; // verified email for this session
 
 // ─────────────────────────────────────────────
 // ADMIN — solo emartinez@vinet.co.cr ve los botones de prueba
 // ─────────────────────────────────────────────
-const ADMIN_EMAIL = "ericka@gmail.com";
+const ADMIN_EMAIL = 'emartinez@vinet.co.cr';
 
 // ─────────────────────────────────────────────
 // ADMIN — solo emartinez@vinet.co.cr
@@ -3181,33 +3304,19 @@ function checkAdminUI(){
   if(gateClearBtn) gateClearBtn.style.display = isAdmin ? 'block' : 'none';
   if(clearDataBar) clearDataBar.style.display  = isAdmin ? 'flex'  : 'none';
   if(tabAdmin)     tabAdmin.style.display      = isAdmin ? 'flex'  : 'none';
-  if(isAdmin) adminInitPanel();
 }
 
-// ── ADMIN: PANEL DE RESULTADOS ──────────────────────────
+// ── ADMIN: INGRESO MANUAL DE RESULTADOS ─────────────────────────────────────
 function adminInitPanel(){
   const sel = document.getElementById('admin-match-sel');
-  if(!sel) return;
-  resolveKnockout(); // usa los resultados ya cargados (si los hay) para resolver nombres
-
-  if(sel.options.length <= 1){
-    // Primera vez: crear las opciones (una por partido)
-    MATCHES.forEach(m=>{
-      const opt = document.createElement('option');
-      opt.value = m.id;
-      sel.appendChild(opt);
-    });
-  }
-  // Siempre refresca el TEXTO de cada opción con los nombres ya resueltos hasta el momento
-  // (esto corrige el caso donde el panel se abrió antes de que llegaran los resultados de Supabase)
-  Array.from(sel.options).forEach(opt=>{
-    if(!opt.value) return;
-    const m = MATCHES.find(x=>x.id===parseInt(opt.value));
-    if(!m) return;
-    const h = m.resolvedHome||m.home, a = m.resolvedAway||m.away;
-    opt.textContent = m.group
-      ? `[Grupo ${m.group}] ${h} vs ${a} · ${m.date}`
-      : `[${m.stage}] ${m.label||''} ${h} vs ${a} · ${m.date}`;
+  if(!sel || sel.options.length > 1) return;
+  MATCHES.forEach(m=>{
+    const grp = m.group ? '[Gr.'+m.group+']' : '['+(m.stage||'')+']';
+    const label = grp+' '+m.home+' vs '+m.away+' · '+m.date;
+    const opt = document.createElement('option');
+    opt.value = m.id;
+    opt.textContent = label;
+    sel.appendChild(opt);
   });
   adminLoadScores();
 }
@@ -3220,108 +3329,67 @@ function adminFillMatch(){
   if(!m) return;
   document.getElementById('admin-home-lbl').textContent = m.resolvedHome||m.home;
   document.getElementById('admin-away-lbl').textContent = m.resolvedAway||m.away;
-  // Si ya hay resultado guardado, lo muestra
   const existing = scores[matchId];
   document.getElementById('admin-home-score').value = existing!=null ? existing.h : '';
   document.getElementById('admin-away-score').value = existing!=null ? existing.a : '';
-
-  // Poblar selector de ganador por penales con los equipos de este partido
-  const penSel = document.getElementById('admin-pen-winner');
-  if(penSel){
-    penSel.innerHTML = `<option value="">— Seleccioná el ganador —</option>
-      <option value="${m.resolvedHome||m.home}">${m.resolvedHome||m.home}</option>
-      <option value="${m.resolvedAway||m.away}">${m.resolvedAway||m.away}</option>`;
-    penSel.value = existing?.pen || '';
-  }
-  adminCheckPen();
-}
-
-// Muestra/oculta el selector de penales según si el partido es de eliminatoria y el marcador está empatado
-function adminCheckPen(){
-  const sel = document.getElementById('admin-match-sel');
-  const matchId = parseInt(sel?.value);
-  const m = MATCHES.find(x=>x.id===matchId);
-  const wrap = document.getElementById('admin-pen-wrap');
-  if(!wrap) return;
-  const home = document.getElementById('admin-home-score').value;
-  const away = document.getElementById('admin-away-score').value;
-  const isTie = home!=='' && away!=='' && parseInt(home)===parseInt(away);
-  const isKO  = m && !m.group;
-  wrap.style.display = (isKO && isTie) ? 'block' : 'none';
 }
 
 async function adminSaveResult(){
-  const sel   = document.getElementById('admin-match-sel');
+  const sel     = document.getElementById('admin-match-sel');
   const matchId = parseInt(sel.value);
-  const home  = document.getElementById('admin-home-score').value;
-  const away  = document.getElementById('admin-away-score').value;
-  const msg   = document.getElementById('admin-result-msg');
+  const home    = document.getElementById('admin-home-score').value;
+  const away    = document.getElementById('admin-away-score').value;
+  const msg     = document.getElementById('admin-result-msg');
 
   if(!matchId){ msg.style.color='var(--red)'; msg.textContent='⚠️ Seleccioná un partido primero'; return; }
   if(home===''||away===''){ msg.style.color='var(--red)'; msg.textContent='⚠️ Ingresá ambos marcadores'; return; }
 
   const m = MATCHES.find(x=>x.id===matchId);
-  const isTie = parseInt(home)===parseInt(away);
-  const penSel = document.getElementById('admin-pen-winner');
-  const penWinner = (m && !m.group && isTie) ? (penSel?.value||'') : '';
-  if(m && !m.group && isTie && !penWinner){
-    msg.style.color='var(--red)'; msg.textContent='⚠️ Es un empate en eliminatoria: seleccioná quién avanza por penales';
-    return;
-  }
-
   msg.style.color='var(--gold)'; msg.textContent='Guardando…';
 
-  try {
-    const body = {
-      match_id: matchId,
-      home_score: parseInt(home),
-      away_score: parseInt(away),
-      pen_winner: penWinner || null,
-      updated_at: new Date().toISOString()
-    };
+  try{
     const res = await fetch(`${SB_URL}/rest/v1/scores`, {
       method:'POST',
       headers:{...SB_HDRS,'Prefer':'resolution=merge-duplicates'},
-      body: JSON.stringify(body)
+      body: JSON.stringify({
+        match_id:   matchId,
+        home_score: parseInt(home),
+        away_score: parseInt(away),
+        updated_at: new Date().toISOString()
+      })
     });
     if(!res.ok) throw new Error(await res.text());
+    scores[matchId] = {h:parseInt(home), a:parseInt(away)};
     msg.style.color='var(--green)';
-    msg.textContent=`✅ ${m.home} ${home} – ${away} ${m.away}${penWinner?` (pasa ${penWinner} por penales)`:''} guardado`;
-    // Actualizar scores local
-    scores[matchId]={h:parseInt(home),a:parseInt(away),pen:penWinner||null};
+    const hn = m.resolvedHome||m.home, an = m.resolvedAway||m.away;
+    msg.textContent = `✅ ${hn} ${home} – ${away} ${an} guardado`;
     adminLoadScores();
-    recalcAll();
-    renderRanking();
-    renderMatches();
-  } catch(e){
+    refreshPts(); renderMatches(); renderRanking(); renderPodium(); renderGroups(); updateStats();
+  }catch(e){
     msg.style.color='var(--red)';
-    msg.textContent='❌ Error al guardar: '+e.message;
+    msg.textContent='❌ Error: '+e.message;
   }
 }
 
 async function adminLoadScores(){
   const container = document.getElementById('admin-scores-list');
   if(!container) return;
-  try {
-    const res = await fetch(`${SB_URL}/rest/v1/scores?select=*&order=match_id.asc`, {headers: SB_HDRS});
-    const data = await res.json();
-    if(!data.length){ container.textContent='Sin resultados guardados aún.'; return; }
-    resolveKnockout(); // asegura que m.resolvedHome/resolvedAway estén al día antes de armar la lista
-    let html = '<div style="display:flex;flex-direction:column;gap:6px;">';
-    data.forEach(s=>{
-      const m = MATCHES.find(x=>x.id===s.match_id);
-      const label = m ? `${m.resolvedHome||m.home} vs ${m.resolvedAway||m.away}` : `Partido #${s.match_id}`;
-      const penTag = s.pen_winner ? `<div style="font-size:10px;color:var(--gold);letter-spacing:.5px;">🥅 Pasa ${s.pen_winner} por penales</div>` : '';
-      html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--s3);border-radius:var(--r);border:1px solid var(--brd);">
-        <span style="color:var(--txt)">${label}${penTag}</span>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);letter-spacing:2px;">${s.home_score} – ${s.away_score}</span>
+  try{
+    const r = await fetch(`${SB_URL}/rest/v1/scores?select=match_id,home_score,away_score&order=match_id.asc`,{headers:SB_HDRS});
+    if(!r.ok){ container.textContent='Error al cargar resultados.'; return; }
+    const rows = await r.json();
+    if(!rows.length){ container.textContent='No hay resultados guardados aún.'; return; }
+    container.innerHTML = rows.map(row=>{
+      const m = MATCHES.find(x=>x.id===row.match_id);
+      const hn = m ? (m.resolvedHome||m.home) : 'Partido '+row.match_id;
+      const an = m ? (m.resolvedAway||m.away) : '';
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--brd);gap:8px;">
+        <span style="color:var(--txt);">${hn} vs ${an}</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);white-space:nowrap;">${row.home_score} – ${row.away_score}</span>
       </div>`;
-    });
-    html+='</div>';
-    container.innerHTML=html;
-  } catch(e){ container.textContent='Error cargando resultados.'; }
+    }).join('');
+  }catch(e){ container.textContent='Error: '+e.message; }
 }
-
 
 function exportAdminCSV(){
   const reg = participants.filter(p=>p.registered);
@@ -3339,51 +3407,14 @@ function exportAdminCSV(){
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href = url;
-  a.download = `quiniela-familia-2026-${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `quiniela-vinet-2026-${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
   toast('📥 CSV exportado correctamente');
 }
 
-async function adminRecalcAll(){
-  const msg = document.getElementById('admin-recalc-msg');
-  msg.style.color='var(--gold)'; msg.textContent='Cargando predicciones2026';
-  try{
-    let allPreds = [], offset = 0;
-    const pageSize = 1000;
-    while(true){
-      const r = await fetch(`${SB_URL}/rest/v1/predictions?select=participant_id,match_id,home_score,away_score&order=participant_id.asc,match_id.asc&limit=${pageSize}&offset=${offset}`,{headers: SB_HDRS});
-      if(!r.ok) throw new Error(await r.text());
-      const page = await r.json();
-      allPreds = allPreds.concat(page);
-      if(page.length < pageSize) break;
-      offset += pageSize;
-    }
-    msg.textContent=`${allPreds.length} predicciones cargadas. Recalculando2026`;
-    participants.forEach(p=>{ p.preds = {}; });
-    allPreds.forEach(row=>{
-      const p = participants.find(x=>x.id===row.participant_id);
-      if(p) p.preds[row.match_id] = {h: row.home_score, a: row.away_score};
-    });
-    resolveKnockout();
-    const updates = [];
-    participants.forEach(p=>{
-      const r = calcPts(p); p.pts=r.pts; p.exact=r.exact; p.correct=r.correct;
-      if(p.id && p.id.includes('-')) updates.push({id:p.id,pts:p.pts,exact:p.exact,correct:p.correct});
-    });
-    for(let i=0;i<updates.length;i+=100){
-      await fetch(`${SB_URL}/rest/v1/participants`,{method:'POST',headers:{...SB_HDRS,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(updates.slice(i,i+100))});
-    }
-    participants.sort((a,b)=>b.pts-a.pts||b.exact-a.exact||b.correct-a.correct);
-    renderRanking(); renderPodium(); updateStats();
-    msg.style.color='var(--green)';
-    msg.textContent=`2705 ${updates.length} participantes actualizados correctamente`;
-    toast('2705 Puntos recalculados y guardados');
-  }catch(e){ msg.style.color='var(--red)'; msg.textContent='Error: '+e.message; }
-}
-
 function isVinetEmail(email){
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email.trim());
+  return /^[^\s@]+@vinet\.co\.cr$/i.test(email.trim());
 }
 
 // ── Welcome Modal ──
@@ -3404,7 +3435,7 @@ function validateWmEmail(){
   const btn=document.getElementById('wm-btn');
   const hint=document.getElementById('wm-hint');
   const inp=document.getElementById('wm-email');
-  if(!val){ inp.className='wm-email-inp'; hint.className='wm-email-hint'; hint.textContent='Ingresá tu correo para acceder'; btn.disabled=true; return; }
+  if(!val){ inp.className='wm-email-inp'; hint.className='wm-email-hint'; hint.textContent='Solo correos @vinet.co.cr'; btn.disabled=true; return; }
   if(isVinetEmail(val)){
     inp.className='wm-email-inp ok';
     hint.className='wm-email-hint suc';
@@ -3413,14 +3444,14 @@ function validateWmEmail(){
   } else {
     inp.className='wm-email-inp error';
     hint.className='wm-email-hint err';
-    hint.textContent=val.includes('@')?`Ingresá un correo válido`:'Ingresá un correo válido';
+    hint.textContent=val.includes('@')?`Solo se permiten correos @${VINET_DOMAIN}`:'Formato: nombre@vinet.co.cr';
     btn.disabled=true;
   }
 }
 
 async function submitWmEmail(){
   const email=document.getElementById('wm-email').value.trim().toLowerCase();
-  if(!isVinetEmail(email)){ toast('⚠️ Ingresá tu correo para acceder'); return; }
+  if(!isVinetEmail(email)){ toast('⚠️ Solo correos @vinet.co.cr'); return; }
 
   // Buscar solo este usuario en Supabase
   let existing = null;
@@ -3464,19 +3495,19 @@ function validateGateEmail(){
   const btn=document.getElementById('email-verify-btn');
   const hint=document.getElementById('email-gate-hint');
   const inp=document.getElementById('gate-email');
-  if(!val){ inp.className='fi'; hint.className='wm-email-hint'; hint.textContent='Ingresá un correo válido'; btn.disabled=true; return; }
+  if(!val){ inp.className='fi'; hint.className='wm-email-hint'; hint.textContent=`Solo correos @${VINET_DOMAIN}`; btn.disabled=true; return; }
   if(isVinetEmail(val)){
     inp.className='fi ok';hint.className='wm-email-hint suc';hint.textContent='✓ Correo válido';btn.disabled=false;
   }else{
     inp.className='fi error';hint.className='wm-email-hint err';
-    hint.textContent=val.includes('@')?`Ingresá un correo válido`:'Ingresá un correo válido';
+    hint.textContent=val.includes('@')?`Solo se permiten correos @${VINET_DOMAIN}`:'Formato: nombre@vinet.co.cr';
     btn.disabled=true;
   }
 }
 
 async function verifyEmail(){
   const email=document.getElementById('gate-email').value.trim().toLowerCase();
-  if(!isVinetEmail(email)){toast('⚠️ Ingresá tu correo para acceder');return;}
+  if(!isVinetEmail(email)){toast('⚠️ Solo correos @vinet.co.cr');return;}
 
   // Mostrar loading en el botón
   const btn = document.getElementById('email-verify-btn');
@@ -3557,7 +3588,7 @@ function logoutEmail(){
   document.getElementById('gate-email').value='';
   document.getElementById('gate-email').className='fi';
   document.getElementById('gate-hint').className='wm-email-hint';
-  document.getElementById('gate-hint').textContent='Ingresá tu correo para continuar';
+  document.getElementById('gate-hint').textContent=`Solo correos @${VINET_DOMAIN}`;
   document.getElementById('email-verify-btn').disabled=true;
 }
 
@@ -3586,9 +3617,9 @@ function updateRegUI(){
     form.querySelectorAll('input:not(#gate-email),select').forEach(el=>el.disabled=true);
     const btn=document.getElementById('btn-reg');
     if(btn){btn.disabled=true;btn.textContent='🔒 Registro Cerrado';}
-    // Hide gate too
-    if(!currentEmail){ document.getElementById('email-gate').style.display='block';
-    document.getElementById('reg-fields').style.display='none'; }
+    // Mantener email-gate visible para que usuarios ya registrados puedan hacer login
+    document.getElementById('email-gate').style.display='block';
+    document.getElementById('reg-fields').style.display='none';
   }
 }
 
@@ -3671,8 +3702,8 @@ async function verifyPwdModal(email, existing){
 
 async function saveQuiniela(){
   if(isDeadlinePassed()){toast('🔒 El registro cerró el 10 de junio a medianoche');return;}
-  if(!currentEmail){toast('⚠️ Ingresá tu correo primero');return;}
-  if(!isVinetEmail(currentEmail)){toast('⚠️ Cualquier correo es válido');return;}
+  if(!currentEmail){toast('⚠️ Verifica tu correo @vinet.co.cr primero');return;}
+  if(!isVinetEmail(currentEmail)){toast('⚠️ Solo correos @vinet.co.cr pueden registrarse');return;}
 
   const name=document.getElementById('r-name').value.trim();
   if(!name){toast('⚠️ Ingresa tu nombre completo');return;}
@@ -3686,8 +3717,7 @@ async function saveQuiniela(){
     if(pwd.length < 4){ toast('⚠️ La contraseña debe tener al menos 4 caracteres'); return; }
     if(pwd !== pwd2)  { toast('⚠️ Las contraseñas no coinciden'); return; }
     const hashed = await hashPwd(pwd);
-    const newId = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&0x3|0x8)).toString(16);});
-    p = {id:newId,name,pts:0,exact:0,correct:0,pwd_hash:hashed};
+    p = {id:`u${Date.now()}`,name,pts:0,exact:0,correct:0,pwd_hash:hashed};
     participants.push(p);
   }
 
@@ -3866,7 +3896,7 @@ function buildShareMessage(){
   const played = Object.values(scores).filter(s=>s.h!=null).length;
   const reg = participants.filter(p=>p.registered);
 
-  let body = `⚽ *QUINIELA MUNDIAL 2026 · FAMILIA MARTÍNEZ* 🏆\n`;
+  let body = `⚽ *QUINIELA MUNDIAL 2026 · VINET* 🏆\n`;
   body += `━━━━━━━━━━━━━━━━━━\n\n`;
 
   if(started && reg.length >= 3){
@@ -3882,10 +3912,10 @@ function buildShareMessage(){
     body += `✅ ${reg.length} colaboradores registrados\n\n`;
   }
 
-  body += `🏆 *PREMIOS*\n`;
-  body += `🎁 1° Premio Sorpresa\n`;
-  body += `🎁 2° Premio Sorpresa\n`;
-  body += `🎁 3° Premio Sorpresa\n\n`;
+  body += `🏆 *PREMIOS VINET*\n`;
+  body += `💻 1° MacBook Neo de 13 pulgadas\n`;
+  body += `🔊 2° Altavoz JBL Authentics 300\n`;
+  body += `🎧 3° Audífonos Apple Beats Studio Pro\n\n`;
   body += `━━━━━━━━━━━━━━━━━━\n`;
   body += `👇 *Registra tu quiniela aquí:*\n`;
   body += `${getShareUrl()}`;
@@ -3965,8 +3995,8 @@ function showTab(id,btn){
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   document.getElementById(`panel-${id}`).classList.add('on');
   btn.classList.add('on');
-  // Si el usuario hace click en Mi Quiniela, descartar la burbuja
   if(id==='quiniela') dismissOnbBubble(false);
+  if(id==='admin') adminInitPanel();
 }
 
 // ─────────────────────────────────────────────
@@ -4027,8 +4057,8 @@ function toast(msg){
 // ─────────────────────────────────────────────
 // PASSWORD GATE — ultra simple
 // ─────────────────────────────────────────────
-const GATE_KEY   = 'fq26ok';
-const CORRECT_PWD = 'Familia2026';
+const GATE_KEY   = 'vq26ok';
+const CORRECT_PWD = 'Vinet2026';
 
 function checkGate(){
   try{
@@ -4111,17 +4141,6 @@ async function init(){
     unlockApp();
     setTimeout(async()=>{
       if(currentEmail){
-        // Cargar participantes para encontrar el usuario
-        await loadParts();
-        // Mostrar picks bloqueados si ya se registró
-        const p = participants.find(x=>x.email===currentEmail);
-        if(p && p.picksLocked){
-          document.getElementById('email-verified-bar').style.display='flex';
-          document.getElementById('verified-email-display').textContent=currentEmail;
-          document.getElementById('email-gate').style.display='none';
-          document.getElementById('reg-fields').style.display='block';
-          showLockedPicks(p);
-        }
         await loadMyPreds();
         renderMatchPreds();
         renderMatches();
@@ -4133,8 +4152,8 @@ async function init(){
 
   await loadScores();
   await loadParts();
-  checkAdminUI(); // refresca el panel admin (nombres de equipos resueltos) ahora que ya cargaron los resultados
-  refreshPts();
+  await loadPenaltyWinners();
+  // pts vienen de Supabase — NO llamar refreshPts() aquí (sobreescribiría con 0)
   renderCarousel();
   renderDayStrip();
   renderPodium();
@@ -4144,12 +4163,25 @@ async function init(){
   renderGroups();
   renderBracket();
   buildRegForm();
+  initPenaltyMatchDropdown();
+  renderPenaltyList();
   updateStats();
   setSyncing(false);
   updateCountdown();
   setInterval(updateCountdown,1000);
 
-  // ── SUPABASE REALTIME ──────────────────────────────────────────
+  // ── SUPABASE REALTIME ──────────────────────────────────────────────────────
+  // Reemplaza el polling de 5s (~31k req/h con 43 users) por WebSocket.
+  // Flujo: cambio en scores/participants → fullRefresh() → re-render completo.
+  // Fallback: si Realtime no conecta en 8s → polling cada 5 min.
+  // ──────────────────────────────────────────────────────────────────────────
+  let rtSocket = null;
+  let rtConnected = false;
+  let rtFallbackTimer = null;
+  let rtHeartbeat = null;
+  let rtReconnectTimer = null;
+  let rtReconnectDelay = 3000; // backoff inicial
+
   async function fullRefresh(){
     setSyncing(true);
     await loadScores();
@@ -4168,49 +4200,120 @@ async function init(){
     renderGroups();
     renderBracket();
     updateStats();
-    checkAdminUI(); // mantiene el panel admin (nombres resueltos) al día con cada actualización en vivo
     setSyncing(false);
   }
 
-  let realtimeConnected = false;
-  function connectRealtime(){
-    try{
-      const wsUrl = `${SB_URL.replace('https','wss')}/realtime/v1/websocket?apikey=${SB_KEY}&vsn=1.0.0`;
-      const ws = new WebSocket(wsUrl);
-      let heartbeat;
-      ws.onopen = ()=>{
-        realtimeConnected = true;
-        ws.send(JSON.stringify({topic:'realtime:public:scores',event:'phx_join',payload:{config:{broadcast:{self:false},presence:{key:''},postgres_changes:[{event:'*',schema:'public',table:'scores'}]}},ref:'1'}));
-        ws.send(JSON.stringify({topic:'realtime:public:participants',event:'phx_join',payload:{config:{broadcast:{self:false},presence:{key:''},postgres_changes:[{event:'*',schema:'public',table:'participants'}]}},ref:'2'}));
-        heartbeat = setInterval(()=>{ if(ws.readyState===1) ws.send(JSON.stringify({topic:'phoenix',event:'heartbeat',payload:{},ref:'hb'})); }, 25000);
-        console.log('🟢 Realtime conectado');
-      };
-      ws.onmessage = (evt)=>{
-        try{
-          const msg = JSON.parse(evt.data);
-          const isChange = msg.event==='postgres_changes'||(msg.payload?.data?.type&&['INSERT','UPDATE','DELETE'].includes(msg.payload.data.type));
-          if(isChange) fullRefresh();
-        }catch(e){}
-      };
-      ws.onclose = ()=>{
-        realtimeConnected = false;
-        clearInterval(heartbeat);
-        setTimeout(connectRealtime, 5000);
-      };
-      ws.onerror = ()=>{ ws.close(); };
-    }catch(e){ console.warn('Realtime no disponible'); }
+  function startFallbackPolling(){
+    if(rtFallbackTimer) return; // ya corriendo
+    console.warn('[RT] Realtime no disponible — fallback polling cada 5 min');
+    rtFallbackTimer = setInterval(fullRefresh, 5 * 60 * 1000);
   }
-  connectRealtime();
 
-  // Fallback polling cada 30s si Realtime no conecta
-  setInterval(async()=>{ if(!realtimeConnected) await fullRefresh(); }, 30000);
+  function stopFallbackPolling(){
+    if(rtFallbackTimer){ clearInterval(rtFallbackTimer); rtFallbackTimer = null; }
+  }
+
+  function connectRealtime(){
+    if(rtSocket) { try{ rtSocket.close(); }catch(e){} rtSocket=null; }
+    clearInterval(rtHeartbeat);
+    clearTimeout(rtReconnectTimer);
+
+    // Supabase Realtime endpoint
+    const wsUrl = `wss://serbnnosjtzmbxmdjtbu.supabase.co/realtime/v1/websocket`
+      + `?apikey=${SB_KEY}&vsn=1.0.0`;
+
+    try {
+      rtSocket = new WebSocket(wsUrl);
+    } catch(e) {
+      console.error('[RT] WebSocket error al conectar:', e);
+      startFallbackPolling();
+      return;
+    }
+
+    // Timeout de conexión: si en 8s no abre → fallback
+    const connTimeout = setTimeout(()=>{
+      if(!rtConnected){
+        console.warn('[RT] Timeout conexión — activando fallback');
+        startFallbackPolling();
+      }
+    }, 8000);
+
+    rtSocket.onopen = ()=>{
+      clearTimeout(connTimeout);
+      rtConnected = true;
+      rtReconnectDelay = 3000; // reset backoff
+      stopFallbackPolling();
+      console.log('[RT] Conectado a Supabase Realtime');
+
+      // Suscribirse a tabla scores
+      rtSocket.send(JSON.stringify({
+        topic: 'realtime:public:scores',
+        event: 'phx_join',
+        payload: { config: { broadcast: { self: false }, presence: { key: '' } } },
+        ref: '1'
+      }));
+
+      // Suscribirse a tabla participants
+      rtSocket.send(JSON.stringify({
+        topic: 'realtime:public:participants',
+        event: 'phx_join',
+        payload: { config: { broadcast: { self: false }, presence: { key: '' } } },
+        ref: '2'
+      }));
+
+      // Heartbeat cada 25s (Supabase desconecta sin actividad a los 60s)
+      rtHeartbeat = setInterval(()=>{
+        if(rtSocket && rtSocket.readyState === WebSocket.OPEN){
+          rtSocket.send(JSON.stringify({
+            topic: 'phoenix', event: 'heartbeat', payload: {}, ref: 'hb'
+          }));
+        }
+      }, 25000);
+    };
+
+    rtSocket.onmessage = (evt)=>{
+      try {
+        const msg = JSON.parse(evt.data);
+        // Ignorar acks de join y heartbeats
+        if(msg.event === 'phx_reply' || msg.event === 'phx_close') return;
+        // Cambio real en scores o participants → refresh completo
+        if(msg.topic && (
+          msg.topic.startsWith('realtime:public:scores') ||
+          msg.topic.startsWith('realtime:public:participants')
+        ) && msg.event !== 'heartbeat'){
+          console.log('[RT] Cambio detectado en', msg.topic, '→ refresh');
+          fullRefresh();
+        }
+      } catch(e){ /* ignorar mensajes malformados */ }
+    };
+
+    rtSocket.onerror = (e)=>{
+      console.error('[RT] Error WebSocket:', e);
+    };
+
+    rtSocket.onclose = (evt)=>{
+      clearTimeout(connTimeout);
+      clearInterval(rtHeartbeat);
+      rtConnected = false;
+      console.warn(`[RT] Desconectado (code ${evt.code}) — reconectando en ${rtReconnectDelay/1000}s`);
+      // Activar fallback mientras reconecta
+      startFallbackPolling();
+      // Reconexión con backoff exponencial (máx 30s)
+      rtReconnectTimer = setTimeout(()=>{
+        rtReconnectDelay = Math.min(rtReconnectDelay * 2, 30000);
+        connectRealtime();
+      }, rtReconnectDelay);
+    };
+  }
+
+  connectRealtime();
 
   // Rebuild carousel daily
   setInterval(()=>{ renderCarousel(); renderDayStrip(); }, 60000);
 
-  // Fetch official scores on load, then every 10 minutes (Free plan: 100 req/day)
-  await fetchRecentScores();
-  setInterval(fetchOfficialScores, 10 * 60 * 1000);
+  // API-Football DESACTIVADA — ingreso manual desde Admin únicamente
+  // await fetchRecentScores();
+  // setInterval(fetchOfficialScores, 10 * 60 * 1000);
 
   // Show welcome modal on first visit (only after auth)
   if(authed && !sessionStorage.getItem('wm-seen') && !isDeadlinePassed()){
@@ -4218,7 +4321,7 @@ async function init(){
   }
 }
 // ═══════════════════════════════════════════════════════
-// SISTEMA DE BLOQUEO POR FASES — Quiniela Familia Martínez 2026
+// SISTEMA DE BLOQUEO POR FASES — Quiniela Vinet 2026
 // ═══════════════════════════════════════════════════════
 const PHASE_LOCKS = {
   grupos: { label:'Fase de Grupos',              lockUTC: new Date(Date.UTC(2026,5,11,5,59)),  icon:'⚽', color:'#D4A017' },
@@ -4226,13 +4329,9 @@ const PHASE_LOCKS = {
   r16:    { label:'Octavos de Final',            lockUTC: new Date(Date.UTC(2026,6,4,16,0)),   icon:'⚡', color:'#3B82F6' },
   qf:     { label:'Cuartos de Final',            lockUTC: new Date(Date.UTC(2026,6,9,19,0)),   icon:'🏅', color:'#8B5CF6' },
   sf:     { label:'Semifinales',                 lockUTC: new Date(Date.UTC(2026,6,14,18,0)),  icon:'🌟', color:'#F59E0B' },
-  final:  { label:'Final y 3er Puesto (Dom 19 Jul)',  lockUTC: new Date(Date.UTC(2026,6,18,20,0)),  icon:'🏆', color:'#EF4444' },
+  final:  { label:'Final y 3er Puesto',          lockUTC: new Date(Date.UTC(2026,6,18,20,0)),  icon:'🏆', color:'#EF4444' },
 };
 
-function isPhraseLocked(fase){
-  const lock=PHASE_LOCKS[fase]; if(!lock) return false;
-  return Date.now()>=lock.lockUTC.getTime();
-}
 
 function formatCR(date){
   return date.toLocaleString('es-CR',{
@@ -4250,8 +4349,15 @@ function timeRemaining(fase){
   return `${m} minutos`;
 }
 
+// Evaluación silenciosa — solo para render, sin toast
+function isPhaseLocked(fase){
+  const lock=PHASE_LOCKS[fase]; if(!lock) return false;
+  return Date.now()>=lock.lockUTC.getTime();
+}
+
+// Con toast — solo llamar cuando el usuario intenta guardar activamente
 function canSavePhase(fase){
-  if(!isPhraseLocked(fase)) return true;
+  if(!isPhaseLocked(fase)) return true;
   const lock=PHASE_LOCKS[fase];
   toast(`🔒 ${lock.label} cerró el ${formatCR(lock.lockUTC)}`);
   return false;
@@ -4282,7 +4388,7 @@ function updatePhaseBanner(container, fase, locked){
 
 function applyPhaseLocks(){
   Object.keys(PHASE_LOCKS).forEach(fase=>{
-    const locked=isPhraseLocked(fase);
+    const locked=isPhaseLocked(fase);
     document.querySelectorAll(`[data-fase="${fase}"]`).forEach(container=>{
       container.querySelectorAll('input.mc-pred-inp,input.sinp,input[type="number"]').forEach(inp=>{
         inp.disabled=locked;
